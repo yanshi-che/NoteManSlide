@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <cmath>
 
 #include "Game_File_MusicData.h"
 namespace Game {
@@ -8,10 +9,12 @@ namespace Game {
 		class Game_File_MusicAnalyse
 		{
 		private:
-			void analyseTotalMinute();
-			void analyseBarLength();
+			const std::uint8_t COUNTOFBEAT;
+			double analyseBarLengthPerMinutes(std::uint8_t& bpm) const noexcept;
+			void analyseBarLength(std::uint8_t& bpm,double& totalMinutes, std::uint16_t& barLength) const noexcept;
 		public:
-			void analyse(char (&filePath)[MAX_PATH],std::uint8_t& bpm,double& totalMinutes,double& beginDlay,int& musicHandle,std::uint16_t& barLength); //MusicData型のインスタンスをnewで返す。
+			Game_File_MusicAnalyse();
+			void analyse(std::uint8_t& bpm,double& totalMinutes,double& beginDelay,std::uint16_t& barLength);
 		};
 
 	}

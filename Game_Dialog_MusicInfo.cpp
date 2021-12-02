@@ -14,6 +14,7 @@ INT_PTR CALLBACK Game::Dialog::MusicInfoDialogProc(HWND hWnd, UINT uMsg, WPARAM 
 			break;
 		case IDOK:
 			isShowMusicInfoDlg = false;
+			isInputed = true;
 			EndDialog(hWnd,NULL);
 			break;
 		case IDCANCEL:
@@ -67,8 +68,10 @@ void Game::Dialog::Game_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MA
 		ScreenFlip();
 	}
 
-	GetDlgItemText(hDialogWnd, IDC_EDDITFilePath, filePath, MAX_PATH);
-	bpm=GetDlgItemText(hDialogWnd,IDC_EDITBPM,NULL,true);
-	totalMinutes=GetDlgItemText(hDialogWnd, IDC_EDITTotalMinutes, NULL, true)/MINUTE;
-	beginDelay=GetDlgItemText(hDialogWnd, IDC_EDITBeginDelay, NULL, true);
+	if (isInputed) {
+		GetDlgItemText(hDialogWnd, IDC_EDDITFilePath, filePath, MAX_PATH);
+		bpm = GetDlgItemText(hDialogWnd, IDC_EDITBPM, NULL, true);
+		totalMinutes = GetDlgItemText(hDialogWnd, IDC_EDITTotalMinutes, NULL, true) / MINUTE;
+		beginDelay = GetDlgItemText(hDialogWnd, IDC_EDITBeginDelay, NULL, true);
+	}
 }

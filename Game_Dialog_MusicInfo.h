@@ -9,6 +9,7 @@
 namespace Game {
 	namespace Dialog {
 		boolean isShowMusicInfoDlg = true;
+		boolean isInputed = false;
 		INT_PTR CALLBACK MusicInfoDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		class Game_Dialog_MusicInfo
 		{
