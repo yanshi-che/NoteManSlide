@@ -1,12 +1,12 @@
 #include <iostream>
 #include "Game_SceneManager.h"
-#include "Game_Config.h"
+#include "Game_Global.h"
 
 // プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	ChangeWindowMode(true);
-	SetGraphMode(Game::WINDOW_WIDTH,Game::WINDOW_HEIGHT,Game::WINDOW_COLORBIT); //スクリーンの大きさの設定
+	SetGraphMode(Game::Global::WINDOW_WIDTH,Game::Global::WINDOW_HEIGHT,Game::Global::WINDOW_COLORBIT); //スクリーンの大きさの設定
 
 	SetDrawScreen(DX_SCREEN_BACK);//裏画面で画面生成
 	if (DxLib_Init() == -1)		// ＤＸライブラリ初期化処理

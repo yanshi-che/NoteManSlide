@@ -8,7 +8,7 @@ Game::Draw::Game_Draw_RaneDraw::Game_Draw_RaneDraw() :
 
 void Game::Draw::Game_Draw_RaneDraw::raneDraw() const noexcept {
 	for (int i = 0; i <= numberOfRane; i++) {
-		DrawLine((WINDOW_WIDTH/numberOfRane)*i, 0, (WINDOW_WIDTH / numberOfRane) * i, WINDOW_HEIGHT, raneColor, raneThickness);
+		DrawLine((Global::WINDOW_WIDTH/numberOfRane)*i, 0, (Global::WINDOW_WIDTH / numberOfRane) * i, Global::WINDOW_HEIGHT, raneColor, raneThickness);
 	}
 }
 

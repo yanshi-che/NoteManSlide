@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Game_Task.h"
-#include "Game_Config.h"
+#include "Game_Global.h"
 namespace Game {
 	namespace Draw {
 		class Game_Draw_BaseDraw : public Game_Task

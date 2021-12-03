@@ -10,9 +10,8 @@ namespace Game {
     class Game_SceneManager : public Game_Task
     {
     private:
-        Game::Draw::Game_Draw_RaneDraw rane;
-        Game::Draw::Game_Draw_UIDraw UI;
-        //std::unique_ptr<BaseDraw> beat;
+        Draw::Game_Draw_RaneDraw rane;
+        Draw::Game_Draw_UIDraw UI;
     public:
         Game_SceneManager();
         void initialize() override;//‰Šú‰»

@@ -4,16 +4,15 @@
 #include <Windows.h>
 #include <cstdint>
 #include "Game_File_BaseFile.h"
-#include "Game_Config.h"
 
 namespace Game {
 	namespace Dialog {
-		boolean isShowMusicInfoDlg = true;
-		boolean isInputed = false;
-		INT_PTR CALLBACK MusicInfoDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		class Game_Dialog_MusicInfo
 		{
 		private:
+			static boolean isShowMusicInfoDlg;
+			static boolean isInputed;
+			static INT_PTR CALLBACK MusicInfoDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 			const double MINUTE;
 			const std::uint8_t BPMCHARMAX;
 			const std::uint8_t TOTALMINUTESCHARMAX;

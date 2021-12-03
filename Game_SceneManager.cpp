@@ -5,7 +5,7 @@ Game::Game_SceneManager::Game_SceneManager()  {
 }
 
 void Game::Game_SceneManager::initialize(){
-
+	
 }
 
 void Game::Game_SceneManager::finalize() {

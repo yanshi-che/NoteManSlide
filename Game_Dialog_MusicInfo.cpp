@@ -1,16 +1,18 @@
 #include "Game_Dialog_MusicInfo.h"
 
-INT_PTR CALLBACK Game::Dialog::MusicInfoDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+INT_PTR CALLBACK Game::Dialog::Game_Dialog_MusicInfo::MusicInfoDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
 	case WM_COMMAND:
 		switch (wParam) {
 		case IDC_BUTTONFilePath:
+		{
 			const char* title[] = { "test" };
 			const char* filter[] = { "mp3 wave\0*.mp3;*.wave\0\0" };
 			char filePath[MAX_PATH];
 			File::Game_File_BaseFile gfb;
 			gfb.openExplorer(title, filter, filePath);
 			SetDlgItemText(hWnd, IDC_EDITFilePath, filePath);
+		}
 			break;
 		case IDOK:
 			isShowMusicInfoDlg = false;
@@ -31,7 +33,8 @@ INT_PTR CALLBACK Game::Dialog::MusicInfoDialogProc(HWND hWnd, UINT uMsg, WPARAM 
 }
 
 Game::Dialog::Game_Dialog_MusicInfo::Game_Dialog_MusicInfo() : MINUTE(60.0),BPMCHARMAX(3),TOTALMINUTESCHARMAX(4),BEGINDELAYCHARMAX(2){
-
+	isShowMusicInfoDlg = true;
+	isInputed = false;
 }
 
 void Game::Dialog::Game_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MAX_PATH], std::uint8_t& bpm, double& totalMinutes, double& beginDelay) {
@@ -70,8 +73,11 @@ void Game::Dialog::Game_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MA
 
 	if (isInputed) {
 		GetDlgItemText(hDialogWnd, IDC_EDDITFilePath, filePath, MAX_PATH);
-		bpm = GetDlgItemText(hDialogWnd, IDC_EDITBPM, NULL, true);
-		totalMinutes = GetDlgItemText(hDialogWnd, IDC_EDITTotalMinutes, NULL, true) / MINUTE;
-		beginDelay = GetDlgItemText(hDialogWnd, IDC_EDITBeginDelay, NULL, true);
+		bpm = GetDlgItemInt(hDialogWnd, IDC_EDITBPM, NULL, true);
+		totalMinutes = GetDlgItemInt(hDialogWnd, IDC_EDITTotalMinutes, NULL, true);
+		beginDelay = GetDlgItemInt(hDialogWnd, IDC_EDITBeginDelay, NULL, true);
 	}
+
+	isShowMusicInfoDlg = true;
+	isInputed = false;
 }
