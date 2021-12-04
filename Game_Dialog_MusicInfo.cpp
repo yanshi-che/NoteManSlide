@@ -1,5 +1,8 @@
 #include "Game_Dialog_MusicInfo.h"
 
+boolean Game::Dialog::Game_Dialog_MusicInfo::isShowMusicInfoDlg = true;
+boolean Game::Dialog::Game_Dialog_MusicInfo::isInputed = false;
+
 INT_PTR CALLBACK Game::Dialog::Game_Dialog_MusicInfo::MusicInfoDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
 	case WM_COMMAND:
@@ -33,8 +36,6 @@ INT_PTR CALLBACK Game::Dialog::Game_Dialog_MusicInfo::MusicInfoDialogProc(HWND h
 }
 
 Game::Dialog::Game_Dialog_MusicInfo::Game_Dialog_MusicInfo() : MINUTE(60.0),BPMCHARMAX(3),TOTALMINUTESCHARMAX(4),BEGINDELAYCHARMAX(2){
-	isShowMusicInfoDlg = true;
-	isInputed = false;
 }
 
 void Game::Dialog::Game_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MAX_PATH], std::uint8_t& bpm, double& totalMinutes, double& beginDelay) {
@@ -52,7 +53,7 @@ void Game::Dialog::Game_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MA
 	SetDlgItemText(hDialogWnd, IDC_BUTTONFilePath, "ファイル選択");
 	SetDlgItemText(hDialogWnd, IDC_STATICBPM, "BPM");
 	SetDlgItemText(hDialogWnd, IDC_STATICTotalMinutes, "再生時間（秒)");
-	SetDlgItemText(hDialogWnd, IDC_STATICBeginDelay, "曲が流れ始めるまでの時間(秒)");
+	SetDlgItemText(hDialogWnd, IDC_STATICBeginDelay, "曲が始まるまでの時間(秒)");
 
 	//EDIITBOXの文字数制限
 	SendMessage(GetDlgItem(hDialogWnd, IDC_EDITBPM), EM_SETLIMITTEXT, BPMCHARMAX, NULL);

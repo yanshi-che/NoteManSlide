@@ -63,8 +63,8 @@ BEGIN
     EDITTEXT        IDC_EDITTotalMinutes,130,90,54,14,ES_AUTOHSCROLL | ES_NUMBER
     EDITTEXT        IDC_EDITBeginDelay,220,90,54,14,ES_AUTOHSCROLL | ES_NUMBER
     LTEXT           "スタティック",IDC_STATICBPM,42,72,30,8
-    LTEXT           "スタティック",IDC_STATICTotalMinutes,132,72,30,8
-    LTEXT           "スタティック",IDC_STATICBeginDelay,222,72,30,8
+    LTEXT           "スタティック",IDC_STATICTotalMinutes,132,72,59,8
+    LTEXT           "スタティック",IDC_STATICBeginDelay,222,72,84,8
 END
 
 

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Game_SceneManager.h"
+#include "Game_DrawManager.h"
 #include "Game_Global.h"
 
 // プログラムは WinMain から始まります
@@ -14,16 +14,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return -1;			// エラーが起きたら直ちに終了
 	}
 
-	Game::Game_SceneManager sm;
+	Game::Game_DrawManager dm;
 
-	sm.initialize();
+	dm.initialize();
 	// while(裏画面を表画面に反映, メッセージ処理, 画面クリア)
 	while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0) {
-		sm.update();
-		sm.draw();
+		dm.update();
+		dm.draw();
 	}
 
-	sm.finalize();
+	dm.finalize();
 
 	DxLib_End();				// ＤＸライブラリ使用の終了処理
 
