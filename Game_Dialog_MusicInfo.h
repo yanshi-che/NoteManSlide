@@ -17,9 +17,12 @@ namespace Game {
 			const std::uint8_t BPMCHARMAX;
 			const std::uint8_t TOTALMINUTESCHARMAX;
 			const std::uint8_t BEGINDELAYCHARMAX;
+			const std::uint8_t NUMBEROFRANECHARMAX;
+			const std::uint8_t RANEMAX;
+			const std::uint8_t RANEMIN;
 		public:
 			Game_Dialog_MusicInfo();
-			void getMusicInfoFromDlg(char(&filePath)[MAX_PATH],std::uint8_t& bpm, double& totalMinutes, double& beginDelay);
+			void getMusicInfoFromDlg(char(&filePath)[MAX_PATH],std::uint8_t& bpm, double& totalMinutes, double& beginDelay,std::uint8_t& numberOfRane);
 		};
 	}
 }

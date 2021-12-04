@@ -12,7 +12,7 @@ namespace Game {
     class Game_DrawManager : public Game_Task
     {
     private:
-        Draw::Game_Draw_DrawFactory drawFactory;
+        std::unique_ptr<Draw::Game_Draw_DrawFactory> drawFactory;
         Draw::Game_Draw_MenuDraw menu;
         Draw::Game_Draw_RaneDraw* rane;
         Draw::Game_Draw_BeatLineDraw* beatLine;

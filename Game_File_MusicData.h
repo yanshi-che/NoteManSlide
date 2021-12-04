@@ -11,13 +11,15 @@ namespace Game {
 			const std::uint16_t barLength;
 			const double totalMinutes;
 			const double beginDelay;
+			const std::uint8_t numberOfRane;
 			const int musicHandle;
 		public:
-			Game_File_MusicData(int musicHandle, std::uint8_t bpm, std::uint16_t barLength, double totalMinutes,double beginDelay);
+			Game_File_MusicData(int musicHandle, std::uint8_t bpm, std::uint16_t barLength, double totalMinutes,double beginDelay,std::uint8_t numberOfRane);
 			const std::uint8_t& getBpm() noexcept;
 			const std::uint16_t& getBarLength() noexcept;
 			const double& getTotalMinutes() noexcept;
 			const double& getBeginDelay()noexcept;
+			const std::uint8_t& getNumberOfRane() noexcept;
 			const int& getMusicHandle() noexcept;
 		};
 

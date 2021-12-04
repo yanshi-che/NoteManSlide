@@ -2,8 +2,7 @@
 
 Game::Draw::Game_Draw_RaneDraw::Game_Draw_RaneDraw() :
 	raneColor(GetColor(255, 255, 255)),raneThickness(2) {
-	numberOfRane = 6;
-
+	numberOfRane = 4;
 }
 
 void Game::Draw::Game_Draw_RaneDraw::draw() noexcept{

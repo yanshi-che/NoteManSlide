@@ -1,13 +1,15 @@
 #include "Game_DrawManager.h"
 
 Game::Game_DrawManager::Game_DrawManager() {
+	drawFactory = std::make_unique<Draw::Game_Draw_DrawFactory>();
 	rane = nullptr;
 	beatLine = nullptr;
 }
 
 void Game::Game_DrawManager::initialize(){
-	rane = drawFactory.getRaneDrawInstance();
-	beatLine = drawFactory.getBeatLineDrawInstance();
+	menu.setDrawFactory(drawFactory.get());
+	rane = drawFactory->getRaneDrawInstance();
+	beatLine = drawFactory->getBeatLineDrawInstance();
 }
 
 void Game::Game_DrawManager::finalize() {

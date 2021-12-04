@@ -38,11 +38,12 @@ namespace Game {
 				thirtySecondNote = 8, // ‚R‚Q•ª‰¹•„
 			};
 			static std::unique_ptr<File::Game_File_MusicData> musicData;
-			static Game_Draw_DrawFactory drawFactory;
+			static Game_Draw_DrawFactory* drawFactory;
 			static void MenuItemSelectCallBack(const TCHAR* itemName, int itemID);//ƒƒjƒ…[‚ª‘I‘ğ‚³‚ê‚½‚çŒÄ‚Î‚ê‚éŠÖ”
 		public:
 			Game_Draw_MenuDraw();
 			static void setMusicData(std::unique_ptr<File::Game_File_MusicData> md);
+			static void setDrawFactory(Game_Draw_DrawFactory* df);
 		};
 
 	}
