@@ -1,23 +1,27 @@
 #pragma once
 
 #include <cstdint>
-#include <vector>
 
 #include "Game_Draw_BaseDraw.h"
 #include "Game_File_MusicData.h"
 
 namespace Game {
 	namespace Draw {
-		class Game_Draw_BeatLineDraw : public Game_Draw_BaseDraw
+		class Game_Draw_LineContainer : public Game_Draw_BaseDraw
 		{
 		private:
-			File::Game_File_MusicData* musicData;
+			const std::uint8_t numberOfRane;
+			double time;
+			std::uint16_t barNumber;
 			std::uint8_t quontize;
+			bool notesFlag[];
 		public:
-			void setMusicData(File::Game_File_MusicData* data) noexcept;
-			void setQuontize(std::uint8_t quon) noexcept;
+			Game_Draw_LineContainer();
+			void drawNote();
+			void drawLine();
 			void initialize() override;
 			void draw() override;
 		};
 	}
 }
+

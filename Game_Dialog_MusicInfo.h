@@ -10,8 +10,8 @@ namespace Game {
 		class Game_Dialog_MusicInfo
 		{
 		private:
-			static boolean isShowMusicInfoDlg;
-			static boolean isInputed;
+			static bool isShowMusicInfoDlg;
+			static bool isInputed;
 			static INT_PTR CALLBACK MusicInfoDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 			const double MINUTE;
 			const std::uint8_t BPMCHARMAX;

@@ -8,9 +8,9 @@ namespace Game {
 		{
 		private:
 			const std::uint8_t bpm;
-			const std::uint16_t barLength;
-			const double totalMinutes;
-			const double beginDelay;
+			const std::uint16_t barLength;//‹È‘S‘Ì‚Ì¬ß”
+			const double totalMinutes;//‹È‚ÌÄ¶ŠÔ(•ª)
+			const double beginDelay;//‹È‚ªn‚Ü‚é‚Ü‚Å‚Ì‚¸‚ê
 			const std::uint8_t numberOfRane;
 			const int musicHandle;
 		public:

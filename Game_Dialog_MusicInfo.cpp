@@ -1,7 +1,7 @@
 #include "Game_Dialog_MusicInfo.h"
 
-boolean Game::Dialog::Game_Dialog_MusicInfo::isShowMusicInfoDlg = true;
-boolean Game::Dialog::Game_Dialog_MusicInfo::isInputed = false;
+bool Game::Dialog::Game_Dialog_MusicInfo::isShowMusicInfoDlg = true;
+bool Game::Dialog::Game_Dialog_MusicInfo::isInputed = false;
 
 INT_PTR CALLBACK Game::Dialog::Game_Dialog_MusicInfo::MusicInfoDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
@@ -77,7 +77,7 @@ void Game::Dialog::Game_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MA
 	if (isInputed) {
 		GetDlgItemText(hDialogWnd, IDC_EDITFilePath, filePath, MAX_PATH);
 		bpm = GetDlgItemInt(hDialogWnd, IDC_EDITBPM, NULL, true);
-		totalMinutes = GetDlgItemInt(hDialogWnd, IDC_EDITTotalMinutes, NULL, true);
+		totalMinutes = GetDlgItemInt(hDialogWnd, IDC_EDITTotalMinutes, NULL, true) / MINUTE;
 		beginDelay = GetDlgItemInt(hDialogWnd, IDC_EDITBeginDelay, NULL, true);
 		std::uint8_t raneTemp = GetDlgItemInt(hDialogWnd, IDC_EDITRANE, NULL, true);
 		if (RANEMIN < raneTemp || raneTemp < RANEMAX) {
