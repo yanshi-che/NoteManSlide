@@ -5,6 +5,8 @@
 対応するノーツは普通のノーツとロングノーツにする予定です。
 レーン数は4~8レーンまで対応予定
 
+- 講義のプログラム作成で忙しいので12月下旬辺りから再開予定
+
 Dxlib著作権表記  
 
 libjpeg　Copyright (C) 1991-2013, Thomas G. Lane, Guido Vollbeding.  
