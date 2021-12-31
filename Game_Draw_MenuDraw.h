@@ -21,13 +21,21 @@ namespace Game {
 				Test,
 				Play,
 				Stop,
-				QUONTIZE,
-				QUARTER, // ‚S•ª‰¹•„
-				EIGHTH, // ‚W•ª‰¹•„
-				TRIPLET, // ‚R˜A•„
-				SIXTEENTH, // ‚P‚U•ª‰¹•„
-				SEXTOLET, // ‚U˜A•„
-				THIRTYSECOND, // ‚R‚Q•ª‰¹•„
+				WholeQUONTIZE, //‘S‘Ì‚Ì•ÏX
+				WholeQUARTER, // ‚S•ª‰¹•„
+				WholeEIGHTH, // ‚W•ª‰¹•„
+				WholeTRIPLET, // ‚R˜A•„
+				WholeSIXTEENTH, // ‚P‚U•ª‰¹•„
+				WholeSEXTOLET, // ‚U˜A•„
+				WholeTHIRTYSECOND, // ‚R‚Q•ª‰¹•„
+				PartQUONTIZE, //ˆê•”‚Ì•ÏX
+				PartQUARTER, // ‚S•ª‰¹•„
+				PartEIGHTH, // ‚W•ª‰¹•„
+				PartTRIPLET, // ‚R˜A•„
+				PartSIXTEENTH, // ‚P‚U•ª‰¹•„
+				PartSEXTOLET, // ‚U˜A•„
+				PartTHIRTYSECOND, // ‚R‚Q•ª‰¹•„
+
 			};
 			enum quontize {
 				quarterNote = 1, // ‚S•ª‰¹•„

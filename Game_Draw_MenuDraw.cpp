@@ -13,13 +13,20 @@ Game::Draw::Game_Draw_MenuDraw::Game_Draw_MenuDraw(){
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, MENUITEM_IDTOP, FALSE, "テスト(&T)", Test);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, Test, FALSE, "再生(&P)", Play);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, Test, FALSE, "停止(&S)", Stop);
-	AddMenuItem(MENUITEM_ADD_CHILD, NULL, MENUITEM_IDTOP, FALSE, "クオンタイズ(&Q)", QUONTIZE);
-	AddMenuItem(MENUITEM_ADD_CHILD, NULL, QUONTIZE, FALSE, "4分音符", QUARTER);
-	AddMenuItem(MENUITEM_ADD_CHILD, NULL, QUONTIZE, FALSE, "8分音符", EIGHTH);
-	AddMenuItem(MENUITEM_ADD_CHILD, NULL, QUONTIZE, FALSE, "16分音符", SIXTEENTH);
-	AddMenuItem(MENUITEM_ADD_CHILD, NULL, QUONTIZE, FALSE, "32分音符", THIRTYSECOND);
-	AddMenuItem(MENUITEM_ADD_CHILD, NULL, QUONTIZE, FALSE, "3連符", TRIPLET);
-	AddMenuItem(MENUITEM_ADD_CHILD, NULL, QUONTIZE, FALSE, "6連符", SEXTOLET);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, MENUITEM_IDTOP, FALSE, "クオンタイズ(全体)", WholeQUONTIZE);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, WholeQUONTIZE, FALSE, "4分音符", WholeQUARTER);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, WholeQUONTIZE, FALSE, "8分音符", WholeEIGHTH);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, WholeQUONTIZE, FALSE, "16分音符", WholeSIXTEENTH);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, WholeQUONTIZE, FALSE, "32分音符", WholeTHIRTYSECOND);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, WholeQUONTIZE, FALSE, "3連符", WholeTRIPLET);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, WholeQUONTIZE, FALSE, "6連符", WholeSEXTOLET);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, MENUITEM_IDTOP, FALSE, "クオンタイズ(小節)", PartQUONTIZE);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, PartQUONTIZE, FALSE, "4分音符", PartQUARTER);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, PartQUONTIZE, FALSE, "8分音符", PartEIGHTH);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, PartQUONTIZE, FALSE, "16分音符", PartSIXTEENTH);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, PartQUONTIZE, FALSE, "32分音符", PartTHIRTYSECOND);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, PartQUONTIZE, FALSE, "3連符", PartTRIPLET);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, PartQUONTIZE, FALSE, "6連符", PartSEXTOLET);
 	SetMenuItemSelectCallBackFunction(MenuItemSelectCallBack);
 }
 
@@ -41,36 +48,67 @@ void Game::Draw::Game_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemNam
 		File::Game_File_MusicFileIO mfIO;
 		setMusicData(mfIO.getMusicFile());
 		break;
-	case QUARTER:
+	case WholeQUARTER:
 		if (musicData != nullptr) {
 			drawFactory->getBeatLineDrawInstance()->setQuontize(quarterNote);
 		}
 		break;
-	case EIGHTH:
+	case WholeEIGHTH:
 		if (musicData != nullptr) {
 			drawFactory->getBeatLineDrawInstance()->setQuontize(eighthNote);
 		}
 		break;
-	case SIXTEENTH:
+	case WholeSIXTEENTH:
 		if (musicData != nullptr) {
 			drawFactory->getBeatLineDrawInstance()->setQuontize(sixteenthNote);
 		}
 		break;
-	case THIRTYSECOND:
+	case WholeTHIRTYSECOND:
 		if (musicData != nullptr) {
 			drawFactory->getBeatLineDrawInstance()->setQuontize(thirtySecondNote);
 		}
 		break;
-	case TRIPLET:
+	case WholeTRIPLET:
 		if (musicData != nullptr) {
 			drawFactory->getBeatLineDrawInstance()->setQuontize(tripletNote);
 		}
 		break;
-	case SEXTOLET:
+	case WholeSEXTOLET:
+		if (musicData != nullptr) {
+			drawFactory->getBeatLineDrawInstance()->setQuontize(sextoletNote);
+		}
+		break;
+	case PartQUARTER:
+		if (musicData != nullptr) {
+			drawFactory->getBeatLineDrawInstance()->setQuontize(quarterNote);
+		}
+		break;
+	case PartEIGHTH:
+		if (musicData != nullptr) {
+			drawFactory->getBeatLineDrawInstance()->setQuontize(eighthNote);
+		}
+		break;
+	case PartSIXTEENTH:
+		if (musicData != nullptr) {
+			drawFactory->getBeatLineDrawInstance()->setQuontize(sixteenthNote);
+		}
+		break;
+	case PartTHIRTYSECOND:
+		if (musicData != nullptr) {
+			drawFactory->getBeatLineDrawInstance()->setQuontize(thirtySecondNote);
+		}
+		break;
+	case PartTRIPLET:
+		if (musicData != nullptr) {
+			drawFactory->getBeatLineDrawInstance()->setQuontize(tripletNote);
+		}
+		break;
+	case PartSEXTOLET:
 		if (musicData != nullptr) {
 			drawFactory->getBeatLineDrawInstance()->setQuontize(sextoletNote);
 		}
 		break;
 	}
+
 }
 
