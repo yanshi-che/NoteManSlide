@@ -10,11 +10,11 @@ namespace Game {
 		{
 		private:
 			const std::uint8_t COUNTOFBEAT;
-			double analyseBarLengthPerMinutes(std::uint8_t& bpm) const noexcept;
-			void analyseBarLength(std::uint8_t& bpm,double& totalMinutes, std::uint16_t& barLength) const noexcept;
+			double analyseBarLengthPerMinutes(std::uint16_t& bpm) const noexcept;
+			void analyseBarLength(std::uint16_t& bpm,double& totalMinutes, std::uint16_t& barLength) const noexcept;
 		public:
 			Game_File_MusicAnalyse();
-			void analyse(std::uint8_t& bpm,double& totalMinutes,double& beginDelay,std::uint16_t& barLength);
+			void analyse(std::uint16_t& bpm,double& totalMinutes,double& beginDelay,std::uint16_t& barLength);
 		};
 
 	}

@@ -19,10 +19,15 @@ namespace Game {
 			std::uint8_t thickness;
 			std::vector<bool> notesFlag; //ノーツががセットされたかどうか
 			std::int32_t y;
+			std::int32_t yMax;
+			std::int32_t yMin;
 		public:
 			Game_Draw_LineContainer(std::uint16_t bID, std::uint8_t numOfRane, double t, std::uint16_t bNum, std::int32_t y);
 			void drawNote() noexcept;
 			void drawLine() noexcept;
+			void updateY(std::int16_t y) noexcept;
+			void setYMax(std::int32_t yMa) noexcept;
+			void setYMin(std::int32_t yMi) noexcept;
 			void draw() override;
 		};
 	}

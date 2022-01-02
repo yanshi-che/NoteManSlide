@@ -19,13 +19,27 @@ Game::Draw::Game_Draw_LineContainer::Game_Draw_LineContainer(std::uint16_t bID, 
 
 
 void Game::Draw::Game_Draw_LineContainer::drawLine() noexcept{
-	if (y < 720 && y>0) {
+	if (y < Game::Global::WINDOW_HEIGHT && y>0) {
 		DrawLine(0, y, Global::WINDOW_WIDTH, y, color, thickness);
 	}
 }
 
 void Game::Draw::Game_Draw_LineContainer::drawNote() noexcept{
 
+}
+
+void Game::Draw::Game_Draw_LineContainer::updateY(std::int16_t y) noexcept {
+	if ( y < 0 && yMin < this->y || 0 < y && this->y < yMax) {
+		this->y += y;
+	}
+}
+
+void Game::Draw::Game_Draw_LineContainer::setYMax(std::int32_t yMa) noexcept {
+	this->yMax = yMa;
+}
+
+void Game::Draw::Game_Draw_LineContainer::setYMin(std::int32_t yMi) noexcept {
+	this->yMin = yMi;
 }
 
 void Game::Draw::Game_Draw_LineContainer::draw() {

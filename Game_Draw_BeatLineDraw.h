@@ -16,11 +16,14 @@ namespace Game {
 			File::Game_File_MusicData* musicData;
 			std::uint8_t quontize;
 			std::vector<std::vector<std::unique_ptr<Game_Draw_LineContainer>>> barVec;
+			std::int8_t y;
+			std::uint8_t yMagnification;
 		public:
 			Game_Draw_BeatLineDraw();
 			void setMusicData(File::Game_File_MusicData* data) noexcept;
 			void setQuontize(std::uint8_t quon) noexcept;
 			void initialize() override;
+			//void finalize() override;
 			void draw() override;
 		};
 	}
