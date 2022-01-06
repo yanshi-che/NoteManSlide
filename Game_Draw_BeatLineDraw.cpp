@@ -30,9 +30,7 @@ void Game::Draw::Game_Draw_BeatLineDraw::initialize() {
 		barVec.at(i).resize(initialQuontize);
 		for (int k = 0; k < initialQuontize; k++) {
 			yMax = initialY + (yWidth * musicData->getBarLength()) + Game::Global::WINDOW_HEIGHT;
-			barVec.at(i).at(k)=std::make_unique<Game_Draw_LineContainer>(i, musicData->getNumberOfRane(), timeSum, k, initialY);
-			barVec.at(i).at(k)->setYMin(initialY);
-			barVec.at(i).at(k)->setYMax(yMax);
+			barVec.at(i).at(k)=std::make_unique<Game_Draw_LineContainer>(i, musicData->getNumberOfRane(), timeSum, k, initialY,yMax);
 			timeSum += timePerBeat;
 			initialY -= yWidth;
 		}
