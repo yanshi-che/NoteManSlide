@@ -50,62 +50,62 @@ void Game::Draw::Game_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemNam
 		break;
 	case WholeQUARTER:
 		if (musicData != nullptr) {
-			drawFactory->getBeatLineDrawInstance()->setQuontize(quarterNote);
+
 		}
 		break;
 	case WholeEIGHTH:
 		if (musicData != nullptr) {
-			drawFactory->getBeatLineDrawInstance()->setQuontize(eighthNote);
+
 		}
 		break;
 	case WholeSIXTEENTH:
 		if (musicData != nullptr) {
-			drawFactory->getBeatLineDrawInstance()->setQuontize(sixteenthNote);
+
 		}
 		break;
 	case WholeTHIRTYSECOND:
 		if (musicData != nullptr) {
-			drawFactory->getBeatLineDrawInstance()->setQuontize(thirtySecondNote);
+
 		}
 		break;
 	case WholeTRIPLET:
 		if (musicData != nullptr) {
-			drawFactory->getBeatLineDrawInstance()->setQuontize(tripletNote);
+
 		}
 		break;
 	case WholeSEXTOLET:
 		if (musicData != nullptr) {
-			drawFactory->getBeatLineDrawInstance()->setQuontize(sextoletNote);
+
 		}
 		break;
 	case PartQUARTER:
 		if (musicData != nullptr) {
-			drawFactory->getBeatLineDrawInstance()->setQuontize(quarterNote);
+
 		}
 		break;
 	case PartEIGHTH:
 		if (musicData != nullptr) {
-			drawFactory->getBeatLineDrawInstance()->setQuontize(eighthNote);
+
 		}
 		break;
 	case PartSIXTEENTH:
 		if (musicData != nullptr) {
-			drawFactory->getBeatLineDrawInstance()->setQuontize(sixteenthNote);
+
 		}
 		break;
 	case PartTHIRTYSECOND:
 		if (musicData != nullptr) {
-			drawFactory->getBeatLineDrawInstance()->setQuontize(thirtySecondNote);
+
 		}
 		break;
 	case PartTRIPLET:
 		if (musicData != nullptr) {
-			drawFactory->getBeatLineDrawInstance()->setQuontize(tripletNote);
+
 		}
 		break;
 	case PartSEXTOLET:
 		if (musicData != nullptr) {
-			drawFactory->getBeatLineDrawInstance()->setQuontize(sextoletNote);
+
 		}
 		break;
 	}

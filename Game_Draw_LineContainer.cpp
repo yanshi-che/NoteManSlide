@@ -1,29 +1,18 @@
 #include "Game_Draw_LineContainer.h"
 
 std::uint8_t Game::Draw::Game_Draw_LineContainer::noteType = Normal;
-std::uint8_t Game::Draw::Game_Draw_LineContainer::noteWidth = 15;
-int Game::Draw::Game_Draw_LineContainer::mouseX = 0;
-int Game::Draw::Game_Draw_LineContainer::mouseY = 0;
-int Game::Draw::Game_Draw_LineContainer::button = 0;
-int Game::Draw::Game_Draw_LineContainer::logType = 0;
-bool Game::Draw::Game_Draw_LineContainer::clickObserver = false;
 
-Game::Draw::Game_Draw_LineContainer::Game_Draw_LineContainer(std::uint16_t bID, std::uint8_t numOfRane, double t, std::uint16_t bNum, std::int32_t y, std::int32_t yMax) :
-	barID(bID), numberOfRane(numOfRane), time(t), barNumber(bNum), yMin(y), yMax(yMax) {
+
+Game::Draw::Game_Draw_LineContainer::Game_Draw_LineContainer(std::uint16_t bID, const std::uint8_t* numberOfRane, double t, std::uint16_t bNum, std::int32_t y, std::int32_t yMax) :
+	barID(bID),time(t),numberOfRane(numberOfRane), barNumber(bNum), yMin(y), yMax(yMax) {
 	this->y = y;
 	noteType = 1;
-	clickWidth = 5;
-	raneWidth = Global::WINDOW_WIDTH / numberOfRane;
-	raneX.resize(numberOfRane);
-	noteFlag.resize(numberOfRane);
-	longNoteFlag.resize(numberOfRane);
-	for (int i = 0; i < numberOfRane; i++) {
-		raneX[i] = raneWidth * i;
-		noteFlag[i] = false;
-		longNoteFlag[i].resize(2);
-		for (int k = 0; k < longNoteFlag[i].size(); k++) {
-			longNoteFlag[i][k] = false;
-		}
+	notes.resize(*numberOfRane);
+	std::uint16_t raneX = 0;
+	std::uint16_t raneWidth = Global::WINDOW_WIDTH / *numberOfRane;
+	for (int i = 0; i < *numberOfRane; i++) {
+		raneX = raneWidth * i;
+		notes[i] = std::make_unique<Game_Draw_NoteContainer>(&(this->y),i,raneX,raneWidth);
 	}
 	if (barNumber == 0) {
 		color = GetColor(0, 0, 255);
@@ -42,51 +31,18 @@ void Game::Draw::Game_Draw_LineContainer::drawLine() noexcept {
 	}
 }
 
-void Game::Draw::Game_Draw_LineContainer::drawNote() noexcept {
+void Game::Draw::Game_Draw_LineContainer::drawNotes() noexcept {
 	if (noteType == Normal) {
-		if (clickObserver==false &&
-			GetMouseInputLog2(&button, &mouseX, &mouseY, &logType, true) &&
-			button == MOUSE_INPUT_LEFT &&
-			logType == MOUSE_INPUT_LOG_DOWN &&
-			std::abs(mouseY - y) <= clickWidth) {
-			for (int i = 0; i < numberOfRane; i++) {
-				if (i != numberOfRane - 1 && raneX[i] < mouseX && mouseX < raneX[i + 1]) {
-					if (!noteFlag[i]) {
-						noteFlag[i] = true;
-						clickObserver = true;
-					}
-					else {
-						noteFlag[i] = false;
-						clickObserver = true;
-					}
-				}else if (i == numberOfRane - 1 && raneX[i] < mouseX && mouseX < Global::WINDOW_WIDTH) {
-					if (!noteFlag[i]) {
-						noteFlag[i] = true;
-						clickObserver = true;
-					}
-					else {
-						noteFlag[i] = false;
-						clickObserver = true;
-					}
-				}
+		if (notes[0]->checkClick()) {
+			for (int i = 0; i < *numberOfRane; i++) {
+				notes[i]->setNoteFlag();
 			}
 		}
-		if (clickObserver &&
-			GetMouseInputLog2(&button, &mouseX, &mouseY, &logType, true) &&
-			button == MOUSE_INPUT_LEFT &&
-			logType == MOUSE_INPUT_LOG_UP) {
-			clickObserver = false;
-		}
+		notes[0]->initializeCheckClick();
 	}
-	for (int i = 0; i < numberOfRane; i++) {
-		if (noteFlag[i]) {
-			DrawBox(raneWidth * (i + 0.5) - noteWidth / 2, y - noteWidth / 2, raneWidth * (i + 0.5) + noteWidth / 2, y + noteWidth / 2, GetColor(255, 255, 255), true);
-		}
+	for (int i = 0; i < *numberOfRane; i++) {
+		notes[i]->drawNote();
 	}
-}
-
-void Game::Draw::Game_Draw_LineContainer::drawLongNote() noexcept {
-
 }
 
 void Game::Draw::Game_Draw_LineContainer::setNoteType(std::uint8_t type) noexcept {
@@ -101,6 +57,5 @@ void Game::Draw::Game_Draw_LineContainer::updateY(std::int16_t y) noexcept {
 
 void Game::Draw::Game_Draw_LineContainer::draw() {
 	drawLine();
-	drawLongNote();
-	drawNote();
+	drawNotes();
 }

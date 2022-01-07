@@ -16,7 +16,6 @@ namespace Game {
 			Game_Draw_RaneDraw();
 			void draw() noexcept override;
 			void setNumberOfRane(std::uint8_t num) noexcept;
-			const std::uint8_t& getNumberOfRane() noexcept;
 		};
 
 	}

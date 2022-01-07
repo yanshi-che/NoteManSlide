@@ -35,7 +35,7 @@ INT_PTR CALLBACK Game::Dialog::Game_Dialog_MusicInfo::MusicInfoDialogProc(HWND h
 	return 0;
 }
 
-Game::Dialog::Game_Dialog_MusicInfo::Game_Dialog_MusicInfo() : MINUTE(60.0), BPMCHARMAX(3), TOTALMINUTESCHARMAX(4), BEGINDELAYCHARMAX(2), NUMBEROFRANECHARMAX(1), RANEMAX(8), RANEMIN(4) {
+Game::Dialog::Game_Dialog_MusicInfo::Game_Dialog_MusicInfo() : BPMCHARMAX(3), TOTALMINUTESCHARMAX(4), BEGINDELAYCHARMAX(2), NUMBEROFRANECHARMAX(1), RANEMAX(8), RANEMIN(4) {
 }
 
 void Game::Dialog::Game_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MAX_PATH], std::uint16_t& bpm, double& totalMinutes, double& beginDelay, std::uint8_t& numberOfRane) {
@@ -77,7 +77,7 @@ void Game::Dialog::Game_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MA
 	if (isInputed) {
 		GetDlgItemText(hDialogWnd, IDC_EDITFilePath, filePath, MAX_PATH);
 		bpm = GetDlgItemInt(hDialogWnd, IDC_EDITBPM, NULL, true);
-		totalMinutes = GetDlgItemInt(hDialogWnd, IDC_EDITTotalMinutes, NULL, true) / MINUTE;
+		totalMinutes = GetDlgItemInt(hDialogWnd, IDC_EDITTotalMinutes, NULL, true) / Global::MINUTE;
 		beginDelay = GetDlgItemInt(hDialogWnd, IDC_EDITBeginDelay, NULL, true);
 		std::uint8_t raneTemp = GetDlgItemInt(hDialogWnd, IDC_EDITRANE, NULL, true);
 		if (RANEMIN < raneTemp || raneTemp < RANEMAX) {

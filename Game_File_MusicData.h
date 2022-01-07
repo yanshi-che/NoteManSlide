@@ -1,6 +1,5 @@
 #pragma once
 
-#include "dxlib/DxLib.h"
 #include <cstdint>
 namespace Game {
 	namespace File {

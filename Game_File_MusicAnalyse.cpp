@@ -7,7 +7,7 @@ double Game::File::Game_File_MusicAnalyse::analyseBarLengthPerMinutes(std::uint1
 }
 
 void Game::File::Game_File_MusicAnalyse::analyseBarLength(std::uint16_t& bpm,double& totalMinutes, std::uint16_t& barLength) const noexcept {
-	barLength = std::ceil(totalMinutes * analyseBarLengthPerMinutes(bpm));
+	barLength = static_cast<std::uint16_t>(std::ceil(totalMinutes * analyseBarLengthPerMinutes(bpm)));
 }
 
 void Game::File::Game_File_MusicAnalyse::analyse(std::uint16_t& bpm, double& totalMinutes, double& beginDelay, std::uint16_t& barLength) {

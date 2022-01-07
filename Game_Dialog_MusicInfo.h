@@ -3,6 +3,7 @@
 #include "resource.h"
 #include <Windows.h>
 #include <cstdint>
+#include "Game_Global.h"
 #include "Game_File_BaseFile.h"
 
 namespace Game {
@@ -13,7 +14,6 @@ namespace Game {
 			static bool isShowMusicInfoDlg;
 			static bool isInputed;
 			static INT_PTR CALLBACK MusicInfoDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-			const double MINUTE;
 			const std::uint8_t BPMCHARMAX;
 			const std::uint8_t TOTALMINUTESCHARMAX;
 			const std::uint8_t BEGINDELAYCHARMAX;

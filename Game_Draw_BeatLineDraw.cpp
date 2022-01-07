@@ -4,7 +4,6 @@
 
 Game::Draw::Game_Draw_BeatLineDraw::Game_Draw_BeatLineDraw() {
 	musicData = nullptr;
-	quontize = 4;
 	y = 0;
 	yMagnification = 15;
 }
@@ -14,14 +13,10 @@ void Game::Draw::Game_Draw_BeatLineDraw::setMusicData(File::Game_File_MusicData*
 	initialize();
 }
 
-void Game::Draw::Game_Draw_BeatLineDraw::setQuontize(std::uint8_t quon) noexcept{
-	quontize = quon;
-}
-
 void Game::Draw::Game_Draw_BeatLineDraw::initialize() {
 	std::uint8_t initialQuontize = 4;
 	double timeSum = musicData->getBeginDelay();
-	double timePerBeat = (musicData->getTotalMinutes() / musicData->getBarLength() / initialQuontize);
+	double timePerBeat = (musicData->getTotalMinutes() * Global::MINUTE / musicData->getBarLength() / initialQuontize);
 	std::int32_t initialY = 700;
 	std::int32_t yWidth = 50;
 	std::int32_t yMax = 0;
@@ -30,7 +25,7 @@ void Game::Draw::Game_Draw_BeatLineDraw::initialize() {
 		barVec.at(i).resize(initialQuontize);
 		for (int k = 0; k < initialQuontize; k++) {
 			yMax = initialY + (yWidth * musicData->getBarLength()) + Game::Global::WINDOW_HEIGHT;
-			barVec.at(i).at(k)=std::make_unique<Game_Draw_LineContainer>(i, musicData->getNumberOfRane(), timeSum, k, initialY,yMax);
+			barVec.at(i).at(k)=std::make_unique<Game_Draw_LineContainer>(i, &musicData->getNumberOfRane(), timeSum, k, initialY,yMax);
 			timeSum += timePerBeat;
 			initialY -= yWidth;
 		}

@@ -21,6 +21,6 @@ void Game::Game_DrawManager::update() {
 }
 
 void Game::Game_DrawManager::draw() {
-	rane->draw();
 	beatLine->draw();
+	rane->draw();
 }

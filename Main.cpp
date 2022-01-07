@@ -9,11 +9,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ChangeWindowMode(true);
 	SetGraphMode(Game::Global::WINDOW_WIDTH,Game::Global::WINDOW_HEIGHT,Game::Global::WINDOW_COLORBIT); //スクリーンの大きさの設定
 
-	SetDrawScreen(DX_SCREEN_BACK);//裏画面で画面生成
 	if (DxLib_Init() == -1)		// ＤＸライブラリ初期化処理
 	{
 		return -1;			// エラーが起きたら直ちに終了
 	}
+	SetDrawScreen(DX_SCREEN_BACK);//裏画面で画面生成
 
 	Game::Game_DrawManager dm;
 
