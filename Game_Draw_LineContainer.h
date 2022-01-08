@@ -33,6 +33,7 @@ namespace Game {
 			Game_Draw_LineContainer(std::uint16_t bID, const std::uint8_t* numberOfRane, double t, std::uint16_t bNum, std::int32_t y,std::int32_t yMax);
 			void drawNotes() noexcept;
 			void drawLine() noexcept;
+			void drawBarID() noexcept;
 			static void setNoteType(std::uint8_t type) noexcept;
 			void updateY(std::int16_t y) noexcept;
 			void draw() override;

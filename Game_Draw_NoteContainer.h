@@ -19,12 +19,16 @@ namespace Game {
 			std::uint16_t raneWidth;//ƒŒ[ƒ“‚Ì•
 			std::int32_t* y; //”ü‚ÌÀ•W
 			bool noteFlag;
+			std::uint32_t color;
+			std::uint16_t noteX;
+			std::uint8_t notePoint;
 		public:
 			Game_Draw_NoteContainer(std::int32_t* y, std::uint8_t noteID, std::uint16_t raneX, std::uint16_t raneWidth);
 			void setNoteFlag();
 			void drawNote();
 			static bool checkClick();
 			static void initializeCheckClick();
+			bool& getNoteFlag();
 		};
 	}
 }

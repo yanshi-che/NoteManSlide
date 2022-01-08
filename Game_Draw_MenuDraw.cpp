@@ -27,6 +27,9 @@ Game::Draw::Game_Draw_MenuDraw::Game_Draw_MenuDraw(){
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, PartQUONTIZE, FALSE, "32分音符", PartTHIRTYSECOND);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, PartQUONTIZE, FALSE, "3連符", PartTRIPLET);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, PartQUONTIZE, FALSE, "6連符", PartSEXTOLET);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, MENUITEM_IDTOP, FALSE, "ノーツの種類", NoteType);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, NoteType, FALSE, "通常", Normal);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, NoteType, FALSE, "ロング", Long);
 	SetMenuItemSelectCallBackFunction(MenuItemSelectCallBack);
 }
 
@@ -45,8 +48,13 @@ void Game::Draw::Game_Draw_MenuDraw::setDrawFactory(Game_Draw_DrawFactory* df) {
 void Game::Draw::Game_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemName, int itemID){
 	switch(itemID) {
 	case NewFile:
-		File::Game_File_MusicFileIO mfIO;
-		setMusicData(mfIO.getMusicFile());
+		if (musicData == nullptr) {
+			File::Game_File_MusicFileIO mfIO;
+			setMusicData(mfIO.getMusicFile());
+		}
+		else {
+
+		}
 		break;
 	case WholeQUARTER:
 		if (musicData != nullptr) {
@@ -107,6 +115,12 @@ void Game::Draw::Game_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemNam
 		if (musicData != nullptr) {
 
 		}
+		break;
+	case Normal:
+		Game_Draw_LineContainer::setNoteType(normalNote);
+		break;
+	case Long:
+		Game_Draw_LineContainer::setNoteType(longNote);
 		break;
 	}
 

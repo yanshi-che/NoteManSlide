@@ -9,9 +9,9 @@ Game::Draw::Game_Draw_LineContainer::Game_Draw_LineContainer(std::uint16_t bID, 
 	noteType = 1;
 	notes.resize(*numberOfRane);
 	std::uint16_t raneX = 0;
-	std::uint16_t raneWidth = Global::WINDOW_WIDTH / *numberOfRane;
+	std::uint16_t raneWidth = (Global::DRAW_X_MAX - Global::DRAW_X_MIN) / *numberOfRane;
 	for (int i = 0; i < *numberOfRane; i++) {
-		raneX = raneWidth * i;
+		raneX = raneWidth * i + Global::DRAW_X_MIN;
 		notes[i] = std::make_unique<Game_Draw_NoteContainer>(&(this->y),i,raneX,raneWidth);
 	}
 	if (barNumber == 0) {
@@ -24,21 +24,26 @@ Game::Draw::Game_Draw_LineContainer::Game_Draw_LineContainer(std::uint16_t bID, 
 	}
 }
 
+void Game::Draw::Game_Draw_LineContainer::drawBarID() noexcept {
+	if (barNumber == 0 && y < Game::Global::WINDOW_HEIGHT && y>0) {
+		DrawFormatString( 0 , y - lineThickness /2, GetColor(255, 255, 255), "%d" , barID + 1);
+	}
+}
 
 void Game::Draw::Game_Draw_LineContainer::drawLine() noexcept {
 	if (y < Game::Global::WINDOW_HEIGHT && y>0) {
-		DrawLine(0, y, Global::WINDOW_WIDTH, y, color, lineThickness);
+		DrawLine(Global::DRAW_X_MIN, y, Global::DRAW_X_MAX, y, color, lineThickness);
 	}
 }
 
 void Game::Draw::Game_Draw_LineContainer::drawNotes() noexcept {
 	if (noteType == Normal) {
-		if (notes[0]->checkClick()) {
+		if (Game_Draw_NoteContainer::checkClick()) {
 			for (int i = 0; i < *numberOfRane; i++) {
 				notes[i]->setNoteFlag();
 			}
 		}
-		notes[0]->initializeCheckClick();
+		Game_Draw_NoteContainer::initializeCheckClick();
 	}
 	for (int i = 0; i < *numberOfRane; i++) {
 		notes[i]->drawNote();
@@ -57,5 +62,6 @@ void Game::Draw::Game_Draw_LineContainer::updateY(std::int16_t y) noexcept {
 
 void Game::Draw::Game_Draw_LineContainer::draw() {
 	drawLine();
+	drawBarID();
 	drawNotes();
 }

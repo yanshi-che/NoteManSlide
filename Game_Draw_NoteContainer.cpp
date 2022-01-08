@@ -15,6 +15,9 @@ Game::Draw::Game_Draw_NoteContainer::Game_Draw_NoteContainer(std::int32_t* y, st
 	this->raneX = raneX;
 	this->raneWidth=raneWidth;
 	noteFlag = false;
+	color = GetColor(255, 255, 255);
+	noteX = raneX + raneWidth /2;
+	notePoint = noteWidth / 2;
 }
 
 bool Game::Draw::Game_Draw_NoteContainer::checkClick() {
@@ -52,7 +55,11 @@ void Game::Draw::Game_Draw_NoteContainer::setNoteFlag() {
 }
 
 void Game::Draw::Game_Draw_NoteContainer::drawNote() {
-		if (noteFlag) {
-			DrawBox(raneWidth * (noteID + 0.5) - noteWidth / 2, *y - noteWidth / 2, raneWidth * (noteID + 0.5) + noteWidth / 2, *y + noteWidth / 2, GetColor(255, 255, 255), true);
-		}
+	if (noteFlag) {
+		DrawBox(noteX - notePoint , *y - notePoint, noteX + notePoint , *y + notePoint, color, true);
+	}
+}
+
+bool& Game::Draw::Game_Draw_NoteContainer::getNoteFlag() {
+	return noteFlag;
 }

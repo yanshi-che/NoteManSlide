@@ -5,7 +5,7 @@
 Game::Draw::Game_Draw_BeatLineDraw::Game_Draw_BeatLineDraw() {
 	musicData = nullptr;
 	y = 0;
-	yMagnification = 15;
+	yMagnification = 25;
 }
 
 void Game::Draw::Game_Draw_BeatLineDraw::setMusicData(File::Game_File_MusicData* data) noexcept{
@@ -22,10 +22,10 @@ void Game::Draw::Game_Draw_BeatLineDraw::initialize() {
 	std::int32_t yMax = 0;
 	barVec.resize(musicData->getBarLength());
 	for (int i = 0; i < musicData->getBarLength(); i++) {
-		barVec.at(i).resize(initialQuontize);
+		barVec[i].resize(initialQuontize);
 		for (int k = 0; k < initialQuontize; k++) {
-			yMax = initialY + (yWidth * musicData->getBarLength()) + Game::Global::WINDOW_HEIGHT;
-			barVec.at(i).at(k)=std::make_unique<Game_Draw_LineContainer>(i, &musicData->getNumberOfRane(), timeSum, k, initialY,yMax);
+			yMax = initialY + (yWidth * musicData->getBarLength() * initialQuontize) - Game::Global::WINDOW_HEIGHT / 2;
+			barVec[i][k]=std::make_unique<Game_Draw_LineContainer>(i, &musicData->getNumberOfRane(), timeSum, k, initialY,yMax);
 			timeSum += timePerBeat;
 			initialY -= yWidth;
 		}

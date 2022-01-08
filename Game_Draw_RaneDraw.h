@@ -11,6 +11,7 @@ namespace Game {
 		private:
 			const std::uint32_t raneColor;     //レーンの色
 			const std::uint8_t raneThickness;  //レーンの太さ
+			static std::uint16_t raneWidth; //レーンの幅
 			std::uint8_t numberOfRane;		   //レーンの数
 		public:
 			Game_Draw_RaneDraw();

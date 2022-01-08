@@ -6,6 +6,7 @@
 #include "Game_File_MusicData.h"
 #include "Game_File_MusicFileIO.h"
 #include "Game_Draw_DrawFactory.h"
+#include "Game_Draw_LineContainer.h"
 
 namespace Game {
 	namespace Draw {
@@ -21,21 +22,23 @@ namespace Game {
 				Test,
 				Play,
 				Stop,
-				WholeQUONTIZE, //全体の変更
-				WholeQUARTER, // ４分音符
-				WholeEIGHTH, // ８分音符
-				WholeTRIPLET, // ３連符
-				WholeSIXTEENTH, // １６分音符
-				WholeSEXTOLET, // ６連符
-				WholeTHIRTYSECOND, // ３２分音符
-				PartQUONTIZE, //一部の変更
-				PartQUARTER, // ４分音符
-				PartEIGHTH, // ８分音符
-				PartTRIPLET, // ３連符
-				PartSIXTEENTH, // １６分音符
-				PartSEXTOLET, // ６連符
-				PartTHIRTYSECOND, // ３２分音符
-
+				WholeQUONTIZE, //全体のクオンタイズの変更
+				WholeQUARTER,
+				WholeEIGHTH,
+				WholeTRIPLET,
+				WholeSIXTEENTH,
+				WholeSEXTOLET,
+				WholeTHIRTYSECOND,
+				PartQUONTIZE, //一部のクオンタイズの変更
+				PartQUARTER,
+				PartEIGHTH,
+				PartTRIPLET,
+				PartSIXTEENTH,
+				PartSEXTOLET,
+				PartTHIRTYSECOND,
+				NoteType,//ノーツの種類の変更
+				Normal,
+				Long,
 			};
 			enum quontize {
 				quarterNote = 1, // ４分音符
@@ -44,6 +47,10 @@ namespace Game {
 				sixteenthNote = 4, // １６分音符
 				sextoletNote = 6, // ６連符
 				thirtySecondNote = 8, // ３２分音符
+			};
+			enum noteType {
+				normalNote=1,
+				longNote,
 			};
 			static std::unique_ptr<File::Game_File_MusicData> musicData;
 			static Game_Draw_DrawFactory* drawFactory;
