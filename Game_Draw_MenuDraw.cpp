@@ -2,8 +2,6 @@
 
 std::unique_ptr<Game::File::Game_File_MusicData> Game::Draw::Game_Draw_MenuDraw::musicData = nullptr;
 
-Game::Draw::Game_Draw_DrawFactory* Game::Draw::Game_Draw_MenuDraw::drawFactory = nullptr;
-
 Game::Draw::Game_Draw_MenuDraw::Game_Draw_MenuDraw(){
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, MENUITEM_IDTOP, FALSE, "ファイル(&F)", File);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, File, FALSE, "新規作成(&N)", NewFile);
@@ -36,13 +34,9 @@ Game::Draw::Game_Draw_MenuDraw::Game_Draw_MenuDraw(){
 void Game::Draw::Game_Draw_MenuDraw::setMusicData(std::unique_ptr<File::Game_File_MusicData> md) {
 	musicData= std::move(md);
 	if (musicData!=nullptr) {
-		drawFactory->getRaneDrawInstance()->setNumberOfRane(musicData.get()->getNumberOfRane());
-		drawFactory->getBeatLineDrawInstance()->setMusicData(musicData.get());
+		Singleton::Game_Singleton_RaneDraw::getInstance()->setNumberOfRane(musicData.get()->getNumberOfRane());
+		Singleton::Game_Singleton_BeatLineDraw::getInstance()->setMusicData(musicData.get());
 	}
-}
-
-void Game::Draw::Game_Draw_MenuDraw::setDrawFactory(Game_Draw_DrawFactory* df) {
-	drawFactory = df;
 }
 
 void Game::Draw::Game_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemName, int itemID){

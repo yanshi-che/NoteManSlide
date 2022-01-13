@@ -6,8 +6,8 @@
 
 
 namespace Game {
-	namespace Draw {
-		class Game_Draw_NoteContainer
+	namespace Note {
+		class Game_Note_NoteContainer
 		{
 		private:
 			static int button, mouseX, mouseY, logType; //マウスのクリック管理用
@@ -23,7 +23,7 @@ namespace Game {
 			std::uint16_t noteX;
 			std::uint8_t notePoint;
 		public:
-			Game_Draw_NoteContainer(std::int32_t* y, std::uint8_t noteID, std::uint16_t raneX, std::uint16_t raneWidth);
+			Game_Note_NoteContainer(std::int32_t* y, std::uint8_t noteID, std::uint16_t raneX, std::uint16_t raneWidth);
 			void setNoteFlag();
 			void drawNote();
 			static bool checkClick();

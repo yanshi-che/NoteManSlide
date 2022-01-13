@@ -6,7 +6,7 @@
 #include <memory>
 #include "dxlib/DxLib.h"
 #include "Game_Draw_BaseDraw.h"
-#include "Game_Draw_NoteContainer.h"
+#include "Game_Note_NoteContainer.h"
 
 namespace Game {
 	namespace Draw {
@@ -26,9 +26,8 @@ namespace Game {
 			const std::uint8_t* numberOfRane; //レーンの数
 			std::int32_t color;//拍線の色
 			std::uint8_t lineThickness; //拍線の太さ
-			//std::vector<std::vector<bool>> longNoteFlag; //一次元目はロングノーツがセットされたかどうか.二次元目はそれが始点または終点か
 			std::int32_t y; //拍線の座標
-			std::vector<std::unique_ptr<Game_Draw_NoteContainer>> notes;
+			std::vector<std::unique_ptr<Note::Game_Note_NoteContainer>> notes;
 		public:
 			Game_Draw_LineContainer(std::uint16_t bID, const std::uint8_t* numberOfRane, double t, std::uint16_t bNum, std::int32_t y,std::int32_t yMax);
 			void drawNotes() noexcept;

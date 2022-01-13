@@ -12,7 +12,7 @@ Game::Draw::Game_Draw_LineContainer::Game_Draw_LineContainer(std::uint16_t bID, 
 	std::uint16_t raneWidth = (Global::DRAW_X_MAX - Global::DRAW_X_MIN) / *numberOfRane;
 	for (int i = 0; i < *numberOfRane; i++) {
 		raneX = raneWidth * i + Global::DRAW_X_MIN;
-		notes[i] = std::make_unique<Game_Draw_NoteContainer>(&(this->y),i,raneX,raneWidth);
+		notes[i] = std::make_unique<Note::Game_Note_NoteContainer>(&(this->y),i,raneX,raneWidth);
 	}
 	if (barNumber == 0) {
 		color = GetColor(0, 0, 255);
@@ -38,12 +38,12 @@ void Game::Draw::Game_Draw_LineContainer::drawLine() noexcept {
 
 void Game::Draw::Game_Draw_LineContainer::drawNotes() noexcept {
 	if (noteType == Normal) {
-		if (Game_Draw_NoteContainer::checkClick()) {
+		if (Note::Game_Note_NoteContainer::checkClick()) {
 			for (int i = 0; i < *numberOfRane; i++) {
 				notes[i]->setNoteFlag();
 			}
 		}
-		Game_Draw_NoteContainer::initializeCheckClick();
+		Note::Game_Note_NoteContainer::initializeCheckClick();
 	}
 	for (int i = 0; i < *numberOfRane; i++) {
 		notes[i]->drawNote();

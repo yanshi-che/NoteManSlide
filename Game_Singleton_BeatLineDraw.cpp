@@ -1,19 +1,32 @@
-#include "Game_Draw_BeatLineDraw.h"
+#include "Game_Singleton_BeatLineDraw.h"
 
 #include <string>
 
-Game::Draw::Game_Draw_BeatLineDraw::Game_Draw_BeatLineDraw() {
+Game::Singleton::Game_Singleton_BeatLineDraw* Game::Singleton::Game_Singleton_BeatLineDraw::instance = nullptr;
+
+Game::Singleton::Game_Singleton_BeatLineDraw* Game::Singleton::Game_Singleton_BeatLineDraw::getInstance() {
+	if (instance == nullptr) {
+		instance = new Game_Singleton_BeatLineDraw();
+	}
+	return instance;
+}
+
+void Game::Singleton::Game_Singleton_BeatLineDraw::destroyInstance() {
+	delete instance;
+}
+
+Game::Singleton::Game_Singleton_BeatLineDraw::Game_Singleton_BeatLineDraw() {
 	musicData = nullptr;
 	y = 0;
 	yMagnification = 25;
 }
 
-void Game::Draw::Game_Draw_BeatLineDraw::setMusicData(File::Game_File_MusicData* data) noexcept{
+void Game::Singleton::Game_Singleton_BeatLineDraw::setMusicData(File::Game_File_MusicData* data) noexcept{
 	musicData = data;
 	initialize();
 }
 
-void Game::Draw::Game_Draw_BeatLineDraw::initialize() {
+void Game::Singleton::Game_Singleton_BeatLineDraw::initialize() {
 	std::uint8_t initialQuontize = 4;
 	double timeSum = musicData->getBeginDelay();
 	double timePerBeat = (musicData->getTotalMinutes() * Global::MINUTE / musicData->getBarLength() / initialQuontize);
@@ -25,14 +38,14 @@ void Game::Draw::Game_Draw_BeatLineDraw::initialize() {
 		barVec[i].resize(initialQuontize);
 		for (int k = 0; k < initialQuontize; k++) {
 			yMax = initialY + (yWidth * musicData->getBarLength() * initialQuontize) - Game::Global::WINDOW_HEIGHT / 2;
-			barVec[i][k]=std::make_unique<Game_Draw_LineContainer>(i, &musicData->getNumberOfRane(), timeSum, k, initialY,yMax);
+			barVec[i][k]=std::make_unique<Draw::Game_Draw_LineContainer>(i, &musicData->getNumberOfRane(), timeSum, k, initialY,yMax);
 			timeSum += timePerBeat;
 			initialY -= yWidth;
 		}
 	}
 }
 
-void Game::Draw::Game_Draw_BeatLineDraw::draw() {
+void Game::Singleton::Game_Singleton_BeatLineDraw::draw() {
 	if (musicData != nullptr) {
 		y = GetMouseWheelRotVol();
 		for (int i = 0; i < barVec.size(); i++) {

@@ -5,16 +5,19 @@
 #include "dxlib/DxLib.h"
 
 namespace Game {
-	namespace Draw {
-		class Game_Draw_RaneDraw :public Game::Draw::Game_Draw_BaseDraw
+	namespace Singleton {
+		class Game_Singleton_RaneDraw :public Draw::Game_Draw_BaseDraw
 		{
 		private:
 			const std::uint32_t raneColor;     //レーンの色
 			const std::uint8_t raneThickness;  //レーンの太さ
-			static std::uint16_t raneWidth; //レーンの幅
+			std::uint16_t raneWidth; //レーンの幅
 			std::uint8_t numberOfRane;		   //レーンの数
+			static Game_Singleton_RaneDraw* instance;
+			Game_Singleton_RaneDraw();
 		public:
-			Game_Draw_RaneDraw();
+			static Game_Singleton_RaneDraw* getInstance();
+			void destroyInstance();
 			void draw() noexcept override;
 			void setNumberOfRane(std::uint8_t num) noexcept;
 		};

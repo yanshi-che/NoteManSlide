@@ -9,16 +9,19 @@
 #include "Game_Draw_LineContainer.h"
 
 namespace Game {
-	namespace Draw {
-		class Game_Draw_BeatLineDraw : public Game_Draw_BaseDraw
+	namespace Singleton {
+		class Game_Singleton_BeatLineDraw : public Draw::Game_Draw_BaseDraw
 		{
 		private:
 			File::Game_File_MusicData* musicData;
-			std::vector<std::vector<std::unique_ptr<Game_Draw_LineContainer>>> barVec;
+			std::vector<std::vector<std::unique_ptr<Draw::Game_Draw_LineContainer>>> barVec;
 			std::int8_t y;
 			std::uint8_t yMagnification;
+			Game_Singleton_BeatLineDraw();
+			static Game_Singleton_BeatLineDraw* instance;
 		public:
-			Game_Draw_BeatLineDraw();
+			static Game_Singleton_BeatLineDraw* getInstance();
+			void destroyInstance();
 			void setMusicData(File::Game_File_MusicData* data) noexcept;
 			void initialize() override;
 			//void finalize() override;
