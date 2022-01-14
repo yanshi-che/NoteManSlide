@@ -17,6 +17,7 @@ void Game::Singleton::Game_Singleton_BeatLineDraw::destroyInstance() {
 
 Game::Singleton::Game_Singleton_BeatLineDraw::Game_Singleton_BeatLineDraw() {
 	musicData = nullptr;
+	noteManager = Singleton::Game_Singleton_NoteManager::getInstance();
 	y = 0;
 	yMagnification = 25;
 }
@@ -33,6 +34,7 @@ void Game::Singleton::Game_Singleton_BeatLineDraw::initialize() {
 	std::int32_t initialY = 700;
 	std::int32_t yWidth = 50;
 	std::int32_t yMax = 0;
+	noteManager->resizeVector(&musicData->getBarLength(),initialQuontize);
 	barVec.resize(musicData->getBarLength());
 	for (int i = 0; i < musicData->getBarLength(); i++) {
 		barVec[i].resize(initialQuontize);

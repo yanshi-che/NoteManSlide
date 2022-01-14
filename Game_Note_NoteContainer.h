@@ -10,25 +10,18 @@ namespace Game {
 		class Game_Note_NoteContainer
 		{
 		private:
-			static int button, mouseX, mouseY, logType; //マウスのクリック管理用
 			static std::uint8_t noteWidth; //描画するノーツの幅；
-			static std::uint8_t clickWidth;//拍線に対するマウスクリックの許容幅
-			static bool clickObserver;//マウスがクリックされて続けているか
-			const std::uint8_t noteID;//何レーン目のノーツか
-			std::uint16_t raneX; //レーンの座標
-			std::uint16_t raneWidth;//レーンの幅
+			const std::uint8_t* numberOfRane; //レーンの数
 			std::int32_t* y; //拍線の座標
-			bool noteFlag;
 			std::uint32_t color;
-			std::uint16_t noteX;
+			std::vector<bool> notesFlag;
+			std::vector<std::uint16_t> noteX;
 			std::uint8_t notePoint;
 		public:
-			Game_Note_NoteContainer(std::int32_t* y, std::uint8_t noteID, std::uint16_t raneX, std::uint16_t raneWidth);
-			void setNoteFlag();
+			Game_Note_NoteContainer(std::int32_t* y,const std::uint8_t* numberOfRane);
+			void setNoteFlag(std::uint8_t raneID);
 			void drawNote();
-			static bool checkClick();
-			static void initializeCheckClick();
-			bool& getNoteFlag();
+			std::vector<bool>& getNoteFlag();
 		};
 	}
 }

@@ -13,10 +13,12 @@ namespace Game {
 		class Game_Singleton_BeatLineDraw : public Draw::Game_Draw_BaseDraw
 		{
 		private:
-			File::Game_File_MusicData* musicData;
-			std::vector<std::vector<std::unique_ptr<Draw::Game_Draw_LineContainer>>> barVec;
-			std::int8_t y;
-			std::uint8_t yMagnification;
+			File::Game_File_MusicData* musicData; //読み込んだ音楽のデータ
+			std::vector<std::vector<std::unique_ptr<Draw::Game_Draw_LineContainer>>> barVec;//小節
+			std::int8_t y;//マウスホイール用の変数
+			std::uint8_t yMagnification;//マウスホイール入力による移動量
+			Singleton::Game_Singleton_NoteManager* noteManager;//ノーツ関連の制御クラス
+
 			Game_Singleton_BeatLineDraw();
 			static Game_Singleton_BeatLineDraw* instance;
 		public:
