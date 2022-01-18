@@ -17,8 +17,3 @@ void Game::Game_DrawManager::finalize() {
 void Game::Game_DrawManager::update() {
 
 }
-
-void Game::Game_DrawManager::draw() {
-	beatLine->draw();
-	rane->draw();
-}

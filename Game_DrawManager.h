@@ -24,3 +24,8 @@ namespace Game {
     };
 
 }
+
+inline void Game::Game_DrawManager::draw() {
+    beatLine->draw();
+    rane->draw();
+}

@@ -6,7 +6,7 @@
 #include <memory>
 #include "dxlib/DxLib.h"
 #include "Game_Draw_BaseDraw.h"
-#include "Game_Note_NoteContainer.h"
+#include "Game_Note_NormalNoteContainer.h"
 #include "Game_Singleton_NoteManager.h"
 
 namespace Game {
@@ -22,6 +22,11 @@ namespace Game {
 			static int button, mouseX, mouseY, logType; //マウスのクリック管理用
 			static std::uint8_t clickWidth;//拍線に対するマウスクリックの許容幅
 			static bool clickObserver;//マウスがクリックされて続けているか
+			static bool longClickObserver;
+
+			static std::uint16_t startBarIDForLongNote;//ロングノーツ用の拍線管理
+			static std::uint16_t startBeatIDForLongNote;//ロングノーツ用の小節管理
+			static std::uint8_t raneIDForLong;//ロングノーツ用のレーン管理
 
 			Singleton::Game_Singleton_NoteManager* noteManager;
 			const std::uint16_t barID; //何小節目に属しているか
@@ -35,8 +40,8 @@ namespace Game {
 			std::int32_t y; //拍線の座標
 			std::vector<std::uint16_t> raneX;
 
-			static bool checkClick();
-			static void initializeCheckClick();
+			bool isMouseClickDown();
+			bool isMouseClickUp();
 			void drawNotes() noexcept;
 			void drawLine() noexcept;
 			void drawBarID() noexcept;
@@ -47,5 +52,11 @@ namespace Game {
 			void draw() override;
 		};
 	}
+}
+
+inline void Game::Draw::Game_Draw_LineContainer::draw() {
+	drawLine();
+	drawBarID();
+	drawNotes();
 }
 

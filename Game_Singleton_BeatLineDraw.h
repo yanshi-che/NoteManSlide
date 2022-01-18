@@ -31,3 +31,19 @@ namespace Game {
 		};
 	}
 }
+
+inline void Game::Singleton::Game_Singleton_BeatLineDraw::draw() {
+	if (musicData != nullptr) {
+		y = GetMouseWheelRotVol();
+		for (int i = 0,isize = barVec.size(); i < isize; ++i) {
+			for (int k = 0, ksize= barVec[i].size(); k < ksize; ++k) {
+				if (y > 0) {
+					barVec[i][k]->updateY(yMagnification);
+				}else if (y < 0) {
+					barVec[i][k]->updateY(-yMagnification);
+				}
+				barVec[i][k]->draw();
+			}
+		}
+	}
+}

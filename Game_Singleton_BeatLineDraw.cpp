@@ -46,19 +46,3 @@ void Game::Singleton::Game_Singleton_BeatLineDraw::initialize() {
 		}
 	}
 }
-
-void Game::Singleton::Game_Singleton_BeatLineDraw::draw() {
-	if (musicData != nullptr) {
-		y = GetMouseWheelRotVol();
-		for (int i = 0; i < barVec.size(); i++) {
-			for (int k = 0; k < barVec.at(i).size(); k++) {
-				if (y > 0) {
-					barVec.at(i).at(k)->updateY(yMagnification);
-				}else if (y < 0) {
-					barVec.at(i).at(k)->updateY(-yMagnification);
-				}
-				barVec.at(i).at(k)->draw();
-			}
-		}
-	}
-}

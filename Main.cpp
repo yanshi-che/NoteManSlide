@@ -2,6 +2,48 @@
 #include "Game_DrawManager.h"
 #include "Game_Global.h"
 
+class Fps {
+	int mStartTime;         //測定開始時刻
+	int mCount;             //カウンタ
+	float mFps;             //fps
+	static const int N = 60;//平均を取るサンプル数
+	static const int FPS = 60;	//設定したFPS
+
+public:
+	Fps() {
+		mStartTime = 0;
+		mCount = 0;
+		mFps = 0;
+	}
+
+	bool Update() {
+		if (mCount == 0) { //1フレーム目なら時刻を記憶
+			mStartTime = GetNowCount();
+		}
+		if (mCount == N) { //60フレーム目なら平均を計算する
+			int t = GetNowCount();
+			mFps = 1000.f / ((t - mStartTime) / (float)N);
+			mCount = 0;
+			mStartTime = t;
+		}
+		mCount++;
+		return true;
+	}
+
+
+	void Draw() {
+		DrawFormatString(0, 0, GetColor(255, 255, 255), "%.1f", mFps);
+	}
+
+	void Wait() {
+		int tookTime = GetNowCount() - mStartTime;	//かかった時間
+		int waitTime = mCount * 1000 / FPS - tookTime;	//待つべき時間
+		if (waitTime > 0) {
+			Sleep(waitTime);	//待機
+		}
+	}
+};
+
 // プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -16,12 +58,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetDrawScreen(DX_SCREEN_BACK);//裏画面で画面生成
 
 	Game::Game_DrawManager dm;
+	Fps fps;
 
 	dm.initialize();
 	// while(裏画面を表画面に反映, メッセージ処理, 画面クリア)
-	while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0) {
+	while (ProcessMessage() == 0 && ClearDrawScreen() == 0) {
+		fps.Update();	//更新
+		fps.Draw();
 		dm.update();
 		dm.draw();
+		ScreenFlip();
+		fps.Wait();
 	}
 
 	dm.finalize();
