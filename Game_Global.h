@@ -10,6 +10,6 @@ namespace Game {
 		constexpr const std::uint16_t DRAW_X_MIN{ 20 };//ウインドウの横幅
 		constexpr const std::uint16_t DRAW_X_MAX{ 700 };//ウインドウの横幅
 		constexpr const double MINUTE{ 60.0 };
-
+		static std::uint8_t clickWidth = 8;//拍線に対するマウスクリックの許容幅
 	}
 }

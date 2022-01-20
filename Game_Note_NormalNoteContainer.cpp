@@ -17,7 +17,7 @@ Game::Note::Game_Note_NormalNoteContainer::Game_Note_NormalNoteContainer(std::in
 	notePoint = noteWidth / 2;
 }
 
-void Game::Note::Game_Note_NormalNoteContainer::setNoteFlag(std::uint8_t raneID) {
+void Game::Note::Game_Note_NormalNoteContainer::setNormalNoteFlag(std::uint8_t raneID) {
 	if (!notesFlag[raneID]) {
 		notesFlag[raneID] = true;
 	}

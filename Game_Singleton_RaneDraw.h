@@ -24,3 +24,13 @@ namespace Game {
 
 	}
 }
+
+inline void Game::Singleton::Game_Singleton_RaneDraw::draw() noexcept {
+	if (numberOfRane != NULL) {
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
+		for (int i = 0; i <= numberOfRane; i++) {
+			DrawLine(raneWidth * i + Global::DRAW_X_MIN, 0, raneWidth * i + Global::DRAW_X_MIN, Global::WINDOW_HEIGHT, raneColor, raneThickness);
+		}
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+	}
+}

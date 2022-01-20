@@ -19,7 +19,7 @@ namespace Game {
 			std::uint8_t notePoint;
 		public:
 			Game_Note_NormalNoteContainer(std::int32_t* y,const std::uint8_t* numberOfRane);
-			void setNoteFlag(std::uint8_t raneID);
+			void setNormalNoteFlag(std::uint8_t raneID);
 			void drawNote();
 			bool getNormalNoteFlag(std::uint8_t raneID);
 			std::vector<bool>& getAllNormalNoteFlag();

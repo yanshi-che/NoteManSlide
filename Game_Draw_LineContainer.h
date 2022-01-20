@@ -19,8 +19,7 @@ namespace Game {
 				Long,
 			};
 			static std::uint8_t noteType; //入力するノーツのタイプ。１の時は普通のノーツ。2の時はロングノーツ
-			static int button, mouseX, mouseY, logType; //マウスのクリック管理用
-			static std::uint8_t clickWidth;//拍線に対するマウスクリックの許容幅
+			static int button, mouseX, mouseY, logType; //マウスのクリック管理
 			static bool clickObserver;//マウスがクリックされて続けているか
 			static bool longClickObserver;
 

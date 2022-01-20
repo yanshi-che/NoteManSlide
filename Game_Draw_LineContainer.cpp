@@ -2,7 +2,6 @@
 
 std::uint8_t Game::Draw::Game_Draw_LineContainer::noteType = Normal;
 
-std::uint8_t Game::Draw::Game_Draw_LineContainer::clickWidth = 8;
 int Game::Draw::Game_Draw_LineContainer::mouseX = 0;
 int Game::Draw::Game_Draw_LineContainer::mouseY = 0;
 int Game::Draw::Game_Draw_LineContainer::button = 0;
@@ -47,7 +46,9 @@ void Game::Draw::Game_Draw_LineContainer::drawBarID() noexcept {
 
 void Game::Draw::Game_Draw_LineContainer::drawLine() noexcept {
 	if (y < Game::Global::WINDOW_HEIGHT && y>0) {
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
 		DrawLine(Global::DRAW_X_MIN, y, Global::DRAW_X_MAX, y, color, lineThickness);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	}
 }
 
@@ -75,7 +76,7 @@ bool Game::Draw::Game_Draw_LineContainer::isMouseClickUp() {
 void Game::Draw::Game_Draw_LineContainer::drawNotes() noexcept {
 	if (noteType == Normal) {
 		if (isMouseClickDown()&&
-			std::abs(mouseY - y) <= clickWidth) {
+			std::abs(mouseY - y) <= Global::clickWidth) {
 			for (int i = 0,isize = raneX.size() - 1; i < isize; ++i) {
 				if (raneX[i] < mouseX && mouseX < raneX[i + 1]) {
 					noteManager->setNormalNote(barID, beatID, i);
@@ -88,7 +89,7 @@ void Game::Draw::Game_Draw_LineContainer::drawNotes() noexcept {
 	}
 	else if (noteType == Long) {
 		if (isMouseClickDown()&&
-			std::abs(mouseY - y) <= clickWidth) {
+			std::abs(mouseY - y) <= Global::clickWidth) {
 			for (int i = 0, isize = raneX.size() - 1; i < isize; ++i) {
 				if (raneX[i] < mouseX && mouseX < raneX[i + 1]) {
 					startBarIDForLongNote = barID;
@@ -101,7 +102,7 @@ void Game::Draw::Game_Draw_LineContainer::drawNotes() noexcept {
 			}
 		}
 		if (isMouseClickUp()) {
-			noteManager->setLongNote(barID, beatID, raneIDForLong, &mouseY,false);
+			noteManager->setLongNote(NULL, NULL, raneIDForLong, &mouseY,false);
 		}
 	}
 	noteManager->draw(barID,beatID);
