@@ -21,7 +21,7 @@ void Game::Singleton::Game_Singleton_NoteManager::destroyInstance() {
 	delete instance;
 }
 
-void Game::Singleton::Game_Singleton_NoteManager::resizeVector(const std::uint16_t* barLength, std::uint8_t& quontize) {
+void Game::Singleton::Game_Singleton_NoteManager::initVector(const std::uint16_t* barLength, std::uint8_t& quontize) {
 	normalNotes.resize(*barLength);
 	longNotes.resize(*barLength);
 	for (int i = 0; i < *barLength; i++) {
@@ -45,51 +45,7 @@ void Game::Singleton::Game_Singleton_NoteManager::setLongNote(const std::uint16_
 	if (isFirst) {
 		//既にロングノーツが設置されていた時に撤去する
 		if (longNotes[barID][beatID]->getLongNoteFlag(raneID).first) {
-			std::uint8_t isFirstOrLastCount = 0;
-			std::uint16_t isNotHaveNote = 0;
-			std::uint16_t noteGroup = longNotes[barID][beatID]->getNoteGroup(raneID);
-			for (int i = barID, isize = longNotes.size(); i < isize; ++i) {
-				for (int k = 0, ksize = longNotes[i].size(); k < ksize; ++k) {
-					if (longNotes[i][k]->getNoteGroup(raneID)==noteGroup&&longNotes[i][k]->getLongNoteFlag(raneID).first) {
-						if (longNotes[i][k]->getLongNoteFlag(raneID).second) {
-							++isFirstOrLastCount;
-						}
-						longNotes[i][k]->setLongNoteFlag(raneID, true);
-						longNotes[i][k]->setNoteHeight(raneID, 0);
-						longNotes[i][k]->setNoteGroup(raneID, 0);
-					}
-					else {
-						++isNotHaveNote;
-					}
-				}
-				if (isNotHaveNote == longNotes[i].size()) {
-					break;
-				}
-				isNotHaveNote = 0;
-			}
-			//この時点で始点終点に当たったら戻る
-			if (isFirstOrLastCount == 2) {
-				longNoteErase = true;
-				return;
-			}
-			isNotHaveNote = 0;
-			for (int i = barID -1; 0<= i; --i) {
-				for (int k = longNotes[i].size() - 1; 0<=k ; --k) {
-					if (longNotes[i][k]->getNoteGroup(raneID) == noteGroup && longNotes[i][k]->getLongNoteFlag(raneID).first) {
-						longNotes[i][k]->setLongNoteFlag(raneID, true);
-						longNotes[i][k]->setNoteHeight(raneID, 0);
-						longNotes[i][k]->setNoteGroup(raneID, 0);
-					}
-					else {
-						++isNotHaveNote;
-					}
-				}
-				if (isNotHaveNote == longNotes[i].size()) {
-					break;
-				}
-				isNotHaveNote = 0;
-			}
-			longNoteErase = true;
+			removeLongNote(barID, beatID, raneID);
 			return;
 		}
 		//ロングノーツがセットされていないとき
@@ -169,4 +125,52 @@ void Game::Singleton::Game_Singleton_NoteManager::setLongNote(const std::uint16_
 			}
 		}
 	}
+}
+
+void Game::Singleton::Game_Singleton_NoteManager::removeLongNote(const std::uint16_t barID, const std::uint16_t beatID, std::uint8_t raneID) {
+	std::uint8_t isFirstOrLastCount = 0;
+	std::uint16_t isNotHaveNote = 0;
+	std::uint16_t noteGroup = longNotes[barID][beatID]->getNoteGroup(raneID);
+	for (int i = barID, isize = longNotes.size(); i < isize; ++i) {
+		for (int k = 0, ksize = longNotes[i].size(); k < ksize; ++k) {
+			if (longNotes[i][k]->getNoteGroup(raneID) == noteGroup && longNotes[i][k]->getLongNoteFlag(raneID).first) {
+				if (longNotes[i][k]->getLongNoteFlag(raneID).second) {
+					++isFirstOrLastCount;
+				}
+				longNotes[i][k]->setLongNoteFlag(raneID, true);
+				longNotes[i][k]->setNoteHeight(raneID, 0);
+				longNotes[i][k]->setNoteGroup(raneID, 0);
+			}
+			else {
+				++isNotHaveNote;
+			}
+		}
+		if (isNotHaveNote == longNotes[i].size()) {
+			break;
+		}
+		isNotHaveNote = 0;
+	}
+	//この時点で始点終点に当たったら戻る
+	if (isFirstOrLastCount == 2) {
+		longNoteErase = true;
+		return;
+	}
+	isNotHaveNote = 0;
+	for (int i = barID - 1; 0 <= i; --i) {
+		for (int k = longNotes[i].size() - 1; 0 <= k; --k) {
+			if (longNotes[i][k]->getNoteGroup(raneID) == noteGroup && longNotes[i][k]->getLongNoteFlag(raneID).first) {
+				longNotes[i][k]->setLongNoteFlag(raneID, true);
+				longNotes[i][k]->setNoteHeight(raneID, 0);
+				longNotes[i][k]->setNoteGroup(raneID, 0);
+			}
+			else {
+				++isNotHaveNote;
+			}
+		}
+		if (isNotHaveNote == longNotes[i].size()) {
+			break;
+		}
+		isNotHaveNote = 0;
+	}
+	longNoteErase = true;
 }

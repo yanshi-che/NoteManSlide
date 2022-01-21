@@ -17,14 +17,12 @@ Game::Draw::Game_Draw_MenuDraw::Game_Draw_MenuDraw(){
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, WholeQUONTIZE, FALSE, "16分音符", WholeSIXTEENTH);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, WholeQUONTIZE, FALSE, "32分音符", WholeTHIRTYSECOND);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, WholeQUONTIZE, FALSE, "3連符", WholeTRIPLET);
-	AddMenuItem(MENUITEM_ADD_CHILD, NULL, WholeQUONTIZE, FALSE, "6連符", WholeSEXTOLET);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, MENUITEM_IDTOP, FALSE, "クオンタイズ(小節)", PartQUONTIZE);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, PartQUONTIZE, FALSE, "4分音符", PartQUARTER);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, PartQUONTIZE, FALSE, "8分音符", PartEIGHTH);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, PartQUONTIZE, FALSE, "16分音符", PartSIXTEENTH);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, PartQUONTIZE, FALSE, "32分音符", PartTHIRTYSECOND);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, PartQUONTIZE, FALSE, "3連符", PartTRIPLET);
-	AddMenuItem(MENUITEM_ADD_CHILD, NULL, PartQUONTIZE, FALSE, "6連符", PartSEXTOLET);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, MENUITEM_IDTOP, FALSE, "ノーツの種類", NoteType);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, NoteType, FALSE, "通常", Normal);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, NoteType, FALSE, "ロング", Long);
@@ -52,32 +50,27 @@ void Game::Draw::Game_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemNam
 		break;
 	case WholeQUARTER:
 		if (musicData != nullptr) {
-
+			Singleton::Game_Singleton_BeatLineDraw::getInstance()->initAllBarLineByQuontize(Global::QUARTER);
 		}
 		break;
 	case WholeEIGHTH:
 		if (musicData != nullptr) {
-
+			Singleton::Game_Singleton_BeatLineDraw::getInstance()->initAllBarLineByQuontize(Global::EIGHTH);
 		}
 		break;
 	case WholeSIXTEENTH:
 		if (musicData != nullptr) {
-
+			Singleton::Game_Singleton_BeatLineDraw::getInstance()->initAllBarLineByQuontize(Global::SIXTEENTH);
 		}
 		break;
 	case WholeTHIRTYSECOND:
 		if (musicData != nullptr) {
-
+			Singleton::Game_Singleton_BeatLineDraw::getInstance()->initAllBarLineByQuontize(Global::THIRTYSECOND);
 		}
 		break;
 	case WholeTRIPLET:
 		if (musicData != nullptr) {
-
-		}
-		break;
-	case WholeSEXTOLET:
-		if (musicData != nullptr) {
-
+			Singleton::Game_Singleton_BeatLineDraw::getInstance()->initAllBarLineByQuontize(Global::TRIPLET);
 		}
 		break;
 	case PartQUARTER:
@@ -105,16 +98,11 @@ void Game::Draw::Game_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemNam
 
 		}
 		break;
-	case PartSEXTOLET:
-		if (musicData != nullptr) {
-
-		}
-		break;
 	case Normal:
-		Game_Draw_LineContainer::setNoteType(normalNote);
+		Game_Draw_LineContainer::setNoteType(Global::NOTETYPENORMAL);
 		break;
 	case Long:
-		Game_Draw_LineContainer::setNoteType(longNote);
+		Game_Draw_LineContainer::setNoteType(Global::NOTETYPELONG);
 		break;
 	}
 

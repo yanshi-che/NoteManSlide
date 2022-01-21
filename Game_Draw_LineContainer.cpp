@@ -1,6 +1,6 @@
 #include "Game_Draw_LineContainer.h"
 
-std::uint8_t Game::Draw::Game_Draw_LineContainer::noteType = Normal;
+std::uint8_t Game::Draw::Game_Draw_LineContainer::noteType = Game::Global::NOTETYPENORMAL;
 
 int Game::Draw::Game_Draw_LineContainer::mouseX = 0;
 int Game::Draw::Game_Draw_LineContainer::mouseY = 0;
@@ -74,7 +74,7 @@ bool Game::Draw::Game_Draw_LineContainer::isMouseClickUp() {
 }
 
 void Game::Draw::Game_Draw_LineContainer::drawNotes() noexcept {
-	if (noteType == Normal) {
+	if (noteType == Global::NOTETYPENORMAL) {
 		if (isMouseClickDown()&&
 			std::abs(mouseY - y) <= Global::clickWidth) {
 			for (int i = 0,isize = raneX.size() - 1; i < isize; ++i) {
@@ -87,7 +87,7 @@ void Game::Draw::Game_Draw_LineContainer::drawNotes() noexcept {
 		}
 		isMouseClickUp();
 	}
-	else if (noteType == Long) {
+	else if (noteType == Global::NOTETYPELONG) {
 		if (isMouseClickDown()&&
 			std::abs(mouseY - y) <= Global::clickWidth) {
 			for (int i = 0, isize = raneX.size() - 1; i < isize; ++i) {
@@ -110,10 +110,4 @@ void Game::Draw::Game_Draw_LineContainer::drawNotes() noexcept {
 
 void Game::Draw::Game_Draw_LineContainer::setNoteType(std::uint8_t type) noexcept {
 	noteType = type;
-}
-
-void Game::Draw::Game_Draw_LineContainer::updateY(std::int16_t y) noexcept {
-	if (y < 0 && yMin < this->y || 0 < y && this->y < yMax) {
-		this->y += y;
-	}
 }

@@ -18,14 +18,14 @@ namespace Game {
 		public:
 			static Game_Singleton_RaneDraw* getInstance();
 			void destroyInstance();
-			void draw() noexcept override;
-			void setNumberOfRane(std::uint8_t num) noexcept;
+			void draw() override;
+			void setNumberOfRane(std::uint8_t num);
 		};
 
 	}
 }
 
-inline void Game::Singleton::Game_Singleton_RaneDraw::draw() noexcept {
+inline void Game::Singleton::Game_Singleton_RaneDraw::draw(){
 	if (numberOfRane != NULL) {
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
 		for (int i = 0; i <= numberOfRane; i++) {

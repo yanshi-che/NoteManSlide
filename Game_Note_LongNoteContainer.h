@@ -22,7 +22,7 @@ namespace Game {
 			std::vector<uint16_t> notesGroup;
 		public:
 			Game_Note_LongNoteContainer(std::int32_t* y, const std::uint8_t* numberOfRane);
-			void setLongNoteFlag(std::uint8_t raneID,bool isFirstOrLast);
+			void setLongNoteFlag(std::uint8_t raneID,bool isFirstOrLast);//ノーツをセット既にセットされているなら撤去
 			void drawLongNote();
 			void setLongNoteFlagFirstOrLast(std::uint8_t raneID,bool is);
 			void setNoteHeight(std::uint8_t raneID, std::int32_t noteHeight);

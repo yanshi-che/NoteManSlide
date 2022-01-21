@@ -20,7 +20,7 @@ Game::Singleton::Game_Singleton_RaneDraw::Game_Singleton_RaneDraw() :
 	raneWidth = 0;
 }
 
-void Game::Singleton::Game_Singleton_RaneDraw::setNumberOfRane(std::uint8_t num) noexcept {
+void Game::Singleton::Game_Singleton_RaneDraw::setNumberOfRane(std::uint8_t num) {
 	numberOfRane = num;
 	raneWidth = (Global::DRAW_X_MAX - Global::DRAW_X_MIN) / numberOfRane;
 }

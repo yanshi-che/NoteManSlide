@@ -27,10 +27,11 @@ namespace Game {
 			static Game_Singleton_NoteManager* getInstance();
 			void destroyInstance();
 
-			void resizeVector(const std::uint16_t* barLength, std::uint8_t& quontize);
+			void initVector(const std::uint16_t* barLength, std::uint8_t& quontize);
 			void makeNoteInstance(const std::uint16_t& barID,const std::uint16_t& beatID,std::int32_t* y,const std::uint8_t* numberOfRane);
 			void setNormalNote(const std::uint16_t& barID,const std::uint16_t& beatID,std::uint8_t raneID);
 			void setLongNote(const std::uint16_t barID, const std::uint16_t beatID, std::uint8_t raneID,std::int32_t* y,bool isFirst);
+			void removeLongNote(const std::uint16_t barID, const std::uint16_t beatID, std::uint8_t raneID);
 			void draw(const std::uint16_t& barID, const std::uint16_t& beatID);
 		};
 	}

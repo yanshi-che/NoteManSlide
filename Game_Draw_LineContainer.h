@@ -14,10 +14,6 @@ namespace Game {
 		class Game_Draw_LineContainer : public Game_Draw_BaseDraw
 		{
 		private:
-			enum noteTypes {
-				Normal = 1,
-				Long,
-			};
 			static std::uint8_t noteType; //入力するノーツのタイプ。１の時は普通のノーツ。2の時はロングノーツ
 			static int button, mouseX, mouseY, logType; //マウスのクリック管理
 			static bool clickObserver;//マウスがクリックされて続けているか
@@ -47,7 +43,7 @@ namespace Game {
 		public:
 			Game_Draw_LineContainer(std::uint16_t barID, const std::uint8_t* numberOfRane, double time, std::uint16_t beatID, std::int32_t y,std::int32_t yMax);
 			static void setNoteType(std::uint8_t type) noexcept;
-			void updateY(std::int16_t y) noexcept;
+			void updateY(std::int8_t& y) noexcept;
 			void draw() override;
 		};
 	}
@@ -59,3 +55,8 @@ inline void Game::Draw::Game_Draw_LineContainer::draw() {
 	drawNotes();
 }
 
+inline void Game::Draw::Game_Draw_LineContainer::updateY(std::int8_t& y) noexcept {
+	if (y < 0 && yMin < this->y || 0 < y && this->y < yMax) {
+		this->y += y;
+	}
+}
