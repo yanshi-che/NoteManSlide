@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <vector>
 #include <memory>
+#include <stack>
 
 #include "Game_Note_NormalNoteContainer.h"
 #include "Game_Note_LongNoteContainer.h"

@@ -62,7 +62,7 @@ void Game::Singleton::Game_Singleton_BeatLineManager::initOneBarLineByQuontize()
 	//ロングノーツがまたがっていたら削除処理
 	for (int i = 1,isize= barVec[id].size(); i < isize; ++i) {
 		for (int k = 0, ksize = musicData->getNumberOfRane(); k < ksize; ++k) {
-			noteManager->setLongNote(id, i, k,nullptr,true);
+			noteManager->removeLongNote(id, i, k);
 		}
 	}
 	//vectorの初期化とリサイズ

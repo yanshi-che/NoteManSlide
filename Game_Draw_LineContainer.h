@@ -21,7 +21,7 @@ namespace Game {
 
 			static std::uint16_t startBarIDForLongNote;//ロングノーツ用の拍線管理
 			static std::uint16_t startBeatIDForLongNote;//ロングノーツ用の小節管理
-			static std::uint8_t raneIDForLong;//ロングノーツ用のレーン管理
+			static std::uint8_t raneIDForLongNote;//ロングノーツ用のレーン管理
 
 			static std::uint16_t barIDForChangeQuontize;//小節ごとのクオンタイズ変更のための変数
 

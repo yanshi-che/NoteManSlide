@@ -11,7 +11,7 @@ bool Game::Draw::Game_Draw_LineContainer::longClickObserver = false;
 
 std::uint16_t Game::Draw::Game_Draw_LineContainer::startBarIDForLongNote = 0;
 std::uint16_t Game::Draw::Game_Draw_LineContainer::startBeatIDForLongNote = 0;
-std::uint8_t Game::Draw::Game_Draw_LineContainer::raneIDForLong = 0;
+std::uint8_t Game::Draw::Game_Draw_LineContainer::raneIDForLongNote = 0;
 
 std::uint16_t Game::Draw::Game_Draw_LineContainer::barIDForChangeQuontize = 0;
 std::uint16_t Game::Draw::Game_Draw_LineContainer::getbarIDForChangeQuontize() {
@@ -117,7 +117,7 @@ void Game::Draw::Game_Draw_LineContainer::drawNotes()  {
 				if (raneX[i] < mouseX && mouseX < raneX[i + 1]) {
 					startBarIDForLongNote = barID;
 					startBeatIDForLongNote = beatID;
-					raneIDForLong = i;
+					raneIDForLongNote = i;
 					noteManager->setLongNote(barID, beatID, i,&y,true);
 					clickObserver = true;
 					break;
@@ -125,7 +125,7 @@ void Game::Draw::Game_Draw_LineContainer::drawNotes()  {
 			}
 		}
 		if (isMouseClickUp()) {
-			noteManager->setLongNote(NULL, NULL, raneIDForLong, &mouseY,false);
+			noteManager->setLongNote(NULL, NULL, raneIDForLongNote, &mouseY,false);
 		}
 	}
 

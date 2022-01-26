@@ -71,8 +71,8 @@ void Game::Singleton::Game_Singleton_NoteManager::setNormalNote(const std::uint1
 void Game::Singleton::Game_Singleton_NoteManager::setLongNote(const std::uint16_t barID,const std::uint16_t beatID, std::uint8_t raneID, std::int32_t* y,bool isFirst) {
 	if (isFirst) {
 		//既にロングノーツが設置されていた時に撤去する
-		if (longNotes[barID][beatID]->getLongNoteFlag(raneID).first) {
-			removeLongNote(barID, beatID, raneID);
+		removeLongNote(barID, beatID, raneID);
+		if (longNoteErase) {
 			return;
 		}
 		//ロングノーツがセットされていないとき
@@ -88,19 +88,15 @@ void Game::Singleton::Game_Singleton_NoteManager::setLongNote(const std::uint16_
 			longNoteErase = false;
 			return;
 		}
+
 		//始点となる拍線の座標とマウスを離した座標の間に存在する拍線にロングノーツをセット
-		Note::Game_Note_LongNoteContainer* last = nullptr;
+		std::stack<Note::Game_Note_LongNoteContainer*> stack;
 		std::uint16_t count = 0;
 		if (0 < *yForLong - *y) { //拍線の順番に沿ってロングノーツを伸ばした時
 			for (int i = startBarIDForLongNote, isize = longNotes.size(); i < isize; ++i) {
 				for (int k = 0, ksize = longNotes[i].size(); k < ksize; ++k) {
 					if (longNotes[i][k]->getY() < *yForLong && *y - Global::clickWidth < longNotes[i][k]->getY()) {
-						if (normalNotes[i][k]->getNormalNoteFlag(raneID)) {
-							normalNotes[i][k]->setNormalNoteFlag(raneID);
-						}
-						longNotes[i][k]->setLongNoteFlag(raneID, false);
-						longNotes[i][k]->setNoteGroup(raneID,longNotesGroup);
-						last = longNotes[i][k].get();
+						stack.push(longNotes[i][k].get());
 						++count;
 					}
 					else if (count != 0) {
@@ -108,7 +104,7 @@ void Game::Singleton::Game_Singleton_NoteManager::setLongNote(const std::uint16_
 					}
 				}
 			}
-			if (last == nullptr) {//始点から他の拍線に伸ばさなかったとき
+			if (stack.size() == 0) {//始点から他の拍線に伸ばさなかったとき
 				longNotes[startBarIDForLongNote][startBeatIDForLongNote]->setLongNoteFlag(raneID, true);
 				longNotes[startBarIDForLongNote][startBeatIDForLongNote]->setNoteGroup(raneID, 0);
 			}
@@ -116,8 +112,20 @@ void Game::Singleton::Game_Singleton_NoteManager::setLongNote(const std::uint16_
 				if (normalNotes[startBarIDForLongNote][startBeatIDForLongNote]->getNormalNoteFlag(raneID)) {
 					normalNotes[startBarIDForLongNote][startBeatIDForLongNote]->setNormalNoteFlag(raneID);
 				}
-				last->setNoteHeight(raneID,*yForLong - last->getY());
-				last->setLongNoteFlagFirstOrLast(raneID,true);//最後のノーツを終点に設定する
+				count = 0;
+				while (stack.size() != 0) {
+					if (count != 0) {
+						stack.top()->setLongNoteFlag(raneID, false);
+						stack.top()->setNoteGroup(raneID, longNotesGroup);
+					}
+					else {
+						stack.top()->setLongNoteFlag(raneID, true);
+						stack.top()->setNoteGroup(raneID, longNotesGroup);
+						stack.top()->setNoteHeight(raneID, *yForLong - stack.top()->getY());
+					}
+					stack.pop();
+					++count;
+				}
 				++longNotesGroup;
 			}
 		}
@@ -125,12 +133,7 @@ void Game::Singleton::Game_Singleton_NoteManager::setLongNote(const std::uint16_
 			for (int i = startBarIDForLongNote; 0 <= i; --i) {
 				for (int k = longNotes[i].size() -1; 0 <= k; --k) {
 					if (*yForLong < longNotes[i][k]->getY() && longNotes[i][k]->getY() < *y + Global::clickWidth) {
-						if (normalNotes[i][k]->getNormalNoteFlag(raneID)) {
-							normalNotes[i][k]->setNormalNoteFlag(raneID);
-						}
-						longNotes[i][k]->setLongNoteFlag(raneID, false);
-						longNotes[i][k]->setNoteGroup(raneID, longNotesGroup);
-						last = longNotes[i][k].get();
+						stack.push(longNotes[i][k].get());
 						++count;
 					}
 					else if (count != 0) {
@@ -138,7 +141,7 @@ void Game::Singleton::Game_Singleton_NoteManager::setLongNote(const std::uint16_
 					}
 				}
 			}
-			if (last == nullptr) {//始点から他の拍線に伸ばさなかったとき
+			if (stack.size() == 0) {//始点から他の拍線に伸ばさなかったとき
 				longNotes[startBarIDForLongNote][startBeatIDForLongNote]->setLongNoteFlag(raneID, true);
 				longNotes[startBarIDForLongNote][startBeatIDForLongNote]->setNoteGroup(raneID, 0);
 			}
@@ -146,8 +149,20 @@ void Game::Singleton::Game_Singleton_NoteManager::setLongNote(const std::uint16_
 				if (normalNotes[startBarIDForLongNote][startBeatIDForLongNote]->getNormalNoteFlag(raneID)) {
 					normalNotes[startBarIDForLongNote][startBeatIDForLongNote]->setNormalNoteFlag(raneID);
 				}
-				longNotes[startBarIDForLongNote][startBeatIDForLongNote]->setNoteHeight(raneID,last->getY() - *yForLong);
-				last->setLongNoteFlagFirstOrLast(raneID,true);//最後のノーツを終点に設定する
+				count = 0;
+				while (stack.size() != 0) {
+					if (count != 0) {
+						stack.top()->setLongNoteFlag(raneID, false);
+						stack.top()->setNoteGroup(raneID, longNotesGroup);
+					}
+					else {
+						stack.top()->setLongNoteFlag(raneID, true);
+						stack.top()->setNoteGroup(raneID, longNotesGroup);
+						longNotes[startBarIDForLongNote][startBeatIDForLongNote]->setNoteHeight(raneID, stack.top()->getY() - *yForLong);
+					}
+					stack.pop();
+					++count;
+				}
 				++longNotesGroup;
 			}
 		}
@@ -155,49 +170,51 @@ void Game::Singleton::Game_Singleton_NoteManager::setLongNote(const std::uint16_
 }
 
 void Game::Singleton::Game_Singleton_NoteManager::removeLongNote(const std::uint16_t barID, const std::uint16_t beatID, std::uint8_t raneID) {
-	std::uint8_t isFirstOrLastCount = 0;
-	std::uint16_t isNotHaveNote = 0;
-	std::uint16_t noteGroup = longNotes[barID][beatID]->getNoteGroup(raneID);
-	for (int i = barID, isize = longNotes.size(); i < isize; ++i) {
-		for (int k = 0, ksize = longNotes[i].size(); k < ksize; ++k) {
-			if (longNotes[i][k]->getNoteGroup(raneID) == noteGroup && longNotes[i][k]->getLongNoteFlag(raneID).first) {
-				if (longNotes[i][k]->getLongNoteFlag(raneID).second) {
-					++isFirstOrLastCount;
+	if (longNotes[barID][beatID]->getLongNoteFlag(raneID).first) {
+		std::uint8_t isFirstOrLastCount = 0;
+		std::uint16_t isNotHaveNote = 0;
+		std::uint16_t noteGroup = longNotes[barID][beatID]->getNoteGroup(raneID);
+		for (int i = barID, isize = longNotes.size(); i < isize; ++i) {
+			for (int k = 0, ksize = longNotes[i].size(); k < ksize; ++k) {
+				if (longNotes[i][k]->getNoteGroup(raneID) == noteGroup && longNotes[i][k]->getLongNoteFlag(raneID).first) {
+					if (longNotes[i][k]->getLongNoteFlag(raneID).second) {
+						++isFirstOrLastCount;
+					}
+					longNotes[i][k]->setLongNoteFlag(raneID, true);
+					longNotes[i][k]->setNoteHeight(raneID, 0);
+					longNotes[i][k]->setNoteGroup(raneID, 0);
 				}
-				longNotes[i][k]->setLongNoteFlag(raneID, true);
-				longNotes[i][k]->setNoteHeight(raneID, 0);
-				longNotes[i][k]->setNoteGroup(raneID, 0);
+				else {
+					++isNotHaveNote;
+				}
 			}
-			else {
-				++isNotHaveNote;
+			if (isNotHaveNote == longNotes[i].size()) {
+				break;
 			}
+			isNotHaveNote = 0;
 		}
-		if (isNotHaveNote == longNotes[i].size()) {
-			break;
+		//この時点で始点終点に当たったら戻る
+		if (isFirstOrLastCount == 2) {
+			longNoteErase = true;
+			return;
 		}
 		isNotHaveNote = 0;
-	}
-	//この時点で始点終点に当たったら戻る
-	if (isFirstOrLastCount == 2) {
+		for (int i = barID - 1; 0 <= i; --i) {
+			for (int k = longNotes[i].size() - 1; 0 <= k; --k) {
+				if (longNotes[i][k]->getNoteGroup(raneID) == noteGroup && longNotes[i][k]->getLongNoteFlag(raneID).first) {
+					longNotes[i][k]->setLongNoteFlag(raneID, true);
+					longNotes[i][k]->setNoteHeight(raneID, 0);
+					longNotes[i][k]->setNoteGroup(raneID, 0);
+				}
+				else {
+					++isNotHaveNote;
+				}
+			}
+			if (isNotHaveNote == longNotes[i].size()) {
+				break;
+			}
+			isNotHaveNote = 0;
+		}
 		longNoteErase = true;
-		return;
 	}
-	isNotHaveNote = 0;
-	for (int i = barID - 1; 0 <= i; --i) {
-		for (int k = longNotes[i].size() - 1; 0 <= k; --k) {
-			if (longNotes[i][k]->getNoteGroup(raneID) == noteGroup && longNotes[i][k]->getLongNoteFlag(raneID).first) {
-				longNotes[i][k]->setLongNoteFlag(raneID, true);
-				longNotes[i][k]->setNoteHeight(raneID, 0);
-				longNotes[i][k]->setNoteGroup(raneID, 0);
-			}
-			else {
-				++isNotHaveNote;
-			}
-		}
-		if (isNotHaveNote == longNotes[i].size()) {
-			break;
-		}
-		isNotHaveNote = 0;
-	}
-	longNoteErase = true;
 }
