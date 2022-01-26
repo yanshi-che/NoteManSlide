@@ -23,27 +23,41 @@ namespace Game {
 			static std::uint16_t startBeatIDForLongNote;//ロングノーツ用の小節管理
 			static std::uint8_t raneIDForLong;//ロングノーツ用のレーン管理
 
+			static std::uint16_t barIDForChangeQuontize;//小節ごとのクオンタイズ変更のための変数
+
 			Singleton::Game_Singleton_NoteManager* noteManager;
 			const std::uint16_t barID; //何小節目に属しているか
 			const std::uint16_t beatID;//その小節の何番目の線か
 			const double time;//曲の開始から何秒か
-			const std::int32_t yMax;//座標の最大値
-			const std::int32_t yMin;//座標の最小値
 			const std::uint8_t* numberOfRane; //レーンの数
+			std::int32_t yMax;//座標の最大値
+			std::int32_t yMin;//座標の最小値
 			std::int32_t color;//拍線の色
 			std::uint8_t lineThickness; //拍線の太さ
 			std::int32_t y; //拍線の座標
 			std::vector<std::uint16_t> raneX;
+			std::uint8_t barIDThickness; //小節番号の線の太さ
+			std::int32_t barIDColor;//小節番号の色
+			std::uint8_t barIDStrWidth;//小節番号の文字の大きさ
 
 			bool isMouseClickDown();
 			bool isMouseClickUp();
-			void drawNotes() noexcept;
-			void drawLine() noexcept;
-			void drawBarID() noexcept;
+			bool checkClickBorder();
+			void drawNotes() ;
+			void drawLine() ;
+			void drawBarID() ;
 		public:
 			Game_Draw_LineContainer(std::uint16_t barID, const std::uint8_t* numberOfRane, double time, std::uint16_t beatID, std::int32_t y,std::int32_t yMax);
-			static void setNoteType(std::uint8_t type) noexcept;
-			void updateY(std::int8_t& y) noexcept;
+			static void setNoteType(std::uint8_t type) ;
+			static std::uint16_t getbarIDForChangeQuontize();
+			double getTime();
+			std::int32_t getY();
+			std::int32_t getYMin();
+			void setYMin(std::int32_t y);
+			std::int32_t getYMax();
+			void updateYMax(std::int32_t y);
+			void updateByInitOneBar(std::int32_t& yWidth);
+			void updateY(std::int8_t& y);
 			void draw() override;
 		};
 	}
@@ -55,7 +69,7 @@ inline void Game::Draw::Game_Draw_LineContainer::draw() {
 	drawNotes();
 }
 
-inline void Game::Draw::Game_Draw_LineContainer::updateY(std::int8_t& y) noexcept {
+inline void Game::Draw::Game_Draw_LineContainer::updateY(std::int8_t& y)  {
 	if (y < 0 && yMin < this->y || 0 < y && this->y < yMax) {
 		this->y += y;
 	}

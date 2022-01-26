@@ -7,7 +7,7 @@ Game::Game_DrawManager::Game_DrawManager() {
 
 void Game::Game_DrawManager::initialize(){
 	rane = Singleton::Game_Singleton_RaneDraw::getInstance();
-	beatLine = Singleton::Game_Singleton_BeatLineDraw::getInstance();
+	beatLine = Singleton::Game_Singleton_BeatLineManager::getInstance();
 }
 
 void Game::Game_DrawManager::finalize() {

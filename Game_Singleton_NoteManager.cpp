@@ -8,6 +8,7 @@ Game::Singleton::Game_Singleton_NoteManager::Game_Singleton_NoteManager() {
 	longNotesGroup = 1;
 	yForLong = nullptr;
 	longNoteErase = false;
+	barIDForInitOneVector = 0;
 }
 
 Game::Singleton::Game_Singleton_NoteManager* Game::Singleton::Game_Singleton_NoteManager::getInstance() {
@@ -24,10 +25,36 @@ void Game::Singleton::Game_Singleton_NoteManager::destroyInstance() {
 void Game::Singleton::Game_Singleton_NoteManager::initVector(const std::uint16_t* barLength, std::uint8_t& quontize) {
 	normalNotes.resize(*barLength);
 	longNotes.resize(*barLength);
-	for (int i = 0; i < *barLength; i++) {
+	for (int i = 0; i < *barLength; ++i) {
 		normalNotes[i].resize(quontize);
 		longNotes[i].resize(quontize);
 	}
+}
+
+void Game::Singleton::Game_Singleton_NoteManager::initOneVector(std::uint8_t& quontize) {
+	normalNotes[barIDForInitOneVector].resize(quontize);
+	longNotes[barIDForInitOneVector].resize(quontize);
+}
+
+void Game::Singleton::Game_Singleton_NoteManager::resetVector(bool isAll) {
+	if (isAll) {
+		for (int i = 0, isize = normalNotes.size(); i < isize; ++i) {
+			for (int k = 0, ksize = normalNotes[i].size(); k < ksize; ++k) {
+				normalNotes[i][k].reset();
+				longNotes[i][k].reset();
+			}
+		}
+	}
+	else {
+		for (int i = 1, isize = normalNotes[barIDForInitOneVector].size(); i < isize; ++i) {
+			normalNotes[barIDForInitOneVector][i].reset();
+			longNotes[barIDForInitOneVector][i].reset();
+		}
+	}
+}
+
+void Game::Singleton::Game_Singleton_NoteManager::setBarIDForInitOneVector(std::uint16_t id) {
+	barIDForInitOneVector = id;
 }
 
 void Game::Singleton::Game_Singleton_NoteManager::makeNoteInstance(const std::uint16_t& barID,const std::uint16_t& beatID, std::int32_t* y,const  std::uint8_t* numberOfRane) {

@@ -8,7 +8,7 @@
 #include "Game_File_MusicFileIO.h"
 #include "Game_Draw_LineContainer.h"
 #include "Game_Singleton_RaneDraw.h"
-#include "Game_Singleton_BeatLineDraw.h"
+#include "Game_Singleton_BeatLineManager.h"
 
 namespace Game {
 	namespace Draw {

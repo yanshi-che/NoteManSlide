@@ -4,7 +4,7 @@
 #include "Game_Task.h"
 #include "Game_Draw_MenuDraw.h"
 #include "Game_Singleton_RaneDraw.h"
-#include "Game_Singleton_BeatLineDraw.h"
+#include "Game_Singleton_BeatLineManager.h"
 
 namespace Game {
 
@@ -13,7 +13,7 @@ namespace Game {
     private:
         Draw::Game_Draw_MenuDraw menu;
         Singleton::Game_Singleton_RaneDraw* rane;
-        Singleton::Game_Singleton_BeatLineDraw* beatLine;
+        Singleton::Game_Singleton_BeatLineManager* beatLine;
     public:
         Game_DrawManager();
         void initialize() override;//èâä˙âª

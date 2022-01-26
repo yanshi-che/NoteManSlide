@@ -79,13 +79,11 @@ void Game::Dialog::Game_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MA
 		bpm = GetDlgItemInt(hDialogWnd, IDC_EDITBPM, NULL, true);
 		totalMinutes = GetDlgItemInt(hDialogWnd, IDC_EDITTotalMinutes, NULL, true) / Global::MINUTE;
 		beginDelay = GetDlgItemInt(hDialogWnd, IDC_EDITBeginDelay, NULL, true);
-		std::uint8_t raneTemp = GetDlgItemInt(hDialogWnd, IDC_EDITRANE, NULL, true);
-		if (RANEMIN < raneTemp || raneTemp < RANEMAX) {
-			numberOfRane = raneTemp;
-		}else if(raneTemp < RANEMIN){
+		numberOfRane = GetDlgItemInt(hDialogWnd, IDC_EDITRANE, NULL, true);
+		if(numberOfRane < RANEMIN){
 			numberOfRane = RANEMIN;
 		}
-		else {
+		else if(RANEMAX < numberOfRane){
 			numberOfRane = RANEMAX;
 		}
 	}
