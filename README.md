@@ -9,6 +9,7 @@
 最低限譜面を作ってJSONで出力するところまで完成。ただし出力されたデータが実際に使い物になるかは未確認
 
 - Boost Library Licence
+  
 Boost Software License - Version 1.0 - August 17th, 2003  
   
 Permission is hereby granted, free of charge, to any person or organization  
