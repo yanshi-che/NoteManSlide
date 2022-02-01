@@ -9,7 +9,7 @@ namespace Game {
 		class Game_File_BaseFile
 		{
 		public:
-			void openExplorer(const char* title[], const char* filter[], char(&filePath)[MAX_PATH]) const;
+			void openExplorer(const char* title[], const char* filter[], char(&filePath)[MAX_PATH],bool isSave) const;
 		};
 	}
 }

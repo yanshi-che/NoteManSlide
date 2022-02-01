@@ -9,11 +9,11 @@ INT_PTR CALLBACK Game::Dialog::Game_Dialog_MusicInfo::MusicInfoDialogProc(HWND h
 		switch (wParam) {
 		case IDC_BUTTONFilePath:
 		{
-			const char* title[] = { "test" };
+			const char* title[] = { "音楽ファイルの選択" };
 			const char* filter[] = { "mp3 wave\0*.mp3;*.wave\0\0" };
 			char filePath[MAX_PATH];
 			File::Game_File_BaseFile gfb;
-			gfb.openExplorer(title, filter, filePath);
+			gfb.openExplorer(title, filter, filePath,false);
 			SetDlgItemText(hWnd, IDC_EDITFilePath, filePath);
 		}
 		break;
@@ -35,10 +35,10 @@ INT_PTR CALLBACK Game::Dialog::Game_Dialog_MusicInfo::MusicInfoDialogProc(HWND h
 	return 0;
 }
 
-Game::Dialog::Game_Dialog_MusicInfo::Game_Dialog_MusicInfo() : BPMCHARMAX(3), TOTALMINUTESCHARMAX(4), BEGINDELAYCHARMAX(2), NUMBEROFRANECHARMAX(1), RANEMAX(8), RANEMIN(4) {
+Game::Dialog::Game_Dialog_MusicInfo::Game_Dialog_MusicInfo() : BPMCHARMAX(3), TOTALMINUTESCHARMAX(4), BEGINDELAYCHARMAX(2), amountOfLaneCHARMAX(1), RANEMAX(8), RANEMIN(4) {
 }
 
-void Game::Dialog::Game_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MAX_PATH], std::uint16_t& bpm, double& totalMinutes, double& beginDelay, std::uint8_t& numberOfRane) {
+void Game::Dialog::Game_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MAX_PATH], std::uint16_t& bpm, double& totalMinutes, double& beginDelay, std::uint8_t& amountOfLane) {
 	HWND hMainWnd = nullptr;
 	HWND hDialogWnd = nullptr;
 	HINSTANCE hInstance = nullptr;
@@ -60,7 +60,7 @@ void Game::Dialog::Game_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MA
 	SendMessage(GetDlgItem(hDialogWnd, IDC_EDITBPM), EM_SETLIMITTEXT, BPMCHARMAX, NULL);
 	SendMessage(GetDlgItem(hDialogWnd, IDC_EDITTotalMinutes), EM_SETLIMITTEXT, TOTALMINUTESCHARMAX, NULL);
 	SendMessage(GetDlgItem(hDialogWnd, IDC_EDITBeginDelay), EM_SETLIMITTEXT, BEGINDELAYCHARMAX, NULL);
-	SendMessage(GetDlgItem(hDialogWnd, IDC_EDITRANE), EM_SETLIMITTEXT, NUMBEROFRANECHARMAX, NULL);
+	SendMessage(GetDlgItem(hDialogWnd, IDC_EDITRANE), EM_SETLIMITTEXT, amountOfLaneCHARMAX, NULL);
 
 	//ダイアログをDXライブラリに登録(DXライブラリは単一のダイアログのみ対応)
 	SetDialogBoxHandle(hDialogWnd);
@@ -79,12 +79,12 @@ void Game::Dialog::Game_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MA
 		bpm = GetDlgItemInt(hDialogWnd, IDC_EDITBPM, NULL, true);
 		totalMinutes = GetDlgItemInt(hDialogWnd, IDC_EDITTotalMinutes, NULL, true) / Global::MINUTE;
 		beginDelay = GetDlgItemInt(hDialogWnd, IDC_EDITBeginDelay, NULL, true);
-		numberOfRane = GetDlgItemInt(hDialogWnd, IDC_EDITRANE, NULL, true);
-		if(numberOfRane < RANEMIN){
-			numberOfRane = RANEMIN;
+		amountOfLane = GetDlgItemInt(hDialogWnd, IDC_EDITRANE, NULL, true);
+		if(amountOfLane < RANEMIN){
+			amountOfLane = RANEMIN;
 		}
-		else if(RANEMAX < numberOfRane){
-			numberOfRane = RANEMAX;
+		else if(RANEMAX < amountOfLane){
+			amountOfLane = RANEMAX;
 		}
 	}
 

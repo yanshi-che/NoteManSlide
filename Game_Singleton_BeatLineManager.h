@@ -16,16 +16,17 @@ namespace Game {
 		class Game_Singleton_BeatLineManager : public Draw::Game_Draw_BaseDraw
 		{
 		private:
-			File::Game_File_MusicData* musicData; //読み込んだ音楽のデータ
+			std::shared_ptr<File::Game_File_MusicData> p_musicData; //読み込んだ音楽のデータ
 			std::vector<std::vector<std::unique_ptr<Draw::Game_Draw_LineContainer>>> barVec;//小節
 			std::int8_t y;//マウスホイール用の変数
 			std::uint8_t yMagnification;//マウスホイール入力による移動量
 			std::function<void()> initBarLineFunction;
 			std::uint8_t quontize;
-			Singleton::Game_Singleton_NoteManager* noteManager;//ノーツ関連の制御クラス
+			Singleton::Game_Singleton_NoteManager* p_noteManager;//ノーツ関連の制御クラス
 
 			Game_Singleton_BeatLineManager();
-			static Game_Singleton_BeatLineManager* instance;
+			static Game_Singleton_BeatLineManager* p_instance;
+
 			void initAllBarLineByQuontize();
 			void initOneBarLineByQuontize();
 			void resetBarVec(bool isAll);
@@ -33,28 +34,13 @@ namespace Game {
 
 		public:
 			static Game_Singleton_BeatLineManager* getInstance();
+
 			void destroyInstance();
-			void setMusicData(File::Game_File_MusicData* data);
 			void initialize(std::uint8_t initialQuontize, double separateBarWidth);
 			//void finalize() override;
-			void draw() override;
+			void setMusicData(std::shared_ptr<File::Game_File_MusicData> data);
 			void setInitBarLineFunc(std::uint8_t quon, bool isAll);
+			void draw() override;
 		};
-	}
-}
-
-inline void Game::Singleton::Game_Singleton_BeatLineManager::draw() {
-	if (musicData != nullptr) {
-		y = GetMouseWheelRotVol() * yMagnification;
-		for (int i = 0,isize = barVec.size(); i < isize; ++i) {
-			for (int k = 0, ksize= barVec[i].size(); k < ksize; ++k) {
-				barVec[i][k]->updateY(y);
-				barVec[i][k]->draw();
-			}
-		}
-		if (initBarLineFunction != nullptr) {
-			initBarLineFunction();
-			initBarLineFunction = nullptr;
-		}
 	}
 }

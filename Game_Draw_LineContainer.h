@@ -21,24 +21,25 @@ namespace Game {
 
 			static std::uint16_t startBarIDForLongNote;//ロングノーツ用の拍線管理
 			static std::uint16_t startBeatIDForLongNote;//ロングノーツ用の小節管理
-			static std::uint8_t raneIDForLongNote;//ロングノーツ用のレーン管理
+			static std::uint8_t laneIDForLongNote;//ロングノーツ用のレーン管理
 
 			static std::uint16_t barIDForChangeQuontize;//小節ごとのクオンタイズ変更のための変数
 
-			Singleton::Game_Singleton_NoteManager* noteManager;
+			Singleton::Game_Singleton_NoteManager* p_noteManager;
 			const std::uint16_t barID; //何小節目に属しているか
 			const std::uint16_t beatID;//その小節の何番目の線か
 			const double time;//曲の開始から何秒か
-			const std::uint8_t* numberOfRane; //レーンの数
+			const std::uint8_t& r_amountOfLane; //レーンの数
 			std::int32_t yMax;//座標の最大値
 			std::int32_t yMin;//座標の最小値
 			std::int32_t color;//拍線の色
 			std::uint8_t lineThickness; //拍線の太さ
 			std::int32_t y; //拍線の座標
-			std::vector<std::uint16_t> raneX;
+			std::vector<std::uint16_t> laneX;
 			std::uint8_t barIDThickness; //小節番号の線の太さ
 			std::int32_t barIDColor;//小節番号の色
 			std::uint8_t barIDStrWidth;//小節番号の文字の大きさ
+			std::uint8_t brend;
 
 			bool isMouseClickDown();
 			bool isMouseClickUp();
@@ -47,30 +48,20 @@ namespace Game {
 			void drawLine() ;
 			void drawBarID() ;
 		public:
-			Game_Draw_LineContainer(std::uint16_t barID, const std::uint8_t* numberOfRane, double time, std::uint16_t beatID, std::int32_t y,std::int32_t yMax);
+			Game_Draw_LineContainer(std::uint16_t barID, const std::uint8_t& amountOfLane, double time, std::uint16_t beatID, std::int32_t y,std::int32_t yMax);
 			static void setNoteType(std::uint8_t type) ;
 			static std::uint16_t getbarIDForChangeQuontize();
+
 			double getTime();
 			std::int32_t getY();
 			std::int32_t getYMin();
-			void setYMin(std::int32_t y);
 			std::int32_t getYMax();
+
+			void setYMin(std::int32_t y);
 			void updateYMax(std::int32_t y);
 			void updateByInitOneBar(std::int32_t& yWidth);
 			void updateY(std::int8_t& y);
 			void draw() override;
 		};
-	}
-}
-
-inline void Game::Draw::Game_Draw_LineContainer::draw() {
-	drawLine();
-	drawBarID();
-	drawNotes();
-}
-
-inline void Game::Draw::Game_Draw_LineContainer::updateY(std::int8_t& y)  {
-	if (y < 0 && yMin < this->y || 0 < y && this->y < yMax) {
-		this->y += y;
 	}
 }

@@ -2,16 +2,15 @@
 
 std::uint8_t Game::Note::Game_Note_LongNoteContainer::noteWidth = 15;
 
-Game::Note::Game_Note_LongNoteContainer::Game_Note_LongNoteContainer(std::int32_t* y, const std::uint8_t* numberOfRane) :
-	numberOfRane(numberOfRane) {
-	this->y = y;
-	notesHeight.resize(*numberOfRane);
-	notesX.resize(*numberOfRane);
-	notesFlag.resize(*numberOfRane);
-	notesGroup.resize(*numberOfRane);
-	std::uint16_t raneWidth = (Global::DRAW_X_MAX - Global::DRAW_X_MIN) / *numberOfRane;
-	for (int i = 0; i < *numberOfRane; ++i) {
-		notesX[i] = raneWidth * i + Global::DRAW_X_MIN + raneWidth / 2;
+Game::Note::Game_Note_LongNoteContainer::Game_Note_LongNoteContainer(const std::uint16_t& barID, const std::uint16_t& beatID,const std::int32_t& y, const std::uint8_t& amountOfLane,const double& time) :
+	r_barID(barID), r_beatID(beatID),r_amountOfLane(amountOfLane),r_time(time),r_y(y) {
+	notesHeight.resize(amountOfLane);
+	notesX.resize(amountOfLane);
+	notesFlag.resize(amountOfLane);
+	notesGroup.resize(amountOfLane);
+	std::uint16_t laneWidth = (Global::DRAW_X_MAX - Global::DRAW_X_MIN) / amountOfLane;
+	for (int i = 0; i < amountOfLane; ++i) {
+		notesX[i] = laneWidth * i + Global::DRAW_X_MIN + laneWidth / 2;
 		notesFlag[i] = { false,false };
 		notesHeight[i] = 0;
 	}
@@ -19,53 +18,76 @@ Game::Note::Game_Note_LongNoteContainer::Game_Note_LongNoteContainer(std::int32_
 	notePoint = noteWidth / 2;
 }
 
-void Game::Note::Game_Note_LongNoteContainer::setLongNoteFlag(std::uint8_t raneID, bool isFirstOrLast) {
+void Game::Note::Game_Note_LongNoteContainer::drawLongNote() {
+	if (r_y < Game::Global::WINDOW_HEIGHT && r_y>0) {
+		for (int i = 0, iSize = static_cast<int>(notesFlag.size()); i < iSize; ++i) {
+			if (notesFlag[i].first && notesFlag[i].second) {
+				DrawBox(notesX[i] - notePoint, r_y - notePoint, notesX[i] + notePoint, r_y + notePoint + notesHeight[i], color, true);
+			}
+		}
+	}
+}
+
+void Game::Note::Game_Note_LongNoteContainer::setLongNoteFlag(std::uint8_t laneID, bool isFirstOrLast) {
 	if (isFirstOrLast) {
-		if (!notesFlag[raneID].first) {
-			notesFlag[raneID].first = true;
-			notesFlag[raneID].second = true;
+		if (!notesFlag[laneID].first) {
+			notesFlag[laneID].first = true;
+			notesFlag[laneID].second = true;
 		}
 		else {
-			notesFlag[raneID].first = false;
-			notesFlag[raneID].second = false;
+			notesFlag[laneID].first = false;
+			notesFlag[laneID].second = false;
 		}
 	}
 	else {
-		if (!notesFlag[raneID].first) {
-			notesFlag[raneID].first = true;
-			notesFlag[raneID].second = false;
+		if (!notesFlag[laneID].first) {
+			notesFlag[laneID].first = true;
+			notesFlag[laneID].second = false;
 		}
 		else {
-			notesFlag[raneID].first = false;
-			notesFlag[raneID].second = false;
+			notesFlag[laneID].first = false;
+			notesFlag[laneID].second = false;
 		}
 	}
 }
 
-void Game::Note::Game_Note_LongNoteContainer::setNoteHeight(std::uint8_t raneID,std::int32_t noteHeight) {
-	this->notesHeight[raneID] = noteHeight;
+void Game::Note::Game_Note_LongNoteContainer::setNoteHeight(std::uint8_t laneID,std::int32_t noteHeight) {
+	this->notesHeight[laneID] = noteHeight;
+}
+
+void Game::Note::Game_Note_LongNoteContainer::setLongNoteFlagFirstOrLast(std::uint8_t laneID,bool is) {
+	notesFlag[laneID].second = is;
+}
+
+void Game::Note::Game_Note_LongNoteContainer::setNoteGroup(std::uint8_t laneID, std::uint16_t group) {
+	notesGroup[laneID] = group;
 }
 
 const std::int32_t& Game::Note::Game_Note_LongNoteContainer::getY() {
-	return *y;
+	return r_y;
 }
 
-void Game::Note::Game_Note_LongNoteContainer::setLongNoteFlagFirstOrLast(std::uint8_t raneID,bool is) {
-	notesFlag[raneID].second = is;
+const std::pair<bool, bool> Game::Note::Game_Note_LongNoteContainer::getLongNoteFlag(std::uint8_t laneID) {
+	return notesFlag[laneID];
 }
 
-std::pair<bool, bool> Game::Note::Game_Note_LongNoteContainer::getLongNoteFlag(std::uint8_t raneID) {
-	return notesFlag[raneID];
-}
-
-std::vector<std::pair<bool, bool>>& Game::Note::Game_Note_LongNoteContainer::getAllLongNoteFlag() {
+const std::vector<std::pair<bool, bool>>& Game::Note::Game_Note_LongNoteContainer::getAllLongNoteFlag() {
 	return notesFlag;
 }
 
-void Game::Note::Game_Note_LongNoteContainer::setNoteGroup(std::uint8_t raneID, std::uint16_t group) {
-	notesGroup[raneID] = group;
+
+const std::uint16_t& Game::Note::Game_Note_LongNoteContainer::getNoteGroup(std::uint8_t laneID) {
+	return notesGroup[laneID];
 }
 
-std::uint16_t Game::Note::Game_Note_LongNoteContainer::getNoteGroup(std::uint8_t raneID) {
-	return notesGroup[raneID];
+const double& Game::Note::Game_Note_LongNoteContainer::getTime() {
+	return r_time;
+}
+
+const std::uint16_t& Game::Note::Game_Note_LongNoteContainer::getBarID() {
+	return r_barID;
+}
+
+const std::uint16_t& Game::Note::Game_Note_LongNoteContainer::getBeatID() {
+	return r_beatID;
 }

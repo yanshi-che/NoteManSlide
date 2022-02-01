@@ -1,11 +1,13 @@
 #include "Game_Draw_MenuDraw.h"
 
-std::unique_ptr<Game::File::Game_File_MusicData> Game::Draw::Game_Draw_MenuDraw::musicData = nullptr;
+std::shared_ptr<Game::File::Game_File_MusicData> Game::Draw::Game_Draw_MenuDraw::p_musicData = nullptr;
 
 Game::Draw::Game_Draw_MenuDraw::Game_Draw_MenuDraw(){
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, MENUITEM_IDTOP, FALSE, "ファイル(&F)", File);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, File, FALSE, "新規作成(&N)", NewFile);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, File, FALSE, "開く(&O)", Open);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, File, FALSE, "保存(&S)", Save);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, File, FALSE, "エクスポート(&E)", Export);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, File, TRUE, NULL, 0);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, File, FALSE, "終了(&X)", Exit);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, MENUITEM_IDTOP, FALSE, "テスト(&T)", Test);
@@ -30,75 +32,86 @@ Game::Draw::Game_Draw_MenuDraw::Game_Draw_MenuDraw(){
 }
 
 void Game::Draw::Game_Draw_MenuDraw::setMusicData(std::unique_ptr<File::Game_File_MusicData> md) {
-	musicData= std::move(md);
-	if (musicData!=nullptr) {
-		Singleton::Game_Singleton_RaneDraw::getInstance()->setNumberOfRane(musicData.get()->getNumberOfRane());
-		Singleton::Game_Singleton_BeatLineManager::getInstance()->setMusicData(musicData.get());
+	p_musicData= std::move(md);
+	if (p_musicData!=nullptr) {
+		Singleton::Game_Singleton_LaneDraw::getInstance()->setamountOfLane(p_musicData.get()->getAmountOfLane());
+		Singleton::Game_Singleton_BeatLineManager::getInstance()->setMusicData(p_musicData);
 	}
 }
 
 void Game::Draw::Game_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemName, int itemID){
 	switch(itemID) {
 	case NewFile:
-		if (musicData == nullptr) {
+		if (p_musicData == nullptr) {
 			File::Game_File_MusicFileIO mfIO;
 			setMusicData(mfIO.getMusicFile());
 		}
 		else {
+			//finalize処理
+		}
+		break;
+	case Save:
+		if (p_musicData != nullptr) {
 
 		}
 		break;
+	case Export:
+		if (p_musicData != nullptr) {
+			File::Game_File_JsonIO jsIO;
+			jsIO.saveNewJson(p_musicData.get());
+		}
+		break;
 	case WholeQUARTER:
-		if (musicData != nullptr) {
+		if (p_musicData != nullptr) {
 			Singleton::Game_Singleton_BeatLineManager::getInstance()->setInitBarLineFunc(Global::QUARTER,true);
 		}
 		break;
 	case WholeEIGHTH:
-		if (musicData != nullptr) {
+		if (p_musicData != nullptr) {
 			Singleton::Game_Singleton_BeatLineManager::getInstance()->setInitBarLineFunc(Global::EIGHTH,true);
 		}
 		break;
 	case WholeSIXTEENTH:
-		if (musicData != nullptr) {
+		if (p_musicData != nullptr) {
 			Singleton::Game_Singleton_BeatLineManager::getInstance()->setInitBarLineFunc(Global::SIXTEENTH,true);
 		}
 		break;
 	case WholeTHIRTYSECOND:
-		if (musicData != nullptr) {
+		if (p_musicData != nullptr) {
 			Singleton::Game_Singleton_BeatLineManager::getInstance()->setInitBarLineFunc(Global::THIRTYSECOND,true);
 		}
 		break;
 	case WholeTRIPLET:
-		if (musicData != nullptr) {
+		if (p_musicData != nullptr) {
 			Singleton::Game_Singleton_BeatLineManager::getInstance()->setInitBarLineFunc(Global::TRIPLET,true);
 		}
 		break;
 	case PartQUARTER:
-		if (musicData != nullptr) {
+		if (p_musicData != nullptr) {
 			Singleton::Game_Singleton_NoteManager::getInstance()->setBarIDForInitOneVector(Draw::Game_Draw_LineContainer::getbarIDForChangeQuontize());
 			Singleton::Game_Singleton_BeatLineManager::getInstance()->setInitBarLineFunc(Global::QUARTER, false);
 		}
 		break;
 	case PartEIGHTH:
-		if (musicData != nullptr) {
+		if (p_musicData != nullptr) {
 			Singleton::Game_Singleton_NoteManager::getInstance()->setBarIDForInitOneVector(Draw::Game_Draw_LineContainer::getbarIDForChangeQuontize());
 			Singleton::Game_Singleton_BeatLineManager::getInstance()->setInitBarLineFunc(Global::EIGHTH, false);
 		}
 		break;
 	case PartSIXTEENTH:
-		if (musicData != nullptr) {
+		if (p_musicData != nullptr) {
 			Singleton::Game_Singleton_NoteManager::getInstance()->setBarIDForInitOneVector(Draw::Game_Draw_LineContainer::getbarIDForChangeQuontize());
 			Singleton::Game_Singleton_BeatLineManager::getInstance()->setInitBarLineFunc(Global::SIXTEENTH, false);
 		}
 		break;
 	case PartTHIRTYSECOND:
-		if (musicData != nullptr) {
+		if (p_musicData != nullptr) {
 			Singleton::Game_Singleton_NoteManager::getInstance()->setBarIDForInitOneVector(Draw::Game_Draw_LineContainer::getbarIDForChangeQuontize());
 			Singleton::Game_Singleton_BeatLineManager::getInstance()->setInitBarLineFunc(Global::THIRTYSECOND, false);
 		}
 		break;
 	case PartTRIPLET:
-		if (musicData != nullptr) {
+		if (p_musicData != nullptr) {
 			Singleton::Game_Singleton_NoteManager::getInstance()->setBarIDForInitOneVector(Draw::Game_Draw_LineContainer::getbarIDForChangeQuontize());
 			Singleton::Game_Singleton_BeatLineManager::getInstance()->setInitBarLineFunc(Global::TRIPLET, false);
 		}

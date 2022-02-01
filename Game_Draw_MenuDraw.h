@@ -6,8 +6,9 @@
 #include "Game_Global.h"
 #include "Game_File_MusicData.h"
 #include "Game_File_MusicFileIO.h"
+#include "Game_File_JsonIO.h"
 #include "Game_Draw_LineContainer.h"
-#include "Game_Singleton_RaneDraw.h"
+#include "Game_Singleton_LaneDraw.h"
 #include "Game_Singleton_BeatLineManager.h"
 
 namespace Game {
@@ -20,6 +21,7 @@ namespace Game {
 				NewFile,
 				Open,
 				Save,
+				Export,
 				Exit,
 				Test,
 				Play,
@@ -40,7 +42,7 @@ namespace Game {
 				Normal,
 				Long,
 			};
-			static std::unique_ptr<File::Game_File_MusicData> musicData;
+			static std::shared_ptr<File::Game_File_MusicData> p_musicData;
 			static void MenuItemSelectCallBack(const TCHAR* itemName, int itemID);//ƒƒjƒ…[‚ª‘I‘ğ‚³‚ê‚½‚çŒÄ‚Î‚ê‚éŠÖ”
 		public:
 			Game_Draw_MenuDraw();
