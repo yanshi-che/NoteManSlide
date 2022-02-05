@@ -17,41 +17,52 @@ void Game::Singleton::Game_Singleton_BeatLineManager::destroyInstance() {
 
 Game::Singleton::Game_Singleton_BeatLineManager::Game_Singleton_BeatLineManager(){
 	p_musicData = nullptr;
+	scrBar = nullptr;
 	p_noteManager = Singleton::Game_Singleton_NoteManager::getInstance();
 	y = 0;
-	yMagnification = 25;
+	yMagnificationByMouseWheel = 25.0f;
 	initBarLineFunction = nullptr;
 	quontize = Global::QUARTER;
 }
 
-void Game::Singleton::Game_Singleton_BeatLineManager::setMusicData(std::shared_ptr<File::Game_File_MusicData> data){
+void Game::Singleton::Game_Singleton_BeatLineManager::setMusicData(const std::shared_ptr<File::Game_File_MusicData>& data){
 	p_musicData = data;
-	initialize(quontize,1.0);
+	initialize(quontize, 1.0f);
 }
 
-void Game::Singleton::Game_Singleton_BeatLineManager::initialize(std::uint8_t initialQuontize, double separateBarWidth) {
-	double timeSum = p_musicData->getBeginDelay();
-	double timePerBeat = (p_musicData->getTotalMinutes() * Global::MINUTE / p_musicData->getBarLength() / initialQuontize);
-	std::int32_t initY = initialY;
-	std::uint8_t yWidth = static_cast<std::uint8_t>(yWidthRegular * separateBarWidth);
-	std::int32_t yMax = 0;
+void Game::Singleton::Game_Singleton_BeatLineManager::initialize(std::uint8_t initialQuontize,float separateBarWidth) {
+	float timeSum = p_musicData->getBeginDelay();
+	float timePerBeat = (p_musicData->getTotalMinutes() * Global::MINUTE / p_musicData->getBarLength() / initialQuontize);
+	float initY = initialY;
+	float yWidth = yWidthRegular * separateBarWidth;
+	float yMax = 0;
+	float totalScoreWidth = 0;
 	p_noteManager->initVector(p_musicData->getBarLength(),initialQuontize);
 	barVec.resize(p_musicData->getBarLength());
 	std::uint8_t amountOfLane = p_musicData->getAmountOfLane();
 	for (int i = 0,iSize = p_musicData->getBarLength(); i < iSize; i++) {
 		barVec[i].resize(initialQuontize);
 		for (int k = 0; k < initialQuontize; k++) {
-			yMax = initY + (yWidth * p_musicData->getBarLength() * initialQuontize) - Game::Global::WINDOW_HEIGHT / 2;
+			yMax = initY + (yWidth * p_musicData->getBarLength() * initialQuontize) - Game::Global::WINDOW_HEIGHT *0.5f;
 			barVec[i][k]=std::make_unique<Draw::Game_Draw_LineContainer>(i, amountOfLane, timeSum, k, initY,yMax);
 			timeSum += timePerBeat;
 			initY -= yWidth;
+			totalScoreWidth += yWidth;
 		}
 	}
+	totalScoreWidth += Game::Global::WINDOW_HEIGHT * 0.5f;
+	initScrollBar(totalScoreWidth);
+}
+
+void Game::Singleton::Game_Singleton_BeatLineManager::initScrollBar(float scoreWidth) {
+	scrBar = std::make_unique<Draw::Game_Draw_ScrollBar>(scoreWidth,barVec,yMagnificationByMouseWheel);
 }
 
 void Game::Singleton::Game_Singleton_BeatLineManager::draw() {
 	if (p_musicData != nullptr) {
-		y = GetMouseWheelRotVol() * yMagnification;
+		y = GetMouseWheelRotVolF() * yMagnificationByMouseWheel;
+		scrBar->updateBarY(y);
+		scrBar->draw();
 		for (int i = 0, iSize = static_cast<int>(barVec.size()); i < iSize; ++i) {
 			for (int k = 0, kSize = static_cast<int>(barVec[i].size()); k < kSize; ++k) {
 				barVec[i][k]->updateY(y);
@@ -68,7 +79,7 @@ void Game::Singleton::Game_Singleton_BeatLineManager::draw() {
 void Game::Singleton::Game_Singleton_BeatLineManager::initAllBarLineByQuontize() {
 	resetBarVec(true);
 	p_noteManager->resetVector(true);
-	double separate = 1.0;
+	float separate = 1.0f;
 	checkSeparate(separate);
 	initialize(quontize,separate);
 }
@@ -85,18 +96,18 @@ void Game::Singleton::Game_Singleton_BeatLineManager::initOneBarLineByQuontize()
 	//vectorの初期化とリサイズ
 	resetBarVec(false);
 	p_noteManager->resetVector(false);
-	double separate = 1.0;
+	float separate = 1.0f;
 	checkSeparate(separate);
 	p_noteManager->initOneVector(quontize);
 
 	// 新たな拍線の作成
-	double timePerBeat = (p_musicData->getTotalMinutes() * Global::MINUTE / p_musicData->getBarLength() / quontize);
-	double timeSum = barVec[id][0]->getTime();
-	std::int32_t yWidth = static_cast<std::uint8_t>(yWidthRegular * separate);
-	std::int32_t initY = barVec[id][0]->getY();
-	std::int32_t yMax = barVec[id][0]->getYMax();
-	std::int32_t yMin = barVec[id][0]->getYMin();
-	std::int32_t yChange = 0;//変更した小節全体の幅
+	float timePerBeat = (p_musicData->getTotalMinutes() * Global::MINUTE / p_musicData->getBarLength() / quontize);
+	float timeSum = barVec[id][0]->getTime();
+	float yWidth = yWidthRegular * separate;
+	float initY = barVec[id][0]->getY();
+	float yMax = barVec[id][0]->getYMax();
+	float yMin = barVec[id][0]->getYMin();
+	float yChange = 0;//変更した小節全体の幅
 	std::uint8_t amountOfLane = p_musicData->getAmountOfLane();
 	barVec[id].resize(quontize);
 	for (int i = 1; i < quontize; ++i) {
@@ -124,31 +135,21 @@ void Game::Singleton::Game_Singleton_BeatLineManager::initOneBarLineByQuontize()
 			}
 		}
 	}
-	else {
-		if (beforeQuontize < quontize) {
-			yChange = -yChange;
-		}
-		for (int i = 0; i <= id; ++i) {
-			for (int k = 0, kSize = static_cast<int>(barVec[i].size()); k < kSize; ++k) {
-				barVec[i][k]->updateYMax(yChange);
-			}
-		}
-	}
 }
 
-void Game::Singleton::Game_Singleton_BeatLineManager::checkSeparate(double& separate) {
+void Game::Singleton::Game_Singleton_BeatLineManager::checkSeparate(float& separate) {
 	switch (quontize) {
 	case Global::EIGHTH:
-		separate = 0.8;
+		separate = 0.5f;
 		break;
 	case Global::SIXTEENTH:
-		separate = 0.6;
+		separate = 0.25f;
 		break;
 	case Global::THIRTYSECOND:
-		separate = 0.4;
+		separate = 0.125f;
 		break;
 	case Global::TRIPLET:
-		separate = 0.75;
+		separate = 0.3333f;
 		break;
 	}
 }
@@ -166,6 +167,15 @@ void Game::Singleton::Game_Singleton_BeatLineManager::resetBarVec(bool isAll) {
 		for (int i = 1, iSize = static_cast<int>(barVec[id].size()); i < iSize; ++i) {
 			barVec[id][i].reset();
 		}
+	}
+}
+
+void Game::Singleton::Game_Singleton_BeatLineManager::resetScrollBar(bool isAll) {
+	if (isAll) {
+
+	}
+	else {
+
 	}
 }
 

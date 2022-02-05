@@ -38,7 +38,7 @@ INT_PTR CALLBACK Game::Dialog::Game_Dialog_MusicInfo::MusicInfoDialogProc(HWND h
 Game::Dialog::Game_Dialog_MusicInfo::Game_Dialog_MusicInfo() : BPMCHARMAX(3), TOTALMINUTESCHARMAX(4), BEGINDELAYCHARMAX(2), amountOfLaneCHARMAX(1), RANEMAX(8), RANEMIN(4) {
 }
 
-void Game::Dialog::Game_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MAX_PATH], std::uint16_t& bpm, double& totalMinutes, double& beginDelay, std::uint8_t& amountOfLane) {
+void Game::Dialog::Game_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MAX_PATH], std::uint16_t& bpm, float& totalMinutes, std::uint16_t& beginDelay, std::uint8_t& amountOfLane) {
 	HWND hMainWnd = nullptr;
 	HWND hDialogWnd = nullptr;
 	HINSTANCE hInstance = nullptr;

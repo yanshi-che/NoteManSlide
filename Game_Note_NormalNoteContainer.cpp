@@ -1,26 +1,27 @@
 #include "Game_Note_NormalNoteContainer.h"
 
 
-std::uint8_t Game::Note::Game_Note_NormalNoteContainer::noteWidth = 15;
+float Game::Note::Game_Note_NormalNoteContainer::noteWidth = 15.0;
 
-Game::Note::Game_Note_NormalNoteContainer::Game_Note_NormalNoteContainer(const std::uint16_t& barID, const std::uint16_t& beatID,const std::int32_t& y,const std::uint8_t& amountOfLane,const double& time) :
-	r_barID(barID),r_beatID(beatID),r_amountOfLane(amountOfLane),r_time(time),r_y(y) {
+Game::Note::Game_Note_NormalNoteContainer::Game_Note_NormalNoteContainer(std::uint16_t barID,std::uint16_t beatID,const float& y,std::uint8_t amountOfLane,float time) :
+	barID(barID),beatID(beatID),amountOfLane(amountOfLane),time(time),r_y(y) {
 	noteX.resize(amountOfLane);
 	notesFlag.resize(amountOfLane);
-	std::uint16_t laneWidth = (Global::DRAW_X_MAX - Global::DRAW_X_MIN) / amountOfLane;
+	float laneWidth = (Global::DRAW_X_MAX - Global::DRAW_X_MIN) / amountOfLane;
 	for (int i = 0; i < amountOfLane; ++i) {
-		noteX[i] = laneWidth * i + Global::DRAW_X_MIN + laneWidth /2;
+		noteX[i] = laneWidth * i + Global::DRAW_X_MIN + laneWidth * 0.5f;
 		notesFlag[i] = false;
 	}
 	color = GetColor(255, 255, 255);
-	notePoint = noteWidth / 2;
+	notePointX = noteWidth * 1.2f;
+	notePointY = noteWidth * 0.3f;
 }
 
 void Game::Note::Game_Note_NormalNoteContainer::drawNote() {
 	if (r_y < Game::Global::WINDOW_HEIGHT && r_y>0) {
 		for (int i = 0, iSize = static_cast<int>(notesFlag.size()); i < iSize; ++i) {
 			if (notesFlag[i]) {
-				DrawBox(noteX[i] - notePoint, r_y - notePoint, noteX[i] + notePoint, r_y + notePoint, color, true);
+				DrawBoxAA(noteX[i] - notePointX, r_y - notePointY, noteX[i] + notePointX, r_y + notePointY, color, true);
 			}
 		}
 	}
@@ -39,18 +40,14 @@ const bool Game::Note::Game_Note_NormalNoteContainer::getNormalNoteFlag(std::uin
 	return notesFlag[laneID];
 }
 
-const std::vector<bool>& Game::Note::Game_Note_NormalNoteContainer::getAllNormalNoteFlag() {
-	return notesFlag;
-}
-
-const double& Game::Note::Game_Note_NormalNoteContainer::getTime() {
-	return r_time;
+const float& Game::Note::Game_Note_NormalNoteContainer::getTime() {
+	return time;
 }
 
 const std::uint16_t& Game::Note::Game_Note_NormalNoteContainer::getBarID() {
-	return r_barID;
+	return barID;
 }
 
 const std::uint16_t& Game::Note::Game_Note_NormalNoteContainer::getBeatID() {
-	return r_beatID;
+	return beatID;
 }

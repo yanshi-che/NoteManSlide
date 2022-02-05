@@ -16,9 +16,9 @@ void Game::Singleton::Game_Singleton_LaneDraw::destroyInstance() {
 
 void Game::Singleton::Game_Singleton_LaneDraw::draw() {
 	if (amountOfLane != NULL) {
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 96);
 		for (int i = 0; i <= amountOfLane; i++) {
-			DrawLine(laneWidth * i + Global::DRAW_X_MIN, 0, laneWidth * i + Global::DRAW_X_MIN, Global::WINDOW_HEIGHT, laneColor, laneThickness);
+			DrawLineAA(laneWidth * i + Global::DRAW_X_MIN, 0, laneWidth * i + Global::DRAW_X_MIN, Global::WINDOW_HEIGHT, laneColor, laneThickness);
 		}
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	}

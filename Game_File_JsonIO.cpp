@@ -1,6 +1,6 @@
 #include "Game_File_JsonIO.h"
 
-Game::File::MusicData::MusicData(std::uint16_t bpm, std::uint16_t barLength, double totalMinutes, double beginDelay, std::uint8_t amountOfLane) {
+Game::File::MusicData::MusicData(std::uint16_t bpm, std::uint16_t barLength, float totalMinutes, std::uint16_t beginDelay, std::uint8_t amountOfLane) {
 	this->bpm = bpm;
 	this->barLength = barLength;
 	this->totalMinutes = totalMinutes;
@@ -18,7 +18,7 @@ void Game::File::tag_invoke(const json::value_from_tag&, json::value& jv, const 
 	};
 }
 
-Game::File::NoteData::NoteData(double time, std::uint8_t noteType, std::uint8_t laneIndex, bool longNoteType, std::uint16_t longNoteGroupIndex, std::uint16_t noteIndex) {
+Game::File::NoteData::NoteData(float time, std::uint8_t noteType, std::uint8_t laneIndex, bool longNoteType, std::uint16_t longNoteGroupIndex, std::uint16_t noteIndex) {
 	this->time = time;
 	this->noteType = noteType;
 	this->laneIndex = laneIndex;
@@ -45,7 +45,7 @@ void Game::File::Game_File_JsonIO::getFilePath(char (&filePath)[MAX_PATH]) {
 	gfb.openExplorer(title, filter, filePath, true);
 }
 
-void Game::File::Game_File_JsonIO::saveNewJson(Game_File_MusicData* p_musicData) {
+void Game::File::Game_File_JsonIO::saveNewJson(Game_File_MusicData* const p_musicData) {
 	//セーブするファイルのパスを取得
 	char filePath[MAX_PATH] = "";//セーブするファイルのパス
 	getFilePath(filePath);
@@ -59,8 +59,7 @@ void Game::File::Game_File_JsonIO::saveNewJson(Game_File_MusicData* p_musicData)
 	json::storage_ptr sp = json::make_shared_resource< json::monotonic_resource >();
 
 	//MusicDataObjectの作成
-	val = json::value_from(MusicData(p_musicData->getBpm(),p_musicData->getBarLength(),p_musicData->getTotalMinutes(),p_musicData->getBeginDelay(),p_musicData->getAmountOfLane()),sp);
-	obj["MusicData"] = val;
+	obj["MusicData"] = json::value_from(MusicData(p_musicData->getBpm(),p_musicData->getBarLength(),p_musicData->getTotalMinutes(),p_musicData->getBeginDelay(),p_musicData->getAmountOfLane()),sp);
 
 	//NotesDataObjectの作成
 	std::vector<std::vector<std::shared_ptr<Note::Game_Note_NormalNoteContainer>>> normalNotes = Singleton::Game_Singleton_NoteManager::getInstance()->getNormalNoteVector();
@@ -96,13 +95,12 @@ void Game::File::Game_File_JsonIO::saveNewJson(Game_File_MusicData* p_musicData)
 		}
 	}
 
-	val = json::value_from(noteDataVector,sp);
-	obj["NoteData"] = val;
+	obj["NoteData"] = json::value_from(noteDataVector,sp);
 
 	val = json::value(obj);
 
-	std::ofstream writing_file;
-	writing_file.open(filePath, std::ios::out);
-	writing_file << val << std::endl;
-	writing_file.close();
+	std::ofstream writeFile;
+	writeFile.open(filePath, std::ios::out);
+	writeFile << val << std::endl;
+	writeFile.close();
 }

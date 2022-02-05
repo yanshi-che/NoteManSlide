@@ -22,7 +22,7 @@ namespace Game {
 			const std::uint8_t RANEMIN;
 		public:
 			Game_Dialog_MusicInfo();
-			void getMusicInfoFromDlg(char(&filePath)[MAX_PATH],std::uint16_t& bpm, double& totalMinutes, double& beginDelay,std::uint8_t& amountOfLane);
+			void getMusicInfoFromDlg(char(&filePath)[MAX_PATH], std::uint16_t& bpm, float& totalMinutes, std::uint16_t& beginDelay, std::uint8_t& amountOfLane);
 		};
 	}
 }

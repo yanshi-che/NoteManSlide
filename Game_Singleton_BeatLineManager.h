@@ -5,21 +5,22 @@
 #include <memory>
 #include <functional>
 
-#include "Game_Draw_BaseDraw.h"
 #include "Game_File_MusicData.h"
 #include "Game_Draw_LineContainer.h"
+#include "Game_Draw_ScrollBar.h"
 
 namespace Game {
 	namespace Singleton {
-		constexpr std::uint8_t yWidthRegular{ 50 }; //拍線と拍線の距離
-		constexpr std::uint16_t initialY = { 700 }; //一小節目の初期座標
-		class Game_Singleton_BeatLineManager : public Draw::Game_Draw_BaseDraw
+		constexpr float yWidthRegular{ 150.0 }; //拍線と拍線の距離
+		constexpr float initialY = { 700.0 }; //一小節目の初期座標
+		class Game_Singleton_BeatLineManager
 		{
 		private:
 			std::shared_ptr<File::Game_File_MusicData> p_musicData; //読み込んだ音楽のデータ
-			std::vector<std::vector<std::unique_ptr<Draw::Game_Draw_LineContainer>>> barVec;//小節
-			std::int8_t y;//マウスホイール用の変数
-			std::uint8_t yMagnification;//マウスホイール入力による移動量
+			std::vector<std::vector<std::shared_ptr<Draw::Game_Draw_LineContainer>>> barVec;//小節
+			std::unique_ptr<Draw::Game_Draw_ScrollBar> scrBar;
+			float y;//マウスホイール用の変数
+			float yMagnificationByMouseWheel;//マウスホイール入力による移動量の倍率
 			std::function<void()> initBarLineFunction;
 			std::uint8_t quontize;
 			Singleton::Game_Singleton_NoteManager* p_noteManager;//ノーツ関連の制御クラス
@@ -30,17 +31,19 @@ namespace Game {
 			void initAllBarLineByQuontize();
 			void initOneBarLineByQuontize();
 			void resetBarVec(bool isAll);
-			void checkSeparate(double& separate);
+			void resetScrollBar(bool isAll);
+			void checkSeparate(float& separate);
 
 		public:
 			static Game_Singleton_BeatLineManager* getInstance();
 
 			void destroyInstance();
-			void initialize(std::uint8_t initialQuontize, double separateBarWidth);
-			//void finalize() override;
-			void setMusicData(std::shared_ptr<File::Game_File_MusicData> data);
+			void initialize(std::uint8_t initialQuontize,float separateBarWidth);
+			void initScrollBar(float scoreWidth);
+			//void finalize();
+			void setMusicData(const std::shared_ptr<File::Game_File_MusicData>& data);
 			void setInitBarLineFunc(std::uint8_t quon, bool isAll);
-			void draw() override;
+			void draw();
 		};
 	}
 }
