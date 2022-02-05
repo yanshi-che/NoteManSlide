@@ -61,11 +61,15 @@ void Game::Singleton::Game_Singleton_BeatLineManager::initScrollBar(float scoreW
 void Game::Singleton::Game_Singleton_BeatLineManager::draw() {
 	if (p_musicData != nullptr) {
 		y = GetMouseWheelRotVolF() * yMagnificationByMouseWheel;
-		scrBar->updateBarY(y);
+		if (y != 0) {
+			scrBar->updateBarY(y);
+		}
 		scrBar->draw();
 		for (int i = 0, iSize = static_cast<int>(barVec.size()); i < iSize; ++i) {
 			for (int k = 0, kSize = static_cast<int>(barVec[i].size()); k < kSize; ++k) {
-				barVec[i][k]->updateY(y);
+				if (y != 0) {
+					barVec[i][k]->updateY(y);
+				}
 				barVec[i][k]->draw();
 			}
 		}

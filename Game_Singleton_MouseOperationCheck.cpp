@@ -3,8 +3,6 @@
 Game::Singleton::Game_Singleton_MouseOperationCheck*  Game::Singleton::Game_Singleton_MouseOperationCheck::p_instance = nullptr;
 
 Game::Singleton::Game_Singleton_MouseOperationCheck::Game_Singleton_MouseOperationCheck() {
-	mouseX = 0;
-	mouseY = 0;
 	logType = 0;
 	button = 0;
 }
@@ -20,8 +18,8 @@ void Game::Singleton::Game_Singleton_MouseOperationCheck::destroyInstance() {
 	delete p_instance;
 }
 
-bool  Game::Singleton::Game_Singleton_MouseOperationCheck::isMouseClickLeftDown() {
-	if (GetMouseInputLog2(&button, &mouseX, &mouseY, &logType, true) &&
+bool Game::Singleton::Game_Singleton_MouseOperationCheck::isMouseClickLeftDown(int* mouseX, int* mouseY) {
+	if (GetMouseInputLog2(&button, mouseX, mouseY, &logType, true) &&
 		logType == MOUSE_INPUT_LOG_DOWN &&
 		button == MOUSE_INPUT_LEFT) {
 		return true;
@@ -29,8 +27,8 @@ bool  Game::Singleton::Game_Singleton_MouseOperationCheck::isMouseClickLeftDown(
 	return false;
 }
 
-bool Game::Singleton::Game_Singleton_MouseOperationCheck::isMouseClickLeftUp() {
-	if (GetMouseInputLog2(&button, &mouseX, &mouseY, &logType, true) &&
+bool Game::Singleton::Game_Singleton_MouseOperationCheck::isMouseClickLeftUp(int* mouseX, int* mouseY) {
+	if (GetMouseInputLog2(&button, mouseX, mouseY, &logType, true) &&
 		logType == MOUSE_INPUT_LOG_UP &&
 		button == MOUSE_INPUT_LEFT) {
 		return true;

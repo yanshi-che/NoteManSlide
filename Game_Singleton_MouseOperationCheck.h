@@ -12,10 +12,9 @@ namespace Game {
 		public:
 			static  Game_Singleton_MouseOperationCheck* getInstance();
 			void destroyInstance();
-			int  mouseX, mouseY; //マウスのクリック管理
 			int button, logType;//マウスのクリック管理
-			bool isMouseClickLeftDown();
-			bool isMouseClickLeftUp();
+			bool isMouseClickLeftDown(int* mouseX,int* mouseY);
+			bool isMouseClickLeftUp(int* mouseX, int* mouseY);
 
 		};
 	}
