@@ -12,6 +12,7 @@ namespace Game {
 	namespace Draw {
 		constexpr const float backWidth{ 20.0f };
 		constexpr const float barWidth{15.0f};
+		constexpr const float barHeightMin{ 40.0f };
 		constexpr const float arrowWidthX{ 10.0f };
 		constexpr const float arrowWidthYAndSpace{ 5.0f };
 		constexpr const float yScrMax{ Global::WINDOW_HEIGHT - backWidth };

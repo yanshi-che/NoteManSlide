@@ -8,8 +8,8 @@ barVec(barVec),yMagnificationByMouseWheel(yMagnificationByMouseWheel){
 	widthMinOnClick = 0;
 	barYBefore = 0;
 	p_mouseCheck = Singleton::Game_Singleton_MouseOperationCheck::getInstance();
-	scrollWidthRate = (Global::WINDOW_HEIGHT - backWidth * 2.0f) / scrollWidth;
-	barHeight = (Global::WINDOW_HEIGHT - backWidth * 2.0f) * scrollWidthRate;
+	scrollWidthRate = (Global::WINDOW_HEIGHT - backWidth * 2.0f - barHeightMin) / scrollWidth;
+	barHeight = (Global::WINDOW_HEIGHT - backWidth * 2.0f ) * scrollWidthRate + barHeightMin;
 	y = Global::WINDOW_HEIGHT - (barHeight + backWidth);
 	clickObserver = false;
 	backColor = GetColor(102, 102, 102);
