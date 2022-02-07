@@ -23,8 +23,6 @@ namespace Game {
 			static bool clickObserver;//マウスクリックによる操作の制御変数
 
 			static int mouseX, mouseY;//マウスクリックの座標格納用の変数
-			static std::uint16_t startBarIDForLongNote;//ロングノーツ用の拍線管理
-			static std::uint16_t startBeatIDForLongNote;//ロングノーツ用の小節管理
 			static std::uint8_t laneIDForLongNote;//ロングノーツ用のレーン管理
 
 			static std::uint16_t barIDForChangeQuontize;//小節ごとのクオンタイズ変更のための変数

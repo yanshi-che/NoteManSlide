@@ -21,7 +21,7 @@ namespace Game {
 			std::unique_ptr<Draw::Game_Draw_ScrollBar> scrBar;
 			float y;//マウスホイール用の変数
 			float yMagnificationByMouseWheel;//マウスホイール入力による移動量の倍率
-			std::function<void()> initBarLineFunction;
+			std::function<void()> initBarLineFunction;//描画処理がすべて終わった後に初期化処理をするための格納変数
 			std::uint8_t quontize;
 			Singleton::Game_Singleton_NoteManager* p_noteManager;//ノーツ関連の制御クラス
 

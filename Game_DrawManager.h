@@ -5,6 +5,7 @@
 #include "Game_Draw_MenuDraw.h"
 #include "Game_Singleton_LaneDraw.h"
 #include "Game_Singleton_BeatLineManager.h"
+#include "Game_Singleton_MouseOperationCheck.h"
 
 namespace Game {
 
@@ -12,6 +13,7 @@ namespace Game {
     {
     private:
         Draw::Game_Draw_MenuDraw menu;
+        Singleton::Game_Singleton_MouseOperationCheck* p_mouseCheck;
         Singleton::Game_Singleton_LaneDraw* p_lane;
         Singleton::Game_Singleton_BeatLineManager* p_beatLine;
     public:

@@ -1,7 +1,7 @@
 #include "Game_Draw_ScrollBar.h"
 
 Game::Draw::Game_Draw_ScrollBar::Game_Draw_ScrollBar(float scrollWidth, std::vector<std::vector<std::shared_ptr<Game_Draw_LineContainer>>>& barVec, float& yMagnificationByMouseWheel) :
-barVec(barVec),yMagnificationByMouseWheel(yMagnificationByMouseWheel){
+	barVec(barVec), yMagnificationByMouseWheel(yMagnificationByMouseWheel) {
 	mouseX = 0;
 	mouseY = 0;
 	widthMaxOnClick = 0;
@@ -9,9 +9,10 @@ barVec(barVec),yMagnificationByMouseWheel(yMagnificationByMouseWheel){
 	barYBefore = 0;
 	p_mouseCheck = Singleton::Game_Singleton_MouseOperationCheck::getInstance();
 	scrollWidthRate = (Global::WINDOW_HEIGHT - backWidth * 2.0f - barHeightMin) / scrollWidth;
-	barHeight = (Global::WINDOW_HEIGHT - backWidth * 2.0f ) * scrollWidthRate + barHeightMin;
+	barHeight = (Global::WINDOW_HEIGHT - backWidth * 2.0f) * scrollWidthRate + barHeightMin;
 	y = Global::WINDOW_HEIGHT - (barHeight + backWidth);
 	clickObserver = false;
+	function = nullptr;
 	backColor = GetColor(102, 102, 102);
 	barColor = GetColor(179, 179, 179);
 	arrowUpColor = GetColor(179, 179, 179);
@@ -32,7 +33,7 @@ void Game::Draw::Game_Draw_ScrollBar::drawBack() {
 }
 
 void Game::Draw::Game_Draw_ScrollBar::drawArrow() {
-	DrawTriangleAA(arrowPointX[0],arrowPointY[1],arrowPointX[1],arrowPointY[3],arrowPointX[2],arrowPointY[1],arrowUpColor,true);//è„ñÓàÛ
+	DrawTriangleAA(arrowPointX[0], arrowPointY[1], arrowPointX[1], arrowPointY[3], arrowPointX[2], arrowPointY[1], arrowUpColor, true);//è„ñÓàÛ
 	DrawTriangleAA(arrowPointX[0], arrowPointY[0], arrowPointX[1], arrowPointY[2], arrowPointX[2], arrowPointY[0], arrowDownColor, true);//â∫ñÓàÛ
 }
 
@@ -54,52 +55,60 @@ void Game::Draw::Game_Draw_ScrollBar::borderCheck() {
 			if (yScrMax < mouseY && mouseY < Global::WINDOW_HEIGHT) {
 				arrowDownColor = GetColor(79, 200, 225);
 			}
-			else {
-				arrowDownColor = GetColor(179, 179, 179);
-			}
 			if (0 < mouseY && mouseY < yScrMin) {
 				arrowUpColor = GetColor(79, 200, 225);
 			}
-			else {
-				arrowUpColor = GetColor(179, 179, 179);
-			}
+		}
+		else {
+			arrowDownColor = GetColor(179, 179, 179);
+			arrowUpColor = GetColor(179, 179, 179);
 		}
 	}
 }
 
 void Game::Draw::Game_Draw_ScrollBar::clickCheck() {
-	if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(&mouseX, &mouseY)) {
+	if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(mouseX, mouseY)) {
 		if (barPointX[0] < mouseX && mouseX < barPointX[1] &&
 			y < mouseY && mouseY < y + barHeight) {
 			clickObserver = true;
 			barColor = GetColor(255, 255, 255);
 			widthMaxOnClick = y + barHeight - mouseY;
 			widthMinOnClick = mouseY - y;
+			function = [&] {return barFunction(); };
 		}
 	}
-	else {
+
+	if (clickObserver && function != nullptr) {
 		GetMousePoint(&mouseX, &mouseY);
+		function();
+		if (p_mouseCheck->isMouseClickLeftUp(mouseX, mouseY)) {
+			clickObserver = false;
+			function = nullptr;
+		}
 	}
-	if (clickObserver && (GetMouseInput() & MOUSE_INPUT_LEFT) &&
+}
+
+void Game::Draw::Game_Draw_ScrollBar::barFunction() {
+	if ((GetMouseInput() & MOUSE_INPUT_LEFT) &&
 		backWidth + widthMinOnClick < mouseY && mouseY < Global::WINDOW_HEIGHT - backWidth - widthMaxOnClick) {
 		barYBefore = y;
 		setBarY(static_cast<float>(mouseY) - widthMinOnClick);
 		updateLineContainerY((barYBefore - y) / scrollWidthRate);
 	}
+}
 
-	if (clickObserver && p_mouseCheck->isMouseClickLeftUp(&mouseX, &mouseY)) {
-		clickObserver = false;
-	}
+void Game::Draw::Game_Draw_ScrollBar::arrowFunction() {
+
 }
 
 void Game::Draw::Game_Draw_ScrollBar::setBarY(float sY) {
-		y = sY;
-		if (yScrMax < y + barHeight) {
-			y = yScrMax - barHeight;
-		}
-		else if (y < yScrMin) {
-			y = yScrMin;
-		}
+	y = sY;
+	if (yScrMax < y + barHeight) {
+		y = yScrMax - barHeight;
+	}
+	else if (y < yScrMin) {
+		y = yScrMin;
+	}
 }
 
 void Game::Draw::Game_Draw_ScrollBar::updateLineContainerY(float y) {
@@ -116,7 +125,7 @@ void Game::Draw::Game_Draw_ScrollBar::updateBarY(float upY) {
 		if (yScrMax < y + barHeight) {
 			y = yScrMax - barHeight;
 		}
-		else if(y < yScrMin){
+		else if (y < yScrMin) {
 			y = yScrMin;
 		}
 	}

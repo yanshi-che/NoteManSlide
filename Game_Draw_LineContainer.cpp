@@ -6,8 +6,6 @@ bool Game::Draw::Game_Draw_LineContainer::clickObserver = false;
 
 int Game::Draw::Game_Draw_LineContainer::mouseX = 0;
 int Game::Draw::Game_Draw_LineContainer::mouseY = 0;
-std::uint16_t Game::Draw::Game_Draw_LineContainer::startBarIDForLongNote = 0;
-std::uint16_t Game::Draw::Game_Draw_LineContainer::startBeatIDForLongNote = 0;
 std::uint8_t Game::Draw::Game_Draw_LineContainer::laneIDForLongNote = 0;
 
 std::uint16_t Game::Draw::Game_Draw_LineContainer::barIDForChangeQuontize = 0;
@@ -68,7 +66,7 @@ void Game::Draw::Game_Draw_LineContainer::draw() {
 void Game::Draw::Game_Draw_LineContainer::drawBarID()  {
 	if (beatID == 0 && y < Game::Global::WINDOW_HEIGHT && y>0) {
 		if (!clickObserver &&
-			p_mouseCheck->isMouseClickLeftDown(&mouseX,&mouseY) &&
+			p_mouseCheck->isMouseClickLeftDown(mouseX,mouseY) &&
 			0 < mouseX &&
 			mouseX < barIDStrWidth &&
 			y - barIDThickness < mouseY &&
@@ -93,7 +91,7 @@ void Game::Draw::Game_Draw_LineContainer::drawLine()  {
 
 void Game::Draw::Game_Draw_LineContainer::drawNotes()  {
 	if (noteType == Global::NOTETYPENORMAL) {
-		if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(&mouseX,&mouseY) && checkClickBorder()) {
+		if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(mouseX,mouseY) && checkClickBorder()) {
 			for (int i = 0,iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
 				if (laneX[i] < mouseX && mouseX < laneX[i + 1]) {
 					p_noteManager->setNormalNote(barID, beatID, i);
@@ -102,16 +100,14 @@ void Game::Draw::Game_Draw_LineContainer::drawNotes()  {
 				}
 			}
 		}
-		if (clickObserver && p_mouseCheck->isMouseClickLeftUp(&mouseX, &mouseY)) {
+		if (clickObserver && p_mouseCheck->isMouseClickLeftUp(mouseX, mouseY)) {
 			clickObserver = false;
 		}
 	}
 	else if (noteType == Global::NOTETYPELONG) {
-		if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(&mouseX, &mouseY) && checkClickBorder()) {
+		if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(mouseX, mouseY) && checkClickBorder()) {
 			for (int i = 0, iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
 				if (laneX[i] < mouseX && mouseX < laneX[i + 1]) {
-					startBarIDForLongNote = barID;
-					startBeatIDForLongNote = beatID;
 					laneIDForLongNote = i;
 					p_noteManager->setLongNote(barID, beatID, i,&y,true);
 					clickObserver = true;
@@ -119,13 +115,12 @@ void Game::Draw::Game_Draw_LineContainer::drawNotes()  {
 				}
 			}
 		}
-		if (clickObserver && p_mouseCheck->isMouseClickLeftUp(&mouseX, &mouseY)) {
+		if (clickObserver && p_mouseCheck->isMouseClickLeftUp(mouseX, mouseY)) {
 			float tempMouseY = static_cast<float>(mouseY);
 			p_noteManager->setLongNote(NULL, NULL, laneIDForLongNote, &tempMouseY , false);
 			clickObserver = false;
 		}
 	}
-
 	p_noteManager->draw(barID,beatID);
 }
 
