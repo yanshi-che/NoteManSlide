@@ -40,19 +40,19 @@ namespace Game {
 			float arrowPointY[4];//è„â∫ñÓàÛÇÃí∏ì_ÇÃÇôç¿ïW
 			std::function<void()> function;//barÇ‡ÇµÇ≠ÇÕarrowÇÃfunctionÇÃäiî[
 
+			void arrowFunction(bool isUp);
+			void barFunction();
+			void borderCheck();
+			void clickCheck();
 			void drawBack();
 			void drawArrow();
 			void drawBar();
-			void updateLineContainerY(float y);
 			void setBarY(float sY);
-			void clickCheck();
-			void barFunction();
-			void arrowFunction(bool isUp);
-			void borderCheck();
+			void updateLineContainerY(float y);
 		public:
 			Game_Draw_ScrollBar(float scrollWidth, std::vector<std::vector<std::shared_ptr<Game_Draw_LineContainer>>>& barVec, float& yMagnificationByMouseWheel);
-			void updateBarY(float upY);
 			void draw();
+			void updateBarY(float upY);
 		};
 	}
 }

@@ -21,6 +21,7 @@ namespace Game {
 			std::unique_ptr<Draw::Game_Draw_ScrollBar> scrBar;
 			float y;//マウスホイール用の変数
 			float yMagnificationByMouseWheel;//マウスホイール入力による移動量の倍率
+			float totalScoreWidth;//スクロールバー用のスコア全体の大きさ
 			std::function<void()> initBarLineFunction;//描画処理がすべて終わった後に初期化処理をするための格納変数
 			std::uint8_t quontize;
 			Singleton::Game_Singleton_NoteManager* p_noteManager;//ノーツ関連の制御クラス
@@ -28,18 +29,18 @@ namespace Game {
 			Game_Singleton_BeatLineManager();
 			static Game_Singleton_BeatLineManager* p_instance;
 
+			void checkSeparate(float& separate);
+			void initScrollBar();
 			void initAllBarLineByQuontize();
 			void initOneBarLineByQuontize();
 			void resetBarVec(bool isAll);
-			void resetScrollBar(bool isAll);
-			void checkSeparate(float& separate);
+			void resetScrollBar();
 
 		public:
 			static Game_Singleton_BeatLineManager* getInstance();
-
 			void destroyInstance();
+
 			void initialize(std::uint8_t initialQuontize,float separateBarWidth);
-			void initScrollBar(float scoreWidth);
 			//void finalize();
 			void setMusicData(const std::shared_ptr<File::Game_File_MusicData>& data);
 			void setInitBarLineFunc(std::uint8_t quon, bool isAll);

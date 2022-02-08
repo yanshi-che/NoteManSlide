@@ -20,6 +20,7 @@ Game::Singleton::Game_Singleton_BeatLineManager::Game_Singleton_BeatLineManager(
 	scrBar = nullptr;
 	p_noteManager = Singleton::Game_Singleton_NoteManager::getInstance();
 	y = 0;
+	totalScoreWidth = 0;
 	yMagnificationByMouseWheel = 25.0f;
 	initBarLineFunction = nullptr;
 	quontize = Global::QUARTER;
@@ -36,7 +37,7 @@ void Game::Singleton::Game_Singleton_BeatLineManager::initialize(std::uint8_t in
 	float initY = initialY;
 	float yWidth = yWidthRegular * separateBarWidth;
 	float yMax = 0;
-	float totalScoreWidth = 0;
+	totalScoreWidth = 0;
 	p_noteManager->initVector(p_musicData->getBarLength(),initialQuontize);
 	barVec.resize(p_musicData->getBarLength());
 	std::uint8_t amountOfLane = p_musicData->getAmountOfLane();
@@ -51,11 +52,11 @@ void Game::Singleton::Game_Singleton_BeatLineManager::initialize(std::uint8_t in
 		}
 	}
 	totalScoreWidth += Game::Global::WINDOW_HEIGHT * 0.5f;
-	initScrollBar(totalScoreWidth);
+	initScrollBar();
 }
 
-void Game::Singleton::Game_Singleton_BeatLineManager::initScrollBar(float scoreWidth) {
-	scrBar = std::make_unique<Draw::Game_Draw_ScrollBar>(scoreWidth,barVec,yMagnificationByMouseWheel);
+void Game::Singleton::Game_Singleton_BeatLineManager::initScrollBar() {
+	scrBar = std::make_unique<Draw::Game_Draw_ScrollBar>(totalScoreWidth,barVec,yMagnificationByMouseWheel);
 }
 
 void Game::Singleton::Game_Singleton_BeatLineManager::draw() {
@@ -81,6 +82,7 @@ void Game::Singleton::Game_Singleton_BeatLineManager::draw() {
 }
 
 void Game::Singleton::Game_Singleton_BeatLineManager::initAllBarLineByQuontize() {
+	resetScrollBar();
 	resetBarVec(true);
 	p_noteManager->resetVector(true);
 	float separate = 1.0f;
@@ -97,7 +99,8 @@ void Game::Singleton::Game_Singleton_BeatLineManager::initOneBarLineByQuontize()
 			p_noteManager->removeLongNote(id, i, k);
 		}
 	}
-	//vectorの初期化とリサイズ
+	//vectorの初期化とリサイズ、スクロールバーのリセット
+	resetScrollBar();
 	resetBarVec(false);
 	p_noteManager->resetVector(false);
 	float separate = 1.0f;
@@ -139,6 +142,11 @@ void Game::Singleton::Game_Singleton_BeatLineManager::initOneBarLineByQuontize()
 			}
 		}
 	}
+
+	//スクロールバーの初期化
+	totalScoreWidth -= yChange;
+	initScrollBar();
+	scrBar->updateBarY(barVec[0][0]->getY() - initialY);
 }
 
 void Game::Singleton::Game_Singleton_BeatLineManager::checkSeparate(float& separate) {
@@ -174,13 +182,8 @@ void Game::Singleton::Game_Singleton_BeatLineManager::resetBarVec(bool isAll) {
 	}
 }
 
-void Game::Singleton::Game_Singleton_BeatLineManager::resetScrollBar(bool isAll) {
-	if (isAll) {
-
-	}
-	else {
-
-	}
+void Game::Singleton::Game_Singleton_BeatLineManager::resetScrollBar() {
+	scrBar.reset();
 }
 
 void Game::Singleton::Game_Singleton_BeatLineManager::setInitBarLineFunc(std::uint8_t quon, bool isAll) {

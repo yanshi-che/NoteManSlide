@@ -28,17 +28,26 @@ Game::Draw::Game_Draw_ScrollBar::Game_Draw_ScrollBar(float scrollWidth, std::vec
 	arrowPointY[3] = arrowWidthYAndSpace;//è„ñÓàÛÇÃï˚å¸
 }
 
-void Game::Draw::Game_Draw_ScrollBar::drawBack() {
-	DrawBoxAA(Global::WINDOW_WIDTH - backWidth, 0, Global::WINDOW_WIDTH, Global::WINDOW_HEIGHT, backColor, true);
+void Game::Draw::Game_Draw_ScrollBar::arrowFunction(bool isUp) {
+	if (Global::WINDOW_WIDTH - backWidth < mouseX && mouseX < Global::WINDOW_WIDTH) {
+		if (isUp && 0 < mouseY && mouseY < backWidth) {
+			updateBarY(yMagnificationByMouseWheel);
+			updateLineContainerY(yMagnificationByMouseWheel);
+		}
+		else if(Global::WINDOW_HEIGHT - backWidth < mouseY && mouseY < Global::WINDOW_HEIGHT){
+			updateBarY(-yMagnificationByMouseWheel);
+			updateLineContainerY(-yMagnificationByMouseWheel);
+		}
+	}
 }
 
-void Game::Draw::Game_Draw_ScrollBar::drawArrow() {
-	DrawTriangleAA(arrowPointX[0], arrowPointY[1], arrowPointX[1], arrowPointY[3], arrowPointX[2], arrowPointY[1], arrowUpColor, true);//è„ñÓàÛ
-	DrawTriangleAA(arrowPointX[0], arrowPointY[0], arrowPointX[1], arrowPointY[2], arrowPointX[2], arrowPointY[0], arrowDownColor, true);//â∫ñÓàÛ
-}
-
-void Game::Draw::Game_Draw_ScrollBar::drawBar() {
-	DrawBoxAA(barPointX[0], y, barPointX[1], y + barHeight, barColor, true);
+void Game::Draw::Game_Draw_ScrollBar::barFunction() {
+	if ((GetMouseInput() & MOUSE_INPUT_LEFT) &&
+		backWidth + widthMinOnClick < mouseY && mouseY < Global::WINDOW_HEIGHT - backWidth - widthMaxOnClick) {
+		barYBefore = y;
+		setBarY(static_cast<float>(mouseY) - widthMinOnClick);
+		updateLineContainerY((barYBefore - y) / scrollWidthRate);
+	}
 }
 
 void Game::Draw::Game_Draw_ScrollBar::borderCheck() {
@@ -106,26 +115,25 @@ void Game::Draw::Game_Draw_ScrollBar::clickCheck() {
 	}
 }
 
-void Game::Draw::Game_Draw_ScrollBar::barFunction() {
-	if ((GetMouseInput() & MOUSE_INPUT_LEFT) &&
-		backWidth + widthMinOnClick < mouseY && mouseY < Global::WINDOW_HEIGHT - backWidth - widthMaxOnClick) {
-		barYBefore = y;
-		setBarY(static_cast<float>(mouseY) - widthMinOnClick);
-		updateLineContainerY((barYBefore - y) / scrollWidthRate);
-	}
+void Game::Draw::Game_Draw_ScrollBar::draw() {
+	borderCheck();
+	clickCheck();
+	drawBack();
+	drawBar();
+	drawArrow();
 }
 
-void Game::Draw::Game_Draw_ScrollBar::arrowFunction(bool isUp) {
-	if (Global::WINDOW_WIDTH - backWidth < mouseX && mouseX < Global::WINDOW_WIDTH) {
-		if (isUp && 0 < mouseY && mouseY < backWidth) {
-			updateBarY(yMagnificationByMouseWheel);
-			updateLineContainerY(yMagnificationByMouseWheel);
-		}
-		else if(Global::WINDOW_HEIGHT - backWidth < mouseY && mouseY < Global::WINDOW_HEIGHT){
-			updateBarY(-yMagnificationByMouseWheel);
-			updateLineContainerY(-yMagnificationByMouseWheel);
-		}
-	}
+void Game::Draw::Game_Draw_ScrollBar::drawArrow() {
+	DrawTriangleAA(arrowPointX[0], arrowPointY[1], arrowPointX[1], arrowPointY[3], arrowPointX[2], arrowPointY[1], arrowUpColor, true);//è„ñÓàÛ
+	DrawTriangleAA(arrowPointX[0], arrowPointY[0], arrowPointX[1], arrowPointY[2], arrowPointX[2], arrowPointY[0], arrowDownColor, true);//â∫ñÓàÛ
+}
+
+void Game::Draw::Game_Draw_ScrollBar::drawBack() {
+	DrawBoxAA(Global::WINDOW_WIDTH - backWidth, 0, Global::WINDOW_WIDTH, Global::WINDOW_HEIGHT, backColor, true);
+}
+
+void Game::Draw::Game_Draw_ScrollBar::drawBar() {
+	DrawBoxAA(barPointX[0], y, barPointX[1], y + barHeight, barColor, true);
 }
 
 void Game::Draw::Game_Draw_ScrollBar::setBarY(float sY) {
@@ -157,13 +165,3 @@ void Game::Draw::Game_Draw_ScrollBar::updateBarY(float upY) {
 		}
 	}
 }
-
-void Game::Draw::Game_Draw_ScrollBar::draw() {
-	borderCheck();
-	clickCheck();
-	drawBack();
-	drawBar();
-	drawArrow();
-}
-
-
