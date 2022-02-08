@@ -47,7 +47,7 @@ namespace Game {
 			void setBarY(float sY);
 			void clickCheck();
 			void barFunction();
-			void arrowFunction();
+			void arrowFunction(bool isUp);
 			void borderCheck();
 		public:
 			Game_Draw_ScrollBar(float scrollWidth, std::vector<std::vector<std::shared_ptr<Game_Draw_LineContainer>>>& barVec, float& yMagnificationByMouseWheel);

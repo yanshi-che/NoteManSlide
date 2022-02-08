@@ -55,8 +55,14 @@ void Game::Draw::Game_Draw_ScrollBar::borderCheck() {
 			if (yScrMax < mouseY && mouseY < Global::WINDOW_HEIGHT) {
 				arrowDownColor = GetColor(79, 200, 225);
 			}
+			else {
+				arrowDownColor = GetColor(179, 179, 179);
+			}
 			if (0 < mouseY && mouseY < yScrMin) {
 				arrowUpColor = GetColor(79, 200, 225);
+			}
+			else {
+				arrowUpColor = GetColor(179, 179, 179);
 			}
 		}
 		else {
@@ -75,6 +81,18 @@ void Game::Draw::Game_Draw_ScrollBar::clickCheck() {
 			widthMaxOnClick = y + barHeight - mouseY;
 			widthMinOnClick = mouseY - y;
 			function = [&] {return barFunction(); };
+		}
+		else if (Global::WINDOW_WIDTH - backWidth < mouseX && mouseX < Global::WINDOW_WIDTH) {
+			if (0 < mouseY && mouseY < backWidth) {
+				clickObserver = true;
+				arrowUpColor = GetColor(13,0,174);
+				function = [&] {return arrowFunction(true); };
+			}
+			else if(Global::WINDOW_HEIGHT - backWidth < mouseY && mouseY < Global::WINDOW_HEIGHT){
+				clickObserver = true;
+				arrowDownColor = GetColor(13, 0, 174);
+				function = [&] {return arrowFunction(false); };
+			}
 		}
 	}
 
@@ -97,8 +115,17 @@ void Game::Draw::Game_Draw_ScrollBar::barFunction() {
 	}
 }
 
-void Game::Draw::Game_Draw_ScrollBar::arrowFunction() {
-
+void Game::Draw::Game_Draw_ScrollBar::arrowFunction(bool isUp) {
+	if (Global::WINDOW_WIDTH - backWidth < mouseX && mouseX < Global::WINDOW_WIDTH) {
+		if (isUp && 0 < mouseY && mouseY < backWidth) {
+			updateBarY(yMagnificationByMouseWheel);
+			updateLineContainerY(yMagnificationByMouseWheel);
+		}
+		else if(Global::WINDOW_HEIGHT - backWidth < mouseY && mouseY < Global::WINDOW_HEIGHT){
+			updateBarY(-yMagnificationByMouseWheel);
+			updateLineContainerY(-yMagnificationByMouseWheel);
+		}
+	}
 }
 
 void Game::Draw::Game_Draw_ScrollBar::setBarY(float sY) {
