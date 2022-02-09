@@ -1,6 +1,6 @@
 #include <iostream>
-#include "Game_DrawManager.h"
-#include "Game_Global.h"
+#include "Make_DrawManager.h"
+#include "Make_Global.h"
 
 class Fps {
 	int mStartTime;         //測定開始時刻
@@ -49,7 +49,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 {
 	SetOutApplicationLogValidFlag(FALSE);
 	ChangeWindowMode(true);
-	SetGraphMode(Game::Global::WINDOW_WIDTH,Game::Global::WINDOW_HEIGHT,Game::Global::WINDOW_COLORBIT); //スクリーンの大きさの設定
+	SetGraphMode(Make::Global::WINDOW_WIDTH,Make::Global::WINDOW_HEIGHT,Make::Global::WINDOW_COLORBIT); //スクリーンの大きさの設定
 
 	if (DxLib_Init() == -1)		// ＤＸライブラリ初期化処理
 	{
@@ -57,7 +57,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 	SetDrawScreen(DX_SCREEN_BACK);//裏画面で画面生成
 
-	Game::Game_DrawManager dm;
+	Make::Make_DrawManager dm;
 	Fps fps;
 
 	dm.initialize();
