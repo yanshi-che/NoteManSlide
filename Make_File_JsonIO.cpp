@@ -13,6 +13,9 @@ Make::File::MusicData::MusicData(std::string name, std::string artist, std::uint
 
 void Make::File::tag_invoke(const json::value_from_tag&, json::value& jv, const MusicData& m) {
 	jv = {
+		{"name",m.name},
+		{"artist",m.artist},
+		{"level",m.level},
 		{ "bpm", m.bpm },
 		{ "barLength", m.barLength },
 		{ "totalMinute", m.totalMinutes },

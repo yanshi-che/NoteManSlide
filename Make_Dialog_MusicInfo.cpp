@@ -80,7 +80,7 @@ void Make::Dialog::Make_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MA
 	if (isInputed) {
 		GetDlgItemText(hDialogWnd, IDC_EDITFilePath, filePath, MAX_PATH);
 		GetDlgItemText(hDialogWnd, IDC_EDITNAME, name, MAX_PATH);
-		GetDlgItemText(hDialogWnd, IDC_EDITFilePath, artist, MAX_PATH);
+		GetDlgItemText(hDialogWnd, IDC_EDITARTIST, artist, MAX_PATH);
 		level = GetDlgItemInt(hDialogWnd, IDC_EDITLEVEL, NULL, true);
 		bpm = GetDlgItemInt(hDialogWnd, IDC_EDITBPM, NULL, true);
 		totalMinutes = GetDlgItemInt(hDialogWnd, IDC_EDITTotalMinutes, NULL, true) / Global::MINUTE;
