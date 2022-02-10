@@ -1,28 +1,32 @@
 #pragma once
 
-#include "resource.h"
 #include <Windows.h>
 #include <cstdint>
 #include "Make_Global.h"
 #include "Make_File_BaseFile.h"
+#include "resource.h"
 
 namespace Make {
 	namespace Dialog {
+		constexpr const std::uint8_t NAMECHARMAX{50};
+		constexpr const std::uint8_t ARTISTCHARMAX{50};
+		constexpr const std::uint8_t LEVELCHARMAX{2};
+		constexpr const std::uint8_t BPMCHARMAX{3};
+		constexpr const std::uint8_t TOTALMINUTESCHARMAX{4};
+		constexpr const std::uint8_t BEGINDELAYCHARMAX{2};
+		constexpr const std::uint8_t amountOfLaneCHARMAX{1};
+		constexpr const std::uint8_t LEVELMAX{ 20 };
+		constexpr const std::uint8_t LEVELMIN{ 1 };
+		constexpr const std::uint8_t LANEMAX{8};
+		constexpr const std::uint8_t LANEMIN{4};
 		class Make_Dialog_MusicInfo
 		{
 		private:
 			static bool isShowMusicInfoDlg;
 			static bool isInputed;
 			static INT_PTR CALLBACK MusicInfoDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-			const std::uint8_t BPMCHARMAX;
-			const std::uint8_t TOTALMINUTESCHARMAX;
-			const std::uint8_t BEGINDELAYCHARMAX;
-			const std::uint8_t amountOfLaneCHARMAX;
-			const std::uint8_t RANEMAX;
-			const std::uint8_t RANEMIN;
 		public:
-			Make_Dialog_MusicInfo();
-			void getMusicInfoFromDlg(char(&filePath)[MAX_PATH], std::uint16_t& bpm, float& totalMinutes, std::uint16_t& beginDelay, std::uint8_t& amountOfLane);
+			void getMusicInfoFromDlg(char(&filePath)[MAX_PATH], char(&name)[MAX_PATH],char(&artist)[MAX_PATH],std::uint8_t& level,std::uint16_t& bpm, float& totalMinutes, std::uint16_t& beginDelay, std::uint8_t& amountOfLane);
 		};
 	}
 }

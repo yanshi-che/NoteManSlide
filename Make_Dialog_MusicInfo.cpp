@@ -35,10 +35,7 @@ INT_PTR CALLBACK Make::Dialog::Make_Dialog_MusicInfo::MusicInfoDialogProc(HWND h
 	return 0;
 }
 
-Make::Dialog::Make_Dialog_MusicInfo::Make_Dialog_MusicInfo() : BPMCHARMAX(3), TOTALMINUTESCHARMAX(4), BEGINDELAYCHARMAX(2), amountOfLaneCHARMAX(1), RANEMAX(8), RANEMIN(4) {
-}
-
-void Make::Dialog::Make_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MAX_PATH], std::uint16_t& bpm, float& totalMinutes, std::uint16_t& beginDelay, std::uint8_t& amountOfLane) {
+void Make::Dialog::Make_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MAX_PATH], char(&name)[MAX_PATH], char(&artist)[MAX_PATH], std::uint8_t& level, std::uint16_t& bpm, float& totalMinutes, std::uint16_t& beginDelay, std::uint8_t& amountOfLane) {
 	HWND hMainWnd = nullptr;
 	HWND hDialogWnd = nullptr;
 	HINSTANCE hInstance = nullptr;
@@ -51,16 +48,22 @@ void Make::Dialog::Make_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MA
 
 	//各項目の説明の設定
 	SetDlgItemText(hDialogWnd, IDC_BUTTONFilePath, "ファイル選択");
+	SetDlgItemText(hDialogWnd, IDC_STATICNAME, "曲名(日本語入力できない場合はペーストしてください)");
+	SetDlgItemText(hDialogWnd, IDC_STATICARTIST, "アーティスト名");
+	SetDlgItemText(hDialogWnd, IDC_STATICLEVEL, "譜面の難易度(1～20)");
 	SetDlgItemText(hDialogWnd, IDC_STATICBPM, "BPM");
-	SetDlgItemText(hDialogWnd, IDC_STATICTotalMinutes, "再生時間（秒)");
+	SetDlgItemText(hDialogWnd, IDC_STATICTotalMinutes, "再生時間(秒)");
 	SetDlgItemText(hDialogWnd, IDC_STATICBeginDelay, "曲が始まるまでの時間(秒)");
-	SetDlgItemText(hDialogWnd, IDC_STATICRANE, "レーン数(4～8)");
+	SetDlgItemText(hDialogWnd, IDC_STATICLANE, "レーン数(4～8)");
 
 	//EDIITBOXの文字数制限
+	SendMessage(GetDlgItem(hDialogWnd, IDC_EDITNAME), EM_SETLIMITTEXT, NAMECHARMAX, NULL);
+	SendMessage(GetDlgItem(hDialogWnd, IDC_EDITARTIST), EM_SETLIMITTEXT, ARTISTCHARMAX, NULL);
+	SendMessage(GetDlgItem(hDialogWnd, IDC_EDITLEVEL), EM_SETLIMITTEXT, LEVELCHARMAX, NULL);
 	SendMessage(GetDlgItem(hDialogWnd, IDC_EDITBPM), EM_SETLIMITTEXT, BPMCHARMAX, NULL);
 	SendMessage(GetDlgItem(hDialogWnd, IDC_EDITTotalMinutes), EM_SETLIMITTEXT, TOTALMINUTESCHARMAX, NULL);
 	SendMessage(GetDlgItem(hDialogWnd, IDC_EDITBeginDelay), EM_SETLIMITTEXT, BEGINDELAYCHARMAX, NULL);
-	SendMessage(GetDlgItem(hDialogWnd, IDC_EDITRANE), EM_SETLIMITTEXT, amountOfLaneCHARMAX, NULL);
+	SendMessage(GetDlgItem(hDialogWnd, IDC_EDITLANE), EM_SETLIMITTEXT, amountOfLaneCHARMAX, NULL);
 
 	//ダイアログをDXライブラリに登録(DXライブラリは単一のダイアログのみ対応)
 	SetDialogBoxHandle(hDialogWnd);
@@ -76,15 +79,24 @@ void Make::Dialog::Make_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MA
 
 	if (isInputed) {
 		GetDlgItemText(hDialogWnd, IDC_EDITFilePath, filePath, MAX_PATH);
+		GetDlgItemText(hDialogWnd, IDC_EDITNAME, name, MAX_PATH);
+		GetDlgItemText(hDialogWnd, IDC_EDITFilePath, artist, MAX_PATH);
+		level = GetDlgItemInt(hDialogWnd, IDC_EDITLEVEL, NULL, true);
 		bpm = GetDlgItemInt(hDialogWnd, IDC_EDITBPM, NULL, true);
 		totalMinutes = GetDlgItemInt(hDialogWnd, IDC_EDITTotalMinutes, NULL, true) / Global::MINUTE;
 		beginDelay = GetDlgItemInt(hDialogWnd, IDC_EDITBeginDelay, NULL, true);
-		amountOfLane = GetDlgItemInt(hDialogWnd, IDC_EDITRANE, NULL, true);
-		if(amountOfLane < RANEMIN){
-			amountOfLane = RANEMIN;
+		amountOfLane = GetDlgItemInt(hDialogWnd, IDC_EDITLANE, NULL, true);
+		if (level < LEVELMIN) {
+			level = LEVELMIN;
+		}else if(LEVELMAX < level){
+			level = LEVELMAX;
 		}
-		else if(RANEMAX < amountOfLane){
-			amountOfLane = RANEMAX;
+
+		if(amountOfLane < LANEMIN){
+			amountOfLane = LANEMIN;
+		}
+		else if(LANEMAX < amountOfLane){
+			amountOfLane = LANEMAX;
 		}
 	}
 

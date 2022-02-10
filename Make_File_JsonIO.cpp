@@ -1,6 +1,9 @@
 #include "Make_File_JsonIO.h"
 
-Make::File::MusicData::MusicData(std::uint16_t bpm, std::uint16_t barLength, float totalMinutes, std::uint16_t beginDelay, std::uint8_t amountOfLane) {
+Make::File::MusicData::MusicData(std::string name, std::string artist, std::uint8_t level,std::uint16_t bpm, std::uint16_t barLength, float totalMinutes, std::uint16_t beginDelay, std::uint8_t amountOfLane) {
+	this->name = name;
+	this->artist = artist;
+	this->level = level;
 	this->bpm = bpm;
 	this->barLength = barLength;
 	this->totalMinutes = totalMinutes;
@@ -59,7 +62,7 @@ void Make::File::Make_File_JsonIO::saveNewJson(Make_File_MusicData* const p_musi
 	json::storage_ptr sp = json::make_shared_resource< json::monotonic_resource >();
 
 	//MusicDataObject�̍쐬
-	obj["MusicData"] = json::value_from(MusicData(p_musicData->getBpm(),p_musicData->getBarLength(),p_musicData->getTotalMinutes(),p_musicData->getBeginDelay(),p_musicData->getAmountOfLane()),sp);
+	obj["MusicData"] = json::value_from(MusicData(p_musicData->getName(), p_musicData->getArtist(), p_musicData->getLevel(),p_musicData->getBpm(),p_musicData->getBarLength(),p_musicData->getTotalMinutes(),p_musicData->getBeginDelay(),p_musicData->getAmountOfLane()),sp);
 
 	//NotesDataObject�̍쐬
 	std::vector<std::vector<std::shared_ptr<Note::Make_Note_NormalNoteContainer>>> normalNotes = Singleton::Make_Singleton_NoteManager::getInstance()->getNormalNoteVector();

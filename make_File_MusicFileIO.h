@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <string>
 
 #include "Make_File_MusicData.h"
 #include "Make_File_MusicAnalyse.h"

@@ -19,12 +19,15 @@ using namespace boost;
 namespace Make{
 	namespace File {
 		struct MusicData { //jsonファイル書き込み用の構造体
+			std::string name;
+			std::string artist;
+			std::uint8_t level;
 			std::uint16_t bpm;
 			std::uint16_t barLength;//曲全体の小節数
 			float totalMinutes;//曲の再生時間(分)
 			std::uint16_t beginDelay;//曲が始まるまでのずれ
 			std::uint8_t amountOfLane;
-			MusicData(std::uint16_t bpm,std::uint16_t barLength,float totalMinutes, std::uint16_t beginDelay,std::uint8_t amountOfLane);
+			MusicData(std::string name,std::string artist,std::uint8_t level,std::uint16_t bpm,std::uint16_t barLength,float totalMinutes, std::uint16_t beginDelay,std::uint8_t amountOfLane);
 		};
 
 		void tag_invoke(const json::value_from_tag&, json::value& jv, const MusicData& m);//valu_from用のオーバロード関数
