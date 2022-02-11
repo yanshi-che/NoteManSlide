@@ -24,13 +24,15 @@ void Make::File::tag_invoke(const json::value_from_tag&, json::value& jv, const 
 	};
 }
 
-Make::File::NoteData::NoteData(float time, std::uint8_t noteType, std::uint8_t laneIndex, bool longNoteType, std::uint16_t longNoteGroupIndex, std::uint16_t noteIndex) {
+Make::File::NoteData::NoteData(float time, std::uint8_t noteType, std::uint8_t laneIndex,std::uint16_t longNoteGroupIndex, std::uint16_t noteIndex, std::uint8_t rightOrLeft, std::uint8_t sildeLaneIndexStart, std::uint8_t sildeLaneIndexEnd) {
 	this->time = time;
 	this->noteType = noteType;
 	this->laneIndex = laneIndex;
-	this->longNoteType = longNoteType;
 	this->longNoteGroupIndex = longNoteGroupIndex;
 	this->noteIndex = noteIndex;
+	this->rightOrLeft = rightOrLeft;
+	this->sildeLaneIndexStart = sildeLaneIndexStart;
+	this->sildeLaneIndexEnd = sildeLaneIndexEnd;
 }
 
 void Make::File::tag_invoke(const json::value_from_tag&, json::value& jv, const NoteData& n) {
@@ -38,9 +40,11 @@ void Make::File::tag_invoke(const json::value_from_tag&, json::value& jv, const 
 		{ "time", n.time},
 		{ "noteType", n.noteType },
 		{ "laneIndex", n.laneIndex },
-		{"longNoteType",n.longNoteType},
 		{"longNoteGroupIndex",n.longNoteGroupIndex},
-		{"noteIndex",n.noteIndex}
+		{"noteIndex",n.noteIndex},
+		{"rightOrLeft",n.rightOrLeft},
+		{"sildeLaneIndexStart",n.sildeLaneIndexStart},
+		{"sildeLaneIndexEnd",n.sildeLaneIndexEnd}
 	};
 }
 
@@ -70,33 +74,42 @@ void Make::File::Make_File_JsonIO::saveNewJson(Make_File_MusicData* const p_musi
 	//NotesDataObject�̍쐬
 	std::vector<std::vector<std::shared_ptr<Note::Make_Note_NormalNoteContainer>>> normalNotes = Singleton::Make_Singleton_NoteManager::getInstance()->getNormalNoteVector();
 	std::vector<std::vector<std::shared_ptr<Note::Make_Note_LongNoteContainer>>> longNotes = Singleton::Make_Singleton_NoteManager::getInstance()->getLongNoteVector();
+	std::vector<std::vector<std::shared_ptr<Note::Make_Note_SlideNoteContainer>>> slideNotes = Singleton::Make_Singleton_NoteManager::getInstance()->getSlideNoteVector();
 
 	std::vector<NoteData> noteDataVector;
 	std::vector<std::uint16_t> noteIndex;
 	noteIndex.resize(p_musicData->getAmountOfLane());
 	for (int i = 0, iSize = static_cast<int>(p_musicData->getAmountOfLane()); i < iSize; ++i) {
-		noteIndex[i] = 0;
+		noteIndex.at(i) = 0;
 	}
 	std::uint16_t longNoteGroupIndex = 1;
 	bool isLongGroupLast = false;
 	for (int i = 0, iSize = static_cast<int>(normalNotes.size()); i < iSize; ++i) {
-		for (int k = 0, kSize = static_cast<int>(normalNotes[i].size()); k < kSize; ++k) {
+		for (int k = 0, kSize = static_cast<int>(normalNotes.at(i).size()); k < kSize; ++k) {
 			for (int l = 0, lSize = static_cast<int>(p_musicData->getAmountOfLane()); l < lSize; ++l) {
-				if (normalNotes[i][k]->getNormalNoteFlag(l)) {
-					noteDataVector.push_back(NoteData(normalNotes[i][k]->getTime(),Global::NOTETYPENORMAL,l,false,0,noteIndex[l]));
-					++noteIndex[l];
+				if (normalNotes.at(i).at(k)->getNormalNoteFlag(l)) {
+					noteDataVector.push_back(NoteData(normalNotes.at(i).at(k)->getTime(),Global::NOTETYPENORMAL,l,NULL,noteIndex.at(l),NULL,NULL,NULL));
+					++noteIndex.at(l);
 				}
-				else if(longNotes[i][k]->getLongNoteFlag(l).second){
-					noteDataVector.push_back(NoteData(longNotes[i][k]->getTime(), Global::NOTETYPELONG, l, true, longNoteGroupIndex, noteIndex[l]));
+				else if(longNotes.at(i).at(k)->getLongNoteFlag(l).second){
+					noteDataVector.push_back(NoteData(longNotes.at(i).at(k)->getTime(), Global::NOTETYPELONG, l,longNoteGroupIndex, noteIndex.at(l),NULL,NULL,NULL));
 					if (!isLongGroupLast) {
 						isLongGroupLast = true;
 					}
 					else {
 						isLongGroupLast = false;
-						++noteIndex[l];
+						++noteIndex.at(l);
 						++longNoteGroupIndex;
 					}
 				}
+			}
+			if (slideNotes.at(i).at(k)->getSlideNoteFlag().first) {
+				noteDataVector.push_back(NoteData(longNotes.at(i).at(k)->getTime(), Global::NOTETYPESLIDE, NULL, NULL, NULL, 1,
+					slideNotes.at(i).at(k)->getNoteStartAndEnd().first.first, slideNotes.at(i).at(k)->getNoteStartAndEnd().first.second));
+			}
+			if (slideNotes.at(i).at(k)->getSlideNoteFlag().second) {
+				noteDataVector.push_back(NoteData(longNotes.at(i).at(k)->getTime(), Global::NOTETYPESLIDE, NULL, NULL, NULL, 2,
+					slideNotes.at(i).at(k)->getNoteStartAndEnd().second.first, slideNotes.at(i).at(k)->getNoteStartAndEnd().second.second));
 			}
 		}
 	}

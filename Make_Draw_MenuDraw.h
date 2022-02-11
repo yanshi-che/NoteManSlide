@@ -41,6 +41,7 @@ namespace Make {
 				NoteType,//ノーツの種類の変更
 				Normal,
 				Long,
+				Slide,
 			};
 			static std::shared_ptr<File::Make_File_MusicData> p_musicData;
 			static void MenuItemSelectCallBack(const TCHAR* itemName, int itemID);//メニューが選択されたら呼ばれる関数

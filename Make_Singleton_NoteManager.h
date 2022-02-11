@@ -7,6 +7,7 @@
 
 #include "Make_Note_NormalNoteContainer.h"
 #include "Make_Note_LongNoteContainer.h"
+#include "Make_Note_SlideNoteContainer.h"
 
 
 namespace Make {
@@ -16,12 +17,15 @@ namespace Make {
 		private:
 			std::vector<std::vector<std::shared_ptr<Note::Make_Note_NormalNoteContainer>>> normalNotes;
 			std::vector<std::vector<std::shared_ptr<Note::Make_Note_LongNoteContainer>>> longNotes;
+			std::vector<std::vector<std::shared_ptr<Note::Make_Note_SlideNoteContainer>>> slideNotes;
 
-			std::uint16_t startBarIDForLongNote;
-			std::uint16_t startBeatIDForLongNote;
-			float* p_yForLong;
+			std::uint16_t startBarID;//ロングとスライド用の始点の保存
+			std::uint16_t startBeatID;
+			std::uint8_t startLaneID;
+			float mouseYBefore;
+			float* p_yBefore;
 			std::uint16_t longNotesGroup;
-			bool longNoteErase;
+			bool noteErase;
 
 			std::uint16_t barIDForInitOneVector;
 			static Make_Singleton_NoteManager* p_instance;
@@ -37,10 +41,12 @@ namespace Make {
 			void removeLongNote(std::uint16_t barID,std::uint16_t beatID,std::uint8_t laneID);
 			void setNormalNote(std::uint16_t barID,std::uint16_t beatID,std::uint8_t laneID);
 			void setLongNote(std::uint16_t barID,std::uint16_t beatID,std::uint8_t laneID,float* y,bool isFirst);
+			void setSlideNote(std::uint16_t barID, std::uint16_t beatID, std::uint8_t laneID,float mouseY,bool isFirst);
 			void setBarIDForInitOneVector(std::uint16_t	id);
 
 			const std::vector<std::vector<std::shared_ptr<Note::Make_Note_NormalNoteContainer>>>& getNormalNoteVector();
 			const std::vector<std::vector<std::shared_ptr<Note::Make_Note_LongNoteContainer>>>& getLongNoteVector();
+			const std::vector<std::vector<std::shared_ptr<Note::Make_Note_SlideNoteContainer>>>& getSlideNoteVector();
 
 			void draw(std::uint16_t barID, std::uint16_t beatID);
 		};

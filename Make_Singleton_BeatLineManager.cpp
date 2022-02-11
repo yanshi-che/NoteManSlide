@@ -33,19 +33,19 @@ void Make::Singleton::Make_Singleton_BeatLineManager::setMusicData(const std::sh
 
 void Make::Singleton::Make_Singleton_BeatLineManager::initialize(std::uint8_t initialQuontize,float separateBarWidth) {
 	float timeSum = p_musicData->getBeginDelay();
-	float timePerBeat = (p_musicData->getTotalMinutes() * Global::MINUTE / p_musicData->getBarLength() / initialQuontize);
+	const float timePerBeat = (p_musicData->getTotalMinutes() * Global::MINUTE / p_musicData->getBarLength() / initialQuontize);
 	float initY = initialY;
-	float yWidth = yWidthRegular * separateBarWidth;
+	const float yWidth = yWidthRegular * separateBarWidth;
 	float yMax = 0;
 	totalScoreWidth = 0;
 	p_noteManager->initVector(p_musicData->getBarLength(),initialQuontize);
 	barVec.resize(p_musicData->getBarLength());
 	std::uint8_t amountOfLane = p_musicData->getAmountOfLane();
 	for (int i = 0,iSize = p_musicData->getBarLength(); i < iSize; i++) {
-		barVec[i].resize(initialQuontize);
+		barVec.at(i).resize(initialQuontize);
 		for (int k = 0; k < initialQuontize; k++) {
 			yMax = initY + (yWidth * p_musicData->getBarLength() * initialQuontize) - Make::Global::WINDOW_HEIGHT *0.5f;
-			barVec[i][k]=std::make_unique<Draw::Make_Draw_LineContainer>(i, amountOfLane, timeSum, k, initY,yMax);
+			barVec.at(i).at(k)=std::make_unique<Draw::Make_Draw_LineContainer>(i, amountOfLane, timeSum, k, initY,yMax);
 			timeSum += timePerBeat;
 			initY -= yWidth;
 			totalScoreWidth += yWidth;
@@ -67,11 +67,11 @@ void Make::Singleton::Make_Singleton_BeatLineManager::draw() {
 		}
 		scrBar->draw();
 		for (int i = 0, iSize = static_cast<int>(barVec.size()); i < iSize; ++i) {
-			for (int k = 0, kSize = static_cast<int>(barVec[i].size()); k < kSize; ++k) {
+			for (int k = 0, kSize = static_cast<int>(barVec.at(i).size()); k < kSize; ++k) {
 				if (y != 0) {
-					barVec[i][k]->updateY(y);
+					barVec.at(i).at(k)->updateY(y);
 				}
-				barVec[i][k]->draw();
+				barVec.at(i).at(k)->draw();
 			}
 		}
 		if (initBarLineFunction != nullptr) {
@@ -92,9 +92,9 @@ void Make::Singleton::Make_Singleton_BeatLineManager::initAllBarLineByQuontize()
 
 void Make::Singleton::Make_Singleton_BeatLineManager::initOneBarLineByQuontize() {
 	std::uint16_t id = Draw::Make_Draw_LineContainer::getbarIDForChangeQuontize();
-	std::uint16_t beforeQuontize = static_cast<std::uint16_t>(barVec[id].size());
+	std::uint16_t beforeQuontize = static_cast<std::uint16_t>(barVec.at(id).size());
 	//ロングノーツがまたがっていたら削除処理
-	for (int i = 1,iSize= static_cast<int>(barVec[id].size()); i < iSize; ++i) {
+	for (int i = 1,iSize= static_cast<int>(barVec.at(id).size()); i < iSize; ++i) {
 		for (int k = 0, kSize = p_musicData->getAmountOfLane(); k < kSize; ++k) {
 			p_noteManager->removeLongNote(id, i, k);
 		}
@@ -105,40 +105,42 @@ void Make::Singleton::Make_Singleton_BeatLineManager::initOneBarLineByQuontize()
 	p_noteManager->resetVector(false);
 	float separate = 1.0f;
 	checkSeparate(separate);
+
+	//ノーツの初期化
 	p_noteManager->initOneVector(quontize);
 
 	// 新たな拍線の作成
-	float timePerBeat = (p_musicData->getTotalMinutes() * Global::MINUTE / p_musicData->getBarLength() / quontize);
-	float timeSum = barVec[id][0]->getTime();
-	float yWidth = yWidthRegular * separate;
-	float initY = barVec[id][0]->getY();
-	float yMax = barVec[id][0]->getYMax();
-	float yMin = barVec[id][0]->getYMin();
+	const float timePerBeat = (p_musicData->getTotalMinutes() * Global::MINUTE / p_musicData->getBarLength() / quontize);
+	float timeSum = barVec.at(id).at(0)->getTime();
+	const float yWidth = yWidthRegular * separate;
+	float initY = barVec.at(id).at(0)->getY();
+	float yMax = barVec.at(id).at(0)->getYMax();
+	float yMin = barVec.at(id).at(0)->getYMin();
 	float yChange = 0;//変更した小節全体の幅
 	std::uint8_t amountOfLane = p_musicData->getAmountOfLane();
-	barVec[id].resize(quontize);
+	barVec.at(id).resize(quontize);
 	for (int i = 1; i < quontize; ++i) {
 		timeSum += timePerBeat;
 		initY -= yWidth;
 		yMax -= yWidth;
 		yMin -= yWidth;
 		yChange -= yWidth;
-		barVec[id][i] = std::make_unique<Draw::Make_Draw_LineContainer>(id, amountOfLane, timeSum, i, initY, yMax);
-		barVec[id][i]->setYMin(yMin);
+		barVec.at(id).at(i) = std::make_unique<Draw::Make_Draw_LineContainer>(id, amountOfLane, timeSum, i, initY, yMax);
+		barVec.at(id).at(i)->setYMin(yMin);
 	}
 
 	//変更した小節より後の小節の座標調整
 	yChange -= yWidth;
 	if (id < p_musicData->getBarLength() - 1) {
-		yChange = yChange + (barVec[id][0]->getY() - barVec[id + 1][0]->getY());//変化量
+		yChange = yChange + (barVec.at(id).at(0)->getY() - barVec.at(id + 1).at(0)->getY());//変化量
 		for (int i = 0; i < id; ++i) {
-			for (int k = 0, kSize = static_cast<int>(barVec[i].size()); k < kSize; ++k) {
-				barVec[i][k]->updateYMax(yChange);
+			for (int k = 0,kSize = static_cast<int>(barVec.at(i).size()); k < kSize; ++k) {
+				barVec.at(i).at(k)->updateYMax(yChange);
 			}
 		}
-		for (int i = id + 1, iSize = static_cast<int>(barVec.size()); i < iSize; ++i) {
-			for (int k = 0, kSize = static_cast<int>(barVec[i].size()); k < kSize; ++k) {
-				barVec[i][k]->updateByInitOneBar(yChange);
+		for (int i = id + 1,iSize = static_cast<int>(barVec.size()); i < iSize; ++i) {
+			for (int k = 0, kSize = static_cast<int>(barVec.at(i).size()); k < kSize; ++k) {
+				barVec.at(i).at(k)->updateByInitOneBar(yChange);
 			}
 		}
 	}
@@ -146,7 +148,7 @@ void Make::Singleton::Make_Singleton_BeatLineManager::initOneBarLineByQuontize()
 	//スクロールバーの初期化
 	totalScoreWidth -= yChange;
 	initScrollBar();
-	scrBar->updateBarY(barVec[0][0]->getY() - initialY);
+	scrBar->updateBarY(barVec.at(0).at(0)->getY() - initialY);
 }
 
 void Make::Singleton::Make_Singleton_BeatLineManager::checkSeparate(float& separate) {
@@ -169,15 +171,15 @@ void Make::Singleton::Make_Singleton_BeatLineManager::checkSeparate(float& separ
 void Make::Singleton::Make_Singleton_BeatLineManager::resetBarVec(bool isAll) {
 	if (isAll) {
 		for (int i = 0, iSize = static_cast<int>(barVec.size()); i < iSize; ++i) {
-			for (int k = 0, kSize = static_cast<int>(barVec[i].size()); k < kSize; ++k) {
-				barVec[i][k].reset();
+			for (int k = 0, kSize = static_cast<int>(barVec.at(i).size()); k < kSize; ++k) {
+				barVec.at(i).at(k).reset();
 			}
 		}
 	}
 	else {
-		std::uint16_t id = Draw::Make_Draw_LineContainer::getbarIDForChangeQuontize();
-		for (int i = 1, iSize = static_cast<int>(barVec[id].size()); i < iSize; ++i) {
-			barVec[id][i].reset();
+		const std::uint16_t id = Draw::Make_Draw_LineContainer::getbarIDForChangeQuontize();
+		for (int i = 1, iSize = static_cast<int>(barVec.at(id).size()); i < iSize; ++i) {
+			barVec.at(id).at(i).reset();
 		}
 	}
 }

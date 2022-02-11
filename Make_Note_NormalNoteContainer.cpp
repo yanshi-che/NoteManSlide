@@ -9,8 +9,8 @@ Make::Note::Make_Note_NormalNoteContainer::Make_Note_NormalNoteContainer(std::ui
 	notesFlag.resize(amountOfLane);
 	float laneWidth = (Global::DRAW_X_MAX - Global::DRAW_X_MIN) / amountOfLane;
 	for (int i = 0; i < amountOfLane; ++i) {
-		noteX[i] = laneWidth * i + Global::DRAW_X_MIN + laneWidth * 0.5f;
-		notesFlag[i] = false;
+		noteX.at(i) = laneWidth * i + Global::DRAW_X_MIN + laneWidth * 0.5f;
+		notesFlag.at(i) = false;
 	}
 	color = GetColor(255, 255, 255);
 	notePointX = noteWidth * 1.2f;
@@ -20,24 +20,24 @@ Make::Note::Make_Note_NormalNoteContainer::Make_Note_NormalNoteContainer(std::ui
 void Make::Note::Make_Note_NormalNoteContainer::drawNote() {
 	if (r_y < Make::Global::WINDOW_HEIGHT && r_y>0) {
 		for (int i = 0, iSize = static_cast<int>(notesFlag.size()); i < iSize; ++i) {
-			if (notesFlag[i]) {
-				DrawBoxAA(noteX[i] - notePointX, r_y - notePointY, noteX[i] + notePointX, r_y + notePointY, color, true);
+			if (notesFlag.at(i)) {
+				DrawBoxAA(noteX.at(i) - notePointX, r_y - notePointY, noteX.at(i) + notePointX, r_y + notePointY, color, true);
 			}
 		}
 	}
 }
 
 void Make::Note::Make_Note_NormalNoteContainer::setNormalNoteFlag(std::uint8_t laneID) {
-	if (!notesFlag[laneID]) {
-		notesFlag[laneID] = true;
+	if (!notesFlag.at(laneID)) {
+		notesFlag.at(laneID) = true;
 	}
 	else {
-		notesFlag[laneID] = false;
+		notesFlag.at(laneID) = false;
 	}
 }
 
 const bool Make::Note::Make_Note_NormalNoteContainer::getNormalNoteFlag(std::uint8_t laneID) {
-	return notesFlag[laneID];
+	return notesFlag.at(laneID);
 }
 
 const float& Make::Note::Make_Note_NormalNoteContainer::getTime() {

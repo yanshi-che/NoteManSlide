@@ -34,12 +34,14 @@ namespace Make{
 
 		struct NoteData { //jsonファイル書き込み用の構造体
 			float time;//ノーツの時間
-			std::uint8_t noteType;//ノーツの種類 1ならNormal 2ならLong
+			std::uint8_t noteType;//ノーツの種類 1ならNormal 2ならLong 3ならSlide
 			std::uint8_t laneIndex;//ノーツが属するレーン
-			bool longNoteType;//ロングノーツの種類 trueなら始点終点　falseなら途中
 			std::uint16_t longNoteGroupIndex;//各ロングノーツが属するグループ
 			std::uint16_t noteIndex;//そのレーンで何番目のノーツか
-			NoteData(float time, std::uint8_t noteType, std::uint8_t laneIndex, bool longNoteType, std::uint16_t longNoteGroupIndex, std::uint16_t noteIndex);
+			std::uint8_t rightOrLeft;//1なら右 2なら左
+			std::uint8_t sildeLaneIndexStart;//スライドノーツの開始レーン
+			std::uint8_t sildeLaneIndexEnd;//スライドノーツの終了レーン
+			NoteData(float time, std::uint8_t noteType, std::uint8_t laneIndex, std::uint16_t longNoteGroupIndex, std::uint16_t noteIndex, std::uint8_t rightOrLeft, std::uint8_t sildeLaneIndexStart, std::uint8_t sildeLaneIndexEnd);
 		};
 
 		void tag_invoke(const json::value_from_tag&, json::value& jv, const NoteData& n);//valu_from用のオーバロード関数

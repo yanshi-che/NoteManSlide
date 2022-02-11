@@ -28,6 +28,7 @@ Make::Draw::Make_Draw_MenuDraw::Make_Draw_MenuDraw(){
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, MENUITEM_IDTOP, FALSE, "ノーツの種類", NoteType);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, NoteType, FALSE, "通常", Normal);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, NoteType, FALSE, "ロング", Long);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, NoteType, FALSE, "スライド", Slide);
 	SetMenuItemSelectCallBackFunction(MenuItemSelectCallBack);
 }
 
@@ -121,6 +122,9 @@ void Make::Draw::Make_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemNam
 		break;
 	case Long:
 		Make_Draw_LineContainer::setNoteType(Global::NOTETYPELONG);
+		break;
+	case Slide:
+		Make_Draw_LineContainer::setNoteType(Global::NOTETYPESLIDE);
 		break;
 	}
 

@@ -11,10 +11,10 @@ Make::Note::Make_Note_LongNoteContainer::Make_Note_LongNoteContainer(std::uint16
 	notesGroup.resize(amountOfLane);
 	float laneWidth = (Global::DRAW_X_MAX - Global::DRAW_X_MIN) / amountOfLane;
 	for (int i = 0; i < amountOfLane; ++i) {
-		notesX[i] = laneWidth * i + Global::DRAW_X_MIN + laneWidth / 2.0f;
-		notesFlag[i] = { false,false };
-		notesHeight1[i] = 0;
-		notesHeight2[i] = 0;
+		notesX.at(i) = laneWidth * i + Global::DRAW_X_MIN + laneWidth / 2.0f;
+		notesFlag.at(i) = { false,false };
+		notesHeight1.at(i) = 0;
+		notesHeight2.at(i) = 0;
 	}
 	color = GetColor(255,255,255);
 	notePointX = noteWidth * 1.2f;
@@ -24,8 +24,8 @@ Make::Note::Make_Note_LongNoteContainer::Make_Note_LongNoteContainer(std::uint16
 void Make::Note::Make_Note_LongNoteContainer::drawLongNote() {
 	if (r_y < Make::Global::WINDOW_HEIGHT && r_y>0) {
 		for (int i = 0, iSize = static_cast<int>(notesFlag.size()); i < iSize; ++i) {
-			if (notesFlag[i].first && notesFlag[i].second) {
-				DrawBoxAA(notesX[i] - notePointX, r_y - notePointY - notesHeight1[i], notesX[i] + notePointX, r_y + notePointY + notesHeight2[i], color, true);
+			if (notesFlag.at(i).first && notesFlag.at(i).second) {
+				DrawBoxAA(notesX.at(i) - notePointX, r_y - notePointY - notesHeight1.at(i), notesX.at(i) + notePointX, r_y + notePointY + notesHeight2.at(i), color, true);
 			}
 		}
 	}
@@ -33,38 +33,38 @@ void Make::Note::Make_Note_LongNoteContainer::drawLongNote() {
 
 void Make::Note::Make_Note_LongNoteContainer::setLongNoteFlag(std::uint8_t laneID,bool isFirstOrLast) {
 	if (isFirstOrLast) {
-		if (!notesFlag[laneID].first) {
-			notesFlag[laneID].first = true;
-			notesFlag[laneID].second = true;
+		if (!notesFlag.at(laneID).first) {
+			notesFlag.at(laneID).first = true;
+			notesFlag.at(laneID).second = true;
 		}
 		else {
-			notesFlag[laneID].first = false;
-			notesFlag[laneID].second = false;
+			notesFlag.at(laneID).first = false;
+			notesFlag.at(laneID).second = false;
 		}
 	}
 	else {
-		if (!notesFlag[laneID].first) {
-			notesFlag[laneID].first = true;
-			notesFlag[laneID].second = false;
+		if (!notesFlag.at(laneID).first) {
+			notesFlag.at(laneID).first = true;
+			notesFlag.at(laneID).second = false;
 		}
 		else {
-			notesFlag[laneID].first = false;
-			notesFlag[laneID].second = false;
+			notesFlag.at(laneID).first = false;
+			notesFlag.at(laneID).second = false;
 		}
 	}
 }
 
-void Make::Note::Make_Note_LongNoteContainer::setNoteHeight(std::uint8_t laneID,float noteHeight,bool isOne) {
-	if (isOne) {
-		this->notesHeight1[laneID] = noteHeight;
+void Make::Note::Make_Note_LongNoteContainer::setNoteHeight(std::uint8_t laneID,float noteHeight,bool isFirst) {
+	if (isFirst) {
+		this->notesHeight1.at(laneID) = noteHeight;
 	}
 	else {
-		this->notesHeight2[laneID] = noteHeight;
+		this->notesHeight2.at(laneID) = noteHeight;
 	}
 }
 
 void Make::Note::Make_Note_LongNoteContainer::setNoteGroup(std::uint8_t laneID,std::uint16_t group) {
-	notesGroup[laneID] = group;
+	notesGroup.at(laneID) = group;
 }
 
 const float& Make::Note::Make_Note_LongNoteContainer::getY() {
@@ -72,11 +72,11 @@ const float& Make::Note::Make_Note_LongNoteContainer::getY() {
 }
 
 const std::pair<bool, bool> Make::Note::Make_Note_LongNoteContainer::getLongNoteFlag(std::uint8_t laneID) {
-	return notesFlag[laneID];
+	return notesFlag.at(laneID);
 }
 
 const std::uint16_t& Make::Note::Make_Note_LongNoteContainer::getNoteGroup(std::uint8_t laneID) {
-	return notesGroup[laneID];
+	return notesGroup.at(laneID);
 }
 
 const float& Make::Note::Make_Note_LongNoteContainer::getTime() {

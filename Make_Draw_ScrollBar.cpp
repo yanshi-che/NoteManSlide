@@ -147,9 +147,9 @@ void Make::Draw::Make_Draw_ScrollBar::setBarY(float sY) {
 }
 
 void Make::Draw::Make_Draw_ScrollBar::updateLineContainerY(float y) {
-	for (int i = 0, iSize = static_cast<int>(barVec.size()); i < iSize; ++i) {
-		for (int k = 0, kSize = static_cast<int>(barVec[i].size()); k < kSize; ++k) {
-			barVec[i][k]->updateY(y);
+	for (int i = 0,iSize = static_cast<int>(barVec.size()); i < iSize; ++i) {
+		for (int k = 0,kSize = static_cast<int>(barVec.at(i).size()); k < kSize; ++k) {
+			barVec.at(i).at(k)->updateY(y);
 		}
 	}
 }

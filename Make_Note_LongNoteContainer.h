@@ -29,8 +29,9 @@ namespace Make {
 			Make_Note_LongNoteContainer(std::uint16_t barID,std::uint16_t beatID,const float& y,std::uint8_t amountOfLane,float time);
 			void setLongNoteFlag(std::uint8_t laneID,bool isFirstOrLast);//ノーツをセット既にセットされているなら撤去
 			void drawLongNote();
-			void setNoteHeight(std::uint8_t laneID, float noteHeight,bool isOne);
+			void setNoteHeight(std::uint8_t laneID, float noteHeight,bool isFirst);
 			void setNoteGroup(std::uint8_t laneID, std::uint16_t group);
+
 			const std::uint16_t& getNoteGroup(std::uint8_t laneID);
 			const float& getY();
 			const std::pair<bool, bool> getLongNoteFlag(std::uint8_t laneID);

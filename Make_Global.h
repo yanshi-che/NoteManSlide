@@ -10,10 +10,11 @@ namespace Make {
 		constexpr const float DRAW_X_MIN{ 40.0f };//ウインドウの横幅
 		constexpr const float DRAW_X_MAX{ 700.0f };//ウインドウの横幅
 
-		constexpr const float MINUTE{ 60.0 };
+		constexpr const float MINUTE{ 60.0f };
 
 		constexpr const std::uint8_t NOTETYPENORMAL{ 1 };//ノーツの識別
 		constexpr const std::uint8_t NOTETYPELONG{ 2 };
+		constexpr const std::uint8_t NOTETYPESLIDE{ 3 };
 
 		constexpr const std::uint8_t QUARTER{ 4 };// ４分音符
 		constexpr const std::uint8_t EIGHTH{ 8 };// ８分音符

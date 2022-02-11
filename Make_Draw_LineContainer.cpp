@@ -27,11 +27,11 @@ Make::Draw::Make_Draw_LineContainer::Make_Draw_LineContainer(std::uint16_t barID
 	laneX.resize(amountOfLane + 1);
 	float laneWidth = (Global::DRAW_X_MAX - Global::DRAW_X_MIN) / amountOfLane;
 	for (int i = 0; i <= amountOfLane; ++i) {
-		laneX[i] = laneWidth * i + Global::DRAW_X_MIN;
+		laneX.at(i) = laneWidth * i + Global::DRAW_X_MIN;
 	}
 
 	barIDColor = GetColor(36, 216, 236);
-	std::ios::fmtflags curret_flag = std::cout.flags();
+	const std::ios::fmtflags curret_flag = std::cout.flags();
 	std::ostringstream ss;
 	ss << std::setw(3) << std::setfill('0') << barID + 1;
 	barIDStr = ss.str();
@@ -93,7 +93,7 @@ void Make::Draw::Make_Draw_LineContainer::drawNotes()  {
 	if (noteType == Global::NOTETYPENORMAL) {
 		if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(mouseX,mouseY) && checkClickBorder()) {
 			for (int i = 0,iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
-				if (laneX[i] < mouseX && mouseX < laneX[i + 1]) {
+				if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
 					p_noteManager->setNormalNote(barID, beatID, i);
 					clickObserver = true;
 					break;
@@ -107,7 +107,7 @@ void Make::Draw::Make_Draw_LineContainer::drawNotes()  {
 	else if (noteType == Global::NOTETYPELONG) {
 		if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(mouseX, mouseY) && checkClickBorder()) {
 			for (int i = 0, iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
-				if (laneX[i] < mouseX && mouseX < laneX[i + 1]) {
+				if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
 					laneIDForLongNote = i;
 					p_noteManager->setLongNote(barID, beatID, i,&y,true);
 					clickObserver = true;
@@ -121,6 +121,27 @@ void Make::Draw::Make_Draw_LineContainer::drawNotes()  {
 			clickObserver = false;
 		}
 	}
+	else if (noteType == Global::NOTETYPESLIDE) {
+		if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(mouseX, mouseY) && checkClickBorder()) {
+			for (int i = 0, iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
+				if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
+					p_noteManager->setSlideNote(barID, beatID, i,static_cast<float>(mouseX),true);
+					clickObserver = true;
+					break;
+				}
+			}
+		}
+		if (clickObserver && p_mouseCheck->isMouseClickLeftUp(mouseX, mouseY)) {
+			for (int i = 0, iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
+				if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
+					p_noteManager->setSlideNote(NULL, NULL, i,static_cast<float>(mouseX),false);
+					clickObserver = false;
+					break;
+				}
+			}
+		}
+	}
+
 	p_noteManager->draw(barID,beatID);
 }
 
