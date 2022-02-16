@@ -19,7 +19,10 @@ Make::Singleton::Make_Singleton_MouseOperationCheck* Make::Singleton::Make_Singl
 }
 
 void Make::Singleton::Make_Singleton_MouseOperationCheck::destroyInstance() {
-	delete p_instance;
+	if (p_instance != nullptr) {
+		delete p_instance;
+		p_instance = nullptr;
+	}
 }
 
 void Make::Singleton::Make_Singleton_MouseOperationCheck::checkMouseClick() {

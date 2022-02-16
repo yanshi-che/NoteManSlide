@@ -31,7 +31,7 @@ namespace Make {
 			Singleton::Make_Singleton_MouseOperationCheck* p_mouseCheck;
 
 			const std::uint16_t barID; //何小節目に属しているか
-			const std::uint16_t beatID;//その小節の何番目の線か
+			const std::uint8_t beatID;//その小節の何番目の線か
 			const float time;//曲の開始から何秒か
 			const std::uint8_t& amountOfLane; //レーンの数
 			float yMax;//座標の最大値
@@ -47,24 +47,24 @@ namespace Make {
 			std::uint8_t brend;
 
 			bool checkClickBorder();
-			void drawNotes() ;
+			void drawNote() ;
 			void drawLine() ;
 			void drawBarID() ;
 		public:
-			Make_Draw_LineContainer(std::uint16_t barID,std::uint8_t amountOfLane,float time,std::uint16_t beatID,float y,float yMax);
+			Make_Draw_LineContainer(std::uint16_t barID,std::uint8_t amountOfLane,float time,std::uint8_t beatID,float y,float yMax);
 			static void setNoteType(std::uint8_t type) ;
 			static std::uint16_t getbarIDForChangeQuontize();
-
-			float getTime();
-			float getY();
-			float getYMin();
-			float getYMax();
 
 			void setYMin(float y);
 			void updateYMax(float y);
 			void updateByInitOneBar(float yWidth);
 			void updateY(float y);
 			void draw();
+
+			float getTime();
+			float getY();
+			float getYMin();
+			float getYMax();
 		};
 	}
 }

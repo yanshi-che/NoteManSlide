@@ -14,7 +14,7 @@ std::uint16_t Make::Draw::Make_Draw_LineContainer::getbarIDForChangeQuontize() {
 	return barIDForChangeQuontize;
 }
 
-Make::Draw::Make_Draw_LineContainer::Make_Draw_LineContainer(std::uint16_t barID,std::uint8_t amountOfLane,float time,std::uint16_t beatID,float y,float yMax) :
+Make::Draw::Make_Draw_LineContainer::Make_Draw_LineContainer(std::uint16_t barID,std::uint8_t amountOfLane,float time,std::uint8_t beatID,float y,float yMax) :
 	barID(barID),amountOfLane(amountOfLane),time(time), beatID(beatID){
 	this->y = y;
 	this->yMax = yMax;
@@ -60,7 +60,7 @@ Make::Draw::Make_Draw_LineContainer::Make_Draw_LineContainer(std::uint16_t barID
 void Make::Draw::Make_Draw_LineContainer::draw() {
 	drawLine();
 	drawBarID();
-	drawNotes();
+	drawNote();
 }
 
 void Make::Draw::Make_Draw_LineContainer::drawBarID()  {
@@ -89,7 +89,7 @@ void Make::Draw::Make_Draw_LineContainer::drawLine()  {
 	}
 }
 
-void Make::Draw::Make_Draw_LineContainer::drawNotes()  {
+void Make::Draw::Make_Draw_LineContainer::drawNote()  {
 	if (noteType == Global::NOTETYPENORMAL) {
 		if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(mouseX,mouseY) && checkClickBorder()) {
 			for (int i = 0,iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {

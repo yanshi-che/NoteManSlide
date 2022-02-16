@@ -2,13 +2,14 @@
 
 #include "dxlib/DxLib.h"
 #include <memory>
+#include <utility>
 
 #include "Make_Global.h"
 #include "Make_File_MusicData.h"
 #include "Make_File_MusicFileIO.h"
 #include "Make_File_JsonIO.h"
+#include "Make_File_SaveFileIO.h"
 #include "Make_Draw_LineContainer.h"
-#include "Make_Singleton_LaneDraw.h"
 #include "Make_Singleton_BeatLineManager.h"
 
 namespace Make {
@@ -47,7 +48,7 @@ namespace Make {
 			static void MenuItemSelectCallBack(const TCHAR* itemName, int itemID);//ƒƒjƒ…[‚ª‘I‘ğ‚³‚ê‚½‚çŒÄ‚Î‚ê‚éŠÖ”
 		public:
 			Make_Draw_MenuDraw();
-			static void setMusicData(std::unique_ptr<File::Make_File_MusicData> md);
+			static void setMusicData(std::shared_ptr<File::Make_File_MusicData> md);
 		};
 
 	}

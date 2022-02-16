@@ -22,6 +22,7 @@ namespace Make {
 		constexpr const std::uint8_t THIRTYSECOND{ 32 };// ３２分音符
 		constexpr const std::uint8_t TRIPLET{ 12 };// ３連符
 
+		static bool saveFlag = true;//セーブしたかどうかのフラグ
 		static std::uint8_t clickWidth = 8;//拍線に対するマウスクリックの許容幅
 	}
 }

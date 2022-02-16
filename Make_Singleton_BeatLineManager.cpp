@@ -12,26 +12,65 @@ Make::Singleton::Make_Singleton_BeatLineManager* Make::Singleton::Make_Singleton
 }
 
 void Make::Singleton::Make_Singleton_BeatLineManager::destroyInstance() {
-	delete p_instance;
+	if (p_instance != nullptr) {
+		delete p_instance;
+		p_instance = nullptr;
+	}
 }
 
 Make::Singleton::Make_Singleton_BeatLineManager::Make_Singleton_BeatLineManager(){
 	p_musicData = nullptr;
 	scrBar = nullptr;
-	p_noteManager = Singleton::Make_Singleton_NoteManager::getInstance();
+	p_laneDraw = nullptr;
+	p_noteManager = nullptr;
 	y = 0;
 	totalScoreWidth = 0;
 	yMagnificationByMouseWheel = 25.0f;
 	initBarLineFunction = nullptr;
 	quontize = Global::QUARTER;
+	std::uint16_t barIDForInitOneVector = 0;
 }
 
-void Make::Singleton::Make_Singleton_BeatLineManager::setMusicData(const std::shared_ptr<File::Make_File_MusicData>& data){
+void Make::Singleton::Make_Singleton_BeatLineManager::draw() {
+	if (p_musicData != nullptr) {
+		y = GetMouseWheelRotVolF() * yMagnificationByMouseWheel;
+		if (y != 0) {
+			scrBar->updateBarY(y);
+		}
+		scrBar->draw();
+		for (int i = 0, iSize = static_cast<int>(barVec.size()); i < iSize; ++i) {
+			for (int k = 0, kSize = static_cast<int>(barVec.at(i).size()); k < kSize; ++k) {
+				if (y != 0) {
+					barVec.at(i).at(k)->updateY(y);
+				}
+				barVec.at(i).at(k)->draw();
+			}
+		}
+		p_laneDraw->draw();
+		if (initBarLineFunction != nullptr) {
+			initBarLineFunction();
+			initBarLineFunction = nullptr;
+		}
+	}
+}
+
+void Make::Singleton::Make_Singleton_BeatLineManager::finalize() {
+	p_musicData.reset();
+	scrBar.reset();
+	resetBarVec(true);
+	p_laneDraw.reset();
+	Make_Singleton_NoteManager::destroyInstance();
+}
+
+void Make::Singleton::Make_Singleton_BeatLineManager::initialize(const std::shared_ptr<File::Make_File_MusicData>& data){
 	p_musicData = data;
-	initialize(quontize, 1.0f);
+	p_laneDraw = std::make_unique<Make_Draw_LaneDraw>();
+	p_laneDraw->setamountOfLane(p_musicData->getAmountOfLane());
+	p_noteManager = Make_Singleton_NoteManager::getInstance();
+	initBarVec(quontize, 1.0f);
 }
 
-void Make::Singleton::Make_Singleton_BeatLineManager::initialize(std::uint8_t initialQuontize,float separateBarWidth) {
+void Make::Singleton::Make_Singleton_BeatLineManager::initBarVec(std::uint8_t initialQuontize,float separateBarWidth) {
 	float timeSum = p_musicData->getBeginDelay();
 	const float timePerBeat = (p_musicData->getTotalMinutes() * Global::MINUTE / p_musicData->getBarLength() / initialQuontize);
 	float initY = initialY;
@@ -55,42 +94,24 @@ void Make::Singleton::Make_Singleton_BeatLineManager::initialize(std::uint8_t in
 	initScrollBar();
 }
 
+void Make::Singleton::Make_Singleton_BeatLineManager::initializeBySavaData() {
+
+}
+
 void Make::Singleton::Make_Singleton_BeatLineManager::initScrollBar() {
 	scrBar = std::make_unique<Draw::Make_Draw_ScrollBar>(totalScoreWidth,barVec,yMagnificationByMouseWheel);
 }
 
-void Make::Singleton::Make_Singleton_BeatLineManager::draw() {
-	if (p_musicData != nullptr) {
-		y = GetMouseWheelRotVolF() * yMagnificationByMouseWheel;
-		if (y != 0) {
-			scrBar->updateBarY(y);
-		}
-		scrBar->draw();
-		for (int i = 0, iSize = static_cast<int>(barVec.size()); i < iSize; ++i) {
-			for (int k = 0, kSize = static_cast<int>(barVec.at(i).size()); k < kSize; ++k) {
-				if (y != 0) {
-					barVec.at(i).at(k)->updateY(y);
-				}
-				barVec.at(i).at(k)->draw();
-			}
-		}
-		if (initBarLineFunction != nullptr) {
-			initBarLineFunction();
-			initBarLineFunction = nullptr;
-		}
-	}
-}
-
-void Make::Singleton::Make_Singleton_BeatLineManager::initAllBarLineByQuontize() {
+void Make::Singleton::Make_Singleton_BeatLineManager::initAllBarLineByQuontizeChange() {
 	resetScrollBar();
 	resetBarVec(true);
-	p_noteManager->resetVector(true);
+	p_noteManager->resetVector(true,NULL);
 	float separate = 1.0f;
 	checkSeparate(separate);
-	initialize(quontize,separate);
+	initBarVec(quontize,separate);
 }
 
-void Make::Singleton::Make_Singleton_BeatLineManager::initOneBarLineByQuontize() {
+void Make::Singleton::Make_Singleton_BeatLineManager::initOneBarLineByQuontizeChange() {
 	std::uint16_t id = Draw::Make_Draw_LineContainer::getbarIDForChangeQuontize();
 	std::uint16_t beforeQuontize = static_cast<std::uint16_t>(barVec.at(id).size());
 	//ロングノーツがまたがっていたら削除処理
@@ -102,12 +123,12 @@ void Make::Singleton::Make_Singleton_BeatLineManager::initOneBarLineByQuontize()
 	//vectorの初期化とリサイズ、スクロールバーのリセット
 	resetScrollBar();
 	resetBarVec(false);
-	p_noteManager->resetVector(false);
+	p_noteManager->resetVector(false,barIDForInitOneVector);
 	float separate = 1.0f;
 	checkSeparate(separate);
 
 	//ノーツの初期化
-	p_noteManager->initOneVector(quontize);
+	p_noteManager->initOneVector(quontize,barIDForInitOneVector);
 
 	// 新たな拍線の作成
 	const float timePerBeat = (p_musicData->getTotalMinutes() * Global::MINUTE / p_musicData->getBarLength() / quontize);
@@ -188,12 +209,17 @@ void Make::Singleton::Make_Singleton_BeatLineManager::resetScrollBar() {
 	scrBar.reset();
 }
 
-void Make::Singleton::Make_Singleton_BeatLineManager::setInitBarLineFunc(std::uint8_t quon, bool isAll) {
+void Make::Singleton::Make_Singleton_BeatLineManager::setInitBarLineFunc(std::uint8_t quon, std::uint16_t barIDForInitOneVector, bool isAll) {
 	this->quontize = quon;
+	this->barIDForInitOneVector = barIDForInitOneVector;
 	if (isAll) {
-		initBarLineFunction = [&]{return initAllBarLineByQuontize(); };
+		initBarLineFunction = [&]{return initAllBarLineByQuontizeChange(); };
 	}
 	else {
-		initBarLineFunction = [&]{return initOneBarLineByQuontize(); };
+		initBarLineFunction = [&]{return initOneBarLineByQuontizeChange(); };
 	}
+}
+
+const std::vector<std::vector<std::shared_ptr<Make::Draw::Make_Draw_LineContainer>>>& Make::Singleton::Make_Singleton_BeatLineManager::getBarVec() {
+	return barVec;
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <boost/json.hpp>
 #include <cstdint>
 #include <vector>
 #include <memory>
@@ -8,6 +9,8 @@
 #include "Make_File_MusicData.h"
 #include "Make_Draw_LineContainer.h"
 #include "Make_Draw_ScrollBar.h"
+#include "Make_Draw_LaneDraw.h"
+#include "Make_Singleton_NoteManager.h"
 
 namespace Make {
 	namespace Singleton {
@@ -18,33 +21,39 @@ namespace Make {
 		private:
 			std::shared_ptr<File::Make_File_MusicData> p_musicData; //読み込んだ音楽のデータ
 			std::vector<std::vector<std::shared_ptr<Draw::Make_Draw_LineContainer>>> barVec;//小節
-			std::unique_ptr<Draw::Make_Draw_ScrollBar> scrBar;
+			std::unique_ptr<Draw::Make_Draw_ScrollBar> scrBar;//スクロールバーの描画クラス
+			std::unique_ptr<Make_Draw_LaneDraw> p_laneDraw;//レーンの描画クラス
 			float y;//マウスホイール用の変数
 			float yMagnificationByMouseWheel;//マウスホイール入力による移動量の倍率
 			float totalScoreWidth;//スクロールバー用のスコア全体の大きさ
 			std::function<void()> initBarLineFunction;//描画処理がすべて終わった後に初期化処理をするための格納変数
 			std::uint8_t quontize;
-			Singleton::Make_Singleton_NoteManager* p_noteManager;//ノーツ関連の制御クラス
+			std::uint16_t barIDForInitOneVector;
+
+			Make_Singleton_NoteManager* p_noteManager;//ノーツ関連の制御クラス
 
 			Make_Singleton_BeatLineManager();
 			static Make_Singleton_BeatLineManager* p_instance;
 
 			void checkSeparate(float& separate);
 			void initScrollBar();
-			void initAllBarLineByQuontize();
-			void initOneBarLineByQuontize();
+			void initAllBarLineByQuontizeChange();
+			void initOneBarLineByQuontizeChange();
 			void resetBarVec(bool isAll);
 			void resetScrollBar();
 
 		public:
 			static Make_Singleton_BeatLineManager* getInstance();
-			void destroyInstance();
+			static void destroyInstance();
 
-			void initialize(std::uint8_t initialQuontize,float separateBarWidth);
-			//void finalize();
-			void setMusicData(const std::shared_ptr<File::Make_File_MusicData>& data);
-			void setInitBarLineFunc(std::uint8_t quon, bool isAll);
+			void finalize();
+			void initialize(const std::shared_ptr<File::Make_File_MusicData>& data);
+			void initBarVec(std::uint8_t initialQuontize,float separateBarWidth);
+			void initializeBySavaData();
+			void setInitBarLineFunc(std::uint8_t quon, std::uint16_t barIDForInitOneVector, bool isAll);
 			void draw();
+
+			const std::vector<std::vector<std::shared_ptr<Draw::Make_Draw_LineContainer>>>& getBarVec();
 		};
 	}
 }
