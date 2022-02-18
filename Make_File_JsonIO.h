@@ -2,11 +2,13 @@
 
 #include <boost/json.hpp>
 #include <cstdint>
+#include <deque>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <memory>
 
+#include "Make_Dialog_FailFile.h"
 #include "Make_File_BaseFile.h"
 #include "Make_File_MusicData.h"
 #include "Make_File_FileStructData.h"

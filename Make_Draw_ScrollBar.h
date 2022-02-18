@@ -28,7 +28,7 @@ namespace Make {
 			float barYBefore;//ひとつ前のマウスのy座標を格納
 			float barHeight;//バーの長さ
 			float scrollWidthRate;//スクロールバーと実際の画面との比率
-			float& yMagnificationByMouseWheel;//マウスホイール入力に対する画面移動の倍率
+			const float& yMagnificationByMouseWheel;//マウスホイール入力に対する画面移動の倍率
 			std::int32_t backColor;
 			std::int32_t barColor;
 			std::int32_t arrowUpColor;
@@ -40,19 +40,19 @@ namespace Make {
 			float arrowPointY[4];//上下矢印の頂点のｙ座標
 			std::function<void()> function;//barもしくはarrowのfunctionの格納
 
-			void arrowFunction(bool isUp);
+			void arrowFunction(const bool isUp);
 			void barFunction();
 			void borderCheck();
 			void clickCheck();
 			void drawBack();
 			void drawArrow();
 			void drawBar();
-			void setBarY(float sY);
-			void updateLineContainerY(float y);
+			void setBarY(const float sY);
+			void updateLineContainerY(const float y);
 		public:
-			Make_Draw_ScrollBar(float scrollWidth, std::vector<std::vector<std::shared_ptr<Make_Draw_LineContainer>>>& barVec, float& yMagnificationByMouseWheel);
+			Make_Draw_ScrollBar(const float scrollWidth,std::vector<std::vector<std::shared_ptr<Make_Draw_LineContainer>>>& barVec,const float& yMagnificationByMouseWheel);
 			void draw();
-			void updateBarY(float upY);
+			void updateBarY(const float upY);
 		};
 	}
 }

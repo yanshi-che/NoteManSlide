@@ -28,8 +28,10 @@ std::unique_ptr<Make::File::Make_File_MusicData> Make::File::Make_File_MusicFile
 			throw "音楽ファイルの読み込みに失敗しました";
 		}
 	}
-	catch (const std::string e) {
-		DrawString(50, 50, e.c_str(), GetColor(255, 255, 255));//仮置き
+	catch (const char* e) {
+		Dialog::Make_Dialog_FailFile f;
+		std::string errSentence(e, 37);
+		f.failFileDlg(errSentence);
 		return nullptr;
 	}
 

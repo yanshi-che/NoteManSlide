@@ -16,7 +16,7 @@ void Make::Singleton::Make_Draw_LaneDraw::draw() {
 	}
 }
 
-void Make::Singleton::Make_Draw_LaneDraw::setamountOfLane(std::uint8_t num) {
+void Make::Singleton::Make_Draw_LaneDraw::setamountOfLane(const std::uint8_t num) {
 	amountOfLane = num;
 	laneWidth = (Global::DRAW_X_MAX - Global::DRAW_X_MIN) / amountOfLane;
 }

@@ -12,6 +12,9 @@ void Make::File::Make_File_JsonIO::saveNewJson(const std::shared_ptr<Make_File_M
 	char filePath[MAX_PATH] = "";//セーブするファイルのパス
 	getFilePath(filePath);
 	if (filePath == "") {
+		Dialog::Make_Dialog_FailFile f;
+		std::string errSentence = "ファイル読み込みに失敗しました";
+		f.failFileDlg(errSentence);
 		return;
 	}
 
@@ -34,6 +37,12 @@ void Make::File::Make_File_JsonIO::saveNewJson(const std::shared_ptr<Make_File_M
 	for (int i = 0, iSize = static_cast<int>(p_musicData->getAmountOfLane()); i < iSize; ++i) {
 		noteIndex.at(i) = 0;
 	}
+	struct longNotePoint {//終点が読み込まれるまでlongNoteの始点情報を保管するためのもの
+		std::uint16_t oldIndex;
+		std::uint16_t newIndex;
+		longNotePoint(std::uint16_t oldIndex, std::uint16_t newIndex) { this->oldIndex = oldIndex;  this->newIndex = newIndex; }
+	};
+	std::deque<longNotePoint> longNotePointDeq;//終点が読み込まれるまでlongNoteの始点情報を保管
 	std::uint16_t longNoteGroupIndex = 1;
 	bool isLongGroupLast = false;
 	for (int i = 0, iSize = static_cast<int>(normalNote.size()); i < iSize; ++i) {
@@ -44,23 +53,28 @@ void Make::File::Make_File_JsonIO::saveNewJson(const std::shared_ptr<Make_File_M
 					++noteIndex.at(l);
 				}
 				else if(longNote.at(i).at(k)->getLongNoteFlag(l).second){
-					noteDataVector.push_back(NoteDataForJson(longNote.at(i).at(k)->getTime(), Global::NOTETYPELONG, l,longNoteGroupIndex, noteIndex.at(l),NULL,NULL,NULL));
-					if (!isLongGroupLast) {
-						isLongGroupLast = true;
+					for (int n = 0, nSize = static_cast<int>(longNotePointDeq.size()); n < nSize; ++n) {
+						if (longNote.at(i).at(k)->getNoteGroup(l) == longNotePointDeq.at(n).oldIndex) {
+							noteDataVector.push_back(NoteDataForJson(longNote.at(i).at(k)->getTime(), Global::NOTETYPELONG, l, longNotePointDeq.at(n).newIndex,noteIndex.at(l), NULL, NULL, NULL));
+							isLongGroupLast = true;
+							longNotePointDeq.erase(longNotePointDeq.begin() + n);
+							break;
+						}
 					}
-					else {
-						isLongGroupLast = false;
-						++noteIndex.at(l);
+					if (!isLongGroupLast) {
+						noteDataVector.push_back(NoteDataForJson(longNote.at(i).at(k)->getTime(), Global::NOTETYPELONG, l, longNoteGroupIndex, noteIndex.at(l),NULL, NULL, NULL));
+						longNotePointDeq.push_back(longNotePoint(longNote.at(i).at(k)->getNoteGroup(l), longNoteGroupIndex));
 						++longNoteGroupIndex;
 					}
+					isLongGroupLast = false;
 				}
 			}
 			if (slideNote.at(i).at(k)->getSlideNoteFlag().first) {
-				noteDataVector.push_back(NoteDataForJson(longNote.at(i).at(k)->getTime(), Global::NOTETYPESLIDE, NULL, NULL, NULL, 1,
+				noteDataVector.push_back(NoteDataForJson(slideNote.at(i).at(k)->getTime(), Global::NOTETYPESLIDE, NULL, NULL, NULL, 1,
 					slideNote.at(i).at(k)->getNoteStartAndEnd().first.first, slideNote.at(i).at(k)->getNoteStartAndEnd().first.second));
 			}
 			if (slideNote.at(i).at(k)->getSlideNoteFlag().second) {
-				noteDataVector.push_back(NoteDataForJson(longNote.at(i).at(k)->getTime(), Global::NOTETYPESLIDE, NULL, NULL, NULL, 2,
+				noteDataVector.push_back(NoteDataForJson(slideNote.at(i).at(k)->getTime(), Global::NOTETYPESLIDE, NULL, NULL, NULL, 2,
 					slideNote.at(i).at(k)->getNoteStartAndEnd().second.first, slideNote.at(i).at(k)->getNoteStartAndEnd().second.second));
 			}
 		}

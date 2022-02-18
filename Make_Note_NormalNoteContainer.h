@@ -22,10 +22,10 @@ namespace Make {
 			float notePointX;
 			float notePointY;
 		public:
-			Make_Note_NormalNoteContainer(std::uint16_t barID,std::uint8_t beatID,const float& y,std::uint8_t amountOfLane,float time);
-			void setNormalNoteFlag(std::uint8_t laneID);
+			Make_Note_NormalNoteContainer(const std::uint16_t barID,const std::uint8_t beatID,const float& y,const std::uint8_t amountOfLane,const float time);
+			void setNormalNoteFlag(const std::uint8_t laneID);
 			void drawNote();
-			const bool getNormalNoteFlag(std::uint8_t laneID);
+			const bool getNormalNoteFlag(const std::uint8_t laneID);
 			const float& getTime();
 			const std::uint16_t& getBarID();
 			const std::uint8_t& getBeatID();

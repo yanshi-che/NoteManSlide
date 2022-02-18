@@ -1,6 +1,6 @@
 #include "Make_Draw_ScrollBar.h"
 
-Make::Draw::Make_Draw_ScrollBar::Make_Draw_ScrollBar(float scrollWidth, std::vector<std::vector<std::shared_ptr<Make_Draw_LineContainer>>>& barVec, float& yMagnificationByMouseWheel) :
+Make::Draw::Make_Draw_ScrollBar::Make_Draw_ScrollBar(const float scrollWidth,std::vector<std::vector<std::shared_ptr<Make_Draw_LineContainer>>>& barVec,const float& yMagnificationByMouseWheel) :
 	barVec(barVec), yMagnificationByMouseWheel(yMagnificationByMouseWheel) {
 	mouseX = 0;
 	mouseY = 0;
@@ -28,7 +28,7 @@ Make::Draw::Make_Draw_ScrollBar::Make_Draw_ScrollBar(float scrollWidth, std::vec
 	arrowPointY[3] = arrowWidthYAndSpace;//è„ñÓàÛÇÃï˚å¸
 }
 
-void Make::Draw::Make_Draw_ScrollBar::arrowFunction(bool isUp) {
+void Make::Draw::Make_Draw_ScrollBar::arrowFunction(const bool isUp) {
 	if (Global::WINDOW_WIDTH - backWidth < mouseX && mouseX < Global::WINDOW_WIDTH) {
 		if (isUp && 0 < mouseY && mouseY < backWidth) {
 			updateBarY(yMagnificationByMouseWheel);
@@ -136,7 +136,7 @@ void Make::Draw::Make_Draw_ScrollBar::drawBar() {
 	DrawBoxAA(barPointX[0], y, barPointX[1], y + barHeight, barColor, true);
 }
 
-void Make::Draw::Make_Draw_ScrollBar::setBarY(float sY) {
+void Make::Draw::Make_Draw_ScrollBar::setBarY(const float sY) {
 	y = sY;
 	if (yScrMax < y + barHeight) {
 		y = yScrMax - barHeight;
@@ -146,7 +146,7 @@ void Make::Draw::Make_Draw_ScrollBar::setBarY(float sY) {
 	}
 }
 
-void Make::Draw::Make_Draw_ScrollBar::updateLineContainerY(float y) {
+void Make::Draw::Make_Draw_ScrollBar::updateLineContainerY(const float y) {
 	for (int i = 0,iSize = static_cast<int>(barVec.size()); i < iSize; ++i) {
 		for (int k = 0,kSize = static_cast<int>(barVec.at(i).size()); k < kSize; ++k) {
 			barVec.at(i).at(k)->updateY(y);
@@ -154,7 +154,7 @@ void Make::Draw::Make_Draw_ScrollBar::updateLineContainerY(float y) {
 	}
 }
 
-void Make::Draw::Make_Draw_ScrollBar::updateBarY(float upY) {
+void Make::Draw::Make_Draw_ScrollBar::updateBarY(const float upY) {
 	if (0 < upY && yScrMin < y || upY < 0 && y + barHeight < yScrMax) {
 		y -= upY * scrollWidthRate;
 		if (yScrMax < y + barHeight) {

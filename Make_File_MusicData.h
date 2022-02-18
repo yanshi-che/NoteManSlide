@@ -18,7 +18,7 @@ namespace Make {
 			const std::uint8_t amountOfLane;
 			const int musicHandle;
 		public:
-			Make_File_MusicData(int musicHandle, std::string name, std::string artist, std::uint8_t level,std::uint16_t bpm,std::uint16_t barLength,float totalMinutes,std::uint16_t beginDelay,std::uint8_t amountOfLane);
+			Make_File_MusicData(const int musicHandle,const std::string& name,const std::string& artist,const std::uint8_t level,const std::uint16_t bpm,const std::uint16_t barLength,const float totalMinutes,const std::uint16_t beginDelay,const std::uint8_t amountOfLane);
 			const std::string& getName() noexcept;
 			const std::string& getArtist() noexcept;
 			const std::uint8_t& getLevel() noexcept;

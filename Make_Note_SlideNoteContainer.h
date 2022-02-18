@@ -30,9 +30,9 @@ namespace Make {
 
 			void drawArrow();
 		public:
-			Make_Note_SlideNoteContainer(std::uint16_t barID, std::uint8_t beatID, const float& y, std::uint8_t amountOfLane, float time);
+			Make_Note_SlideNoteContainer(const std::uint16_t barID,const std::uint8_t beatID, const float& y,const std::uint8_t amountOfLane,const float time);
 			void drawSlideNote();
-			void setSlideNoteFlag(std::uint8_t laneIDStart, std::uint8_t laneIDEnd,bool right);//ノーツをセット既にセットされているなら撤去
+			void setSlideNoteFlag(const std::uint8_t laneIDStart,const std::uint8_t laneIDEnd,const bool right);//ノーツをセット既にセットされているなら撤去
 
 			const std::pair<bool,bool>& getSlideNoteFlag();//trueなら右をfalseなら左を
 			const std::pair<std::pair<std::uint8_t, std::uint8_t>, std::pair<std::uint8_t, std::uint8_t>>& getNoteStartAndEnd();

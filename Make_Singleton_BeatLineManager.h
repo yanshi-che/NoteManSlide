@@ -2,15 +2,19 @@
 
 #include <boost/json.hpp>
 #include <cstdint>
-#include <vector>
-#include <memory>
 #include <functional>
+#include <memory>
+#include <deque>
+#include <vector>
+
 
 #include "Make_File_MusicData.h"
 #include "Make_Draw_LineContainer.h"
 #include "Make_Draw_ScrollBar.h"
 #include "Make_Draw_LaneDraw.h"
 #include "Make_Singleton_NoteManager.h"
+
+using namespace boost;
 
 namespace Make {
 	namespace Singleton {
@@ -35,12 +39,14 @@ namespace Make {
 			Make_Singleton_BeatLineManager();
 			static Make_Singleton_BeatLineManager* p_instance;
 
-			void checkSeparate(float& separate);
 			void initScrollBar();
+			void initSingletons();
 			void initAllBarLineByQuontizeChange();
 			void initOneBarLineByQuontizeChange();
 			void resetBarVec(bool isAll);
 			void resetScrollBar();
+
+			float checkSeparate(const std::uint8_t quontize);
 
 		public:
 			static Make_Singleton_BeatLineManager* getInstance();
@@ -49,8 +55,8 @@ namespace Make {
 			void finalize();
 			void initialize(const std::shared_ptr<File::Make_File_MusicData>& data);
 			void initBarVec(std::uint8_t initialQuontize,float separateBarWidth);
-			void initializeBySavaData();
-			void setInitBarLineFunc(std::uint8_t quon, std::uint16_t barIDForInitOneVector, bool isAll);
+			void initializeBySavaData(const std::shared_ptr<File::Make_File_MusicData>& data,const json::value val);
+			void setInitBarLineFunc(const std::uint8_t quon,const std::uint16_t barIDForInitOneVector,const bool isAll);
 			void draw();
 
 			const std::vector<std::vector<std::shared_ptr<Draw::Make_Draw_LineContainer>>>& getBarVec();

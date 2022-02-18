@@ -2,7 +2,7 @@
 
 float Make::Note::Make_Note_LongNoteContainer::noteWidth = 15.0;
 
-Make::Note::Make_Note_LongNoteContainer::Make_Note_LongNoteContainer(std::uint16_t barID,std::uint8_t beatID,const float& y,std::uint8_t amountOfLane,float time) :
+Make::Note::Make_Note_LongNoteContainer::Make_Note_LongNoteContainer(const std::uint16_t barID,const std::uint8_t beatID,const float& y,const std::uint8_t amountOfLane,const float time) :
 	barID(barID), beatID(beatID),amountOfLane(amountOfLane),time(time),r_y(y) {
 	noteHeight1.resize(amountOfLane);
 	noteHeight2.resize(amountOfLane);
@@ -31,7 +31,7 @@ void Make::Note::Make_Note_LongNoteContainer::drawLongNote() {
 	}
 }
 
-void Make::Note::Make_Note_LongNoteContainer::setLongNoteFlag(std::uint8_t laneID,bool isFirstOrLast) {
+void Make::Note::Make_Note_LongNoteContainer::setLongNoteFlag(const std::uint8_t laneID,const bool isFirstOrLast) {
 	if (isFirstOrLast) {
 		if (!noteFlag.at(laneID).first) {
 			noteFlag.at(laneID).first = true;
@@ -54,7 +54,7 @@ void Make::Note::Make_Note_LongNoteContainer::setLongNoteFlag(std::uint8_t laneI
 	}
 }
 
-void Make::Note::Make_Note_LongNoteContainer::setNoteHeight(std::uint8_t laneID,float noteHeight,bool isFirst) {
+void Make::Note::Make_Note_LongNoteContainer::setNoteHeight(const std::uint8_t laneID,const float noteHeight,const bool isFirst) {
 	if (isFirst) {
 		this->noteHeight1.at(laneID) = noteHeight;
 	}
@@ -63,7 +63,7 @@ void Make::Note::Make_Note_LongNoteContainer::setNoteHeight(std::uint8_t laneID,
 	}
 }
 
-void Make::Note::Make_Note_LongNoteContainer::setNoteGroup(std::uint8_t laneID,std::uint16_t group) {
+void Make::Note::Make_Note_LongNoteContainer::setNoteGroup(const std::uint8_t laneID,const std::uint16_t group) {
 	noteGroup.at(laneID) = group;
 }
 
@@ -71,11 +71,11 @@ const float& Make::Note::Make_Note_LongNoteContainer::getY() {
 	return r_y;
 }
 
-const std::pair<bool, bool> Make::Note::Make_Note_LongNoteContainer::getLongNoteFlag(std::uint8_t laneID) {
+const std::pair<bool, bool> Make::Note::Make_Note_LongNoteContainer::getLongNoteFlag(const std::uint8_t laneID) {
 	return noteFlag.at(laneID);
 }
 
-const std::uint16_t& Make::Note::Make_Note_LongNoteContainer::getNoteGroup(std::uint8_t laneID) {
+const std::uint16_t& Make::Note::Make_Note_LongNoteContainer::getNoteGroup(const std::uint8_t laneID) {
 	return noteGroup.at(laneID);
 }
 

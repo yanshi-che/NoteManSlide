@@ -1,8 +1,8 @@
 #include "Make_Note_SlideNoteContainer.h"
 
-std::uint8_t Make::Note::Make_Note_SlideNoteContainer::lineThickness = 5;
+std::uint8_t Make::Note::Make_Note_SlideNoteContainer::lineThickness = 8;
 
-Make::Note::Make_Note_SlideNoteContainer::Make_Note_SlideNoteContainer(std::uint16_t barID, std::uint8_t beatID, const float& y, std::uint8_t amountOfLane, float time) :
+Make::Note::Make_Note_SlideNoteContainer::Make_Note_SlideNoteContainer(const std::uint16_t barID,const std::uint8_t beatID, const float& y,const std::uint8_t amountOfLane,const float time) :
 	barID(barID), beatID(beatID), amountOfLane(amountOfLane), time(time), r_y(y) {
 	colorR = GetColor(228, 75, 198);
 	colorL = GetColor(62, 253, 249);
@@ -41,7 +41,7 @@ void Make::Note::Make_Note_SlideNoteContainer::drawArrow() {
 
 void Make::Note::Make_Note_SlideNoteContainer::drawSlideNote() {
 	if (r_y < Make::Global::WINDOW_HEIGHT && r_y>0) {
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 210);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 120);
 		drawArrow();
 		if (noteFlag.first) {
 			DrawLineAA(laneX.at(noteStartAndEndLane.first.first + 1), r_y, laneX.at(noteStartAndEndLane.first.second), r_y, colorR,lineThickness);
@@ -53,7 +53,7 @@ void Make::Note::Make_Note_SlideNoteContainer::drawSlideNote() {
 	}
 }
 
-void Make::Note::Make_Note_SlideNoteContainer::setSlideNoteFlag(std::uint8_t laneIDStart, std::uint8_t laneIDEnd, bool right) {
+void Make::Note::Make_Note_SlideNoteContainer::setSlideNoteFlag(const std::uint8_t laneIDStart,const std::uint8_t laneIDEnd,const bool right) {
 	if (right) {
 		if (!noteFlag.first) {
 			noteStartAndEndLane.first.first = laneIDStart;

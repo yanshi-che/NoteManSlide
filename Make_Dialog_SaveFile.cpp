@@ -3,7 +3,7 @@
 bool Make::Dialog::Make_Dialog_SaveFile::isShowMusicInfoDlg = true;
 bool  Make::Dialog::Make_Dialog_SaveFile::isInputed =false;
 
-INT_PTR CALLBACK  Make::Dialog::Make_Dialog_SaveFile::SaveFileDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+INT_PTR CALLBACK  Make::Dialog::Make_Dialog_SaveFile::saveFileDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
 	case WM_COMMAND:
 		switch (wParam) {
@@ -54,7 +54,7 @@ void Make::Dialog::Make_Dialog_SaveFile::getSaveFilePathFromDlg(char(&saveFilePa
 	hInstance = GetModuleHandle(nullptr);
 
 	//ダイアログの作成
-	hDialogWnd = CreateDialog(hInstance, MAKEINTRESOURCE(IDD_SaveFile), hMainWnd, SaveFileDialogProc);
+	hDialogWnd = CreateDialog(hInstance, MAKEINTRESOURCE(IDD_SaveFile), hMainWnd, saveFileDialogProc);
 
 	//各項目の説明の設定
 	SetDlgItemText(hDialogWnd, IDC_BUTTONSaveFilePath, "notemanファイル選択");

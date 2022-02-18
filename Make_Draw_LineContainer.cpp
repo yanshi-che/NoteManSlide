@@ -14,7 +14,7 @@ std::uint16_t Make::Draw::Make_Draw_LineContainer::getbarIDForChangeQuontize() {
 	return barIDForChangeQuontize;
 }
 
-Make::Draw::Make_Draw_LineContainer::Make_Draw_LineContainer(std::uint16_t barID,std::uint8_t amountOfLane,float time,std::uint8_t beatID,float y,float yMax) :
+Make::Draw::Make_Draw_LineContainer::Make_Draw_LineContainer(const std::uint16_t barID,const std::uint8_t amountOfLane,const float time,const std::uint8_t beatID,const float y,const float yMax) :
 	barID(barID),amountOfLane(amountOfLane),time(time), beatID(beatID){
 	this->y = y;
 	this->yMax = yMax;
@@ -149,11 +149,11 @@ void Make::Draw::Make_Draw_LineContainer::setNoteType(std::uint8_t type)  {
 	noteType = type;
 }
 
-void Make::Draw::Make_Draw_LineContainer::setYMin(float y) {
+void Make::Draw::Make_Draw_LineContainer::setYMin(const float y) {
 	yMin = y;
 }
 
-void Make::Draw::Make_Draw_LineContainer::updateY(float upY) {
+void Make::Draw::Make_Draw_LineContainer::updateY(const float upY) {
 	if (upY < 0 && yMin < y || 0 < upY && y < yMax) {
 		y += upY;
 		if (yMax < y) {
@@ -166,11 +166,11 @@ void Make::Draw::Make_Draw_LineContainer::updateY(float upY) {
 }
 
 
-void Make::Draw::Make_Draw_LineContainer::updateYMax(float y) {
+void Make::Draw::Make_Draw_LineContainer::updateYMax(const float y) {
 	yMax += y;
 }
 
-void Make::Draw::Make_Draw_LineContainer::updateByInitOneBar(float yWidth) {
+void Make::Draw::Make_Draw_LineContainer::updateByInitOneBar(const float yWidth) {
 	y += yWidth;
 	yMin += yWidth;
 	updateYMax(yWidth);

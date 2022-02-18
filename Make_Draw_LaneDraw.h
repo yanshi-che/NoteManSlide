@@ -17,7 +17,7 @@ namespace Make {
 		public:
 			Make_Draw_LaneDraw();
 			void draw();
-			void setamountOfLane(std::uint8_t num);
+			void setamountOfLane(const std::uint8_t num);
 		};
 
 	}

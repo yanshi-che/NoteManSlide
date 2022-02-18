@@ -51,14 +51,14 @@ namespace Make {
 			void drawLine() ;
 			void drawBarID() ;
 		public:
-			Make_Draw_LineContainer(std::uint16_t barID,std::uint8_t amountOfLane,float time,std::uint8_t beatID,float y,float yMax);
-			static void setNoteType(std::uint8_t type) ;
+			Make_Draw_LineContainer(const std::uint16_t barID,const std::uint8_t amountOfLane,const float time,const std::uint8_t beatID,const float y,const float yMax);
+			static void setNoteType(const std::uint8_t type) ;
 			static std::uint16_t getbarIDForChangeQuontize();
 
-			void setYMin(float y);
-			void updateYMax(float y);
-			void updateByInitOneBar(float yWidth);
-			void updateY(float y);
+			void setYMin(const float y);
+			void updateYMax(const float y);
+			void updateByInitOneBar(const float yWidth);
+			void updateY(const float y);
 			void draw();
 
 			float getTime();

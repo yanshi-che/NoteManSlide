@@ -1,6 +1,6 @@
 #include "Make_File_MusicData.h"
 
-Make::File::Make_File_MusicData::Make_File_MusicData(int mHandle, std::string name, std::string artist, std::uint8_t level,std::uint16_t bp,std::uint16_t bLength,float tMinutes,std::uint16_t bDlay,std::uint8_t numOfLane) :
+Make::File::Make_File_MusicData::Make_File_MusicData(const int mHandle,const std::string& name,const std::string& artist,const std::uint8_t level,const std::uint16_t bp,const std::uint16_t bLength,const float tMinutes,const std::uint16_t bDlay,const std::uint8_t numOfLane) :
 musicHandle(mHandle),name(name),artist(artist),level(level),bpm(bp),barLength(bLength),totalMinutes(tMinutes),beginDelay(bDlay),amountOfLane(numOfLane){}
 
 const std::string& Make::File::Make_File_MusicData::getName() noexcept {

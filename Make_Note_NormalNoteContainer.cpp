@@ -3,7 +3,7 @@
 
 float Make::Note::Make_Note_NormalNoteContainer::noteWidth = 15.0;
 
-Make::Note::Make_Note_NormalNoteContainer::Make_Note_NormalNoteContainer(std::uint16_t barID,std::uint8_t beatID,const float& y,std::uint8_t amountOfLane,float time) :
+Make::Note::Make_Note_NormalNoteContainer::Make_Note_NormalNoteContainer(const std::uint16_t barID,const std::uint8_t beatID,const float& y,const std::uint8_t amountOfLane,const float time) :
 	barID(barID),beatID(beatID),amountOfLane(amountOfLane),time(time),r_y(y) {
 	noteX.resize(amountOfLane);
 	noteFlag.resize(amountOfLane);
@@ -27,7 +27,7 @@ void Make::Note::Make_Note_NormalNoteContainer::drawNote() {
 	}
 }
 
-void Make::Note::Make_Note_NormalNoteContainer::setNormalNoteFlag(std::uint8_t laneID) {
+void Make::Note::Make_Note_NormalNoteContainer::setNormalNoteFlag(const std::uint8_t laneID) {
 	if (!noteFlag.at(laneID)) {
 		noteFlag.at(laneID) = true;
 	}
@@ -36,7 +36,7 @@ void Make::Note::Make_Note_NormalNoteContainer::setNormalNoteFlag(std::uint8_t l
 	}
 }
 
-const bool Make::Note::Make_Note_NormalNoteContainer::getNormalNoteFlag(std::uint8_t laneID) {
+const bool Make::Note::Make_Note_NormalNoteContainer::getNormalNoteFlag(const std::uint8_t laneID) {
 	return noteFlag.at(laneID);
 }
 

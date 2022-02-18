@@ -26,15 +26,15 @@ namespace Make {
 			float notePointY;
 			std::vector<uint16_t> noteGroup;
 		public:
-			Make_Note_LongNoteContainer(std::uint16_t barID,std::uint8_t beatID,const float& y,std::uint8_t amountOfLane,float time);
-			void setLongNoteFlag(std::uint8_t laneID,bool isFirstOrLast);//ノーツをセット既にセットされているなら撤去
+			Make_Note_LongNoteContainer(const std::uint16_t barID,const std::uint8_t beatID,const float& y,std::uint8_t amountOfLane,const float time);
+			void setLongNoteFlag(const std::uint8_t laneID,const bool isFirstOrLast);//ノーツをセット既にセットされているなら撤去
 			void drawLongNote();
-			void setNoteHeight(std::uint8_t laneID, float noteHeight,bool isFirst);
-			void setNoteGroup(std::uint8_t laneID, std::uint16_t group);
+			void setNoteHeight(const std::uint8_t laneID,const float noteHeight,const bool isFirst);
+			void setNoteGroup(const std::uint8_t laneID,const std::uint16_t group);
 
-			const std::uint16_t& getNoteGroup(std::uint8_t laneID);
+			const std::uint16_t& getNoteGroup(const std::uint8_t laneID);
 			const float& getY();
-			const std::pair<bool, bool> getLongNoteFlag(std::uint8_t laneID);
+			const std::pair<bool, bool> getLongNoteFlag(const std::uint8_t laneID);
 			const float& getTime();
 			const std::uint16_t& getBarID();
 			const std::uint8_t& getBeatID();

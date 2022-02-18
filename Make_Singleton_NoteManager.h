@@ -33,21 +33,24 @@ namespace Make {
 			static Make_Singleton_NoteManager* getInstance();
 			static void destroyInstance();
 
-			void initVector(std::uint16_t barLength,std::uint8_t quontize);
-			void initOneVector(std::uint8_t quontize, std::uint16_t barID);
-			void makeNoteInstance(std::uint16_t barID,std::uint8_t beatID,const float& y,std::uint8_t amountOfLane,float time);
-			void resetVector(bool isAll, std::uint16_t barID);
-			void removeLongNote(std::uint16_t barID,std::uint8_t beatID,std::uint8_t laneID);
-			void setNormalNote(std::uint16_t barID,std::uint8_t beatID,std::uint8_t laneID);
-			void setLongNote(std::uint16_t barID,std::uint8_t beatID,std::uint8_t laneID,float* y,bool isFirst);
-			void setLongNoteGroupe(std::uint16_t longNoteGroup);
-			void setSlideNote(std::uint16_t barID, std::uint8_t beatID, std::uint8_t laneID,float mouseY,bool isFirst);
+			void draw(const std::uint16_t barID,const std::uint8_t beatID);
+			void initVector(const std::uint16_t barLength,const std::uint8_t quontize);
+			void initOneVector(const std::uint8_t quontize,const std::uint16_t barID);
+			void resizeOneVector(const std::uint16_t barID, const std::uint8_t quontize);
+			void makeNoteInstance(const std::uint16_t barID,const std::uint8_t beatID,const float& y,const std::uint8_t amountOfLane,const float time);
+			void resetVector(const bool isAll,const std::uint16_t barID);
+			void removeLongNote(const std::uint16_t barID,const std::uint8_t beatID,const std::uint8_t laneID);
+			void setNormalNote(const std::uint16_t barID,const std::uint8_t beatID,const std::uint8_t laneID);
+			void setLongNote(const std::uint16_t barID,const std::uint8_t beatID,const std::uint8_t laneID,float* y,const bool isFirst);
+			void setLongNoteBySavaData(const std::uint16_t startBarID, const std::uint8_t startBeatID, const std::uint16_t endBarID, const std::uint8_t endBeatID, const std::uint8_t laneID);
+			void setLongNoteGroupe(const std::uint16_t longNoteGroup);
+			void setSlideNote(const std::uint16_t barID,const std::uint8_t beatID,const std::uint8_t laneID,const float mouseY,const bool isFirst);
+			void setSlideNoteBySavaData(const std::uint16_t barID, const std::uint8_t beatID, const std::uint8_t start, const std::uint8_t end,const bool isRight);
 
 			const std::vector<std::vector<std::shared_ptr<Note::Make_Note_NormalNoteContainer>>>& getNormalNoteVector();
 			const std::vector<std::vector<std::shared_ptr<Note::Make_Note_LongNoteContainer>>>& getLongNoteVector();
 			const std::vector<std::vector<std::shared_ptr<Note::Make_Note_SlideNoteContainer>>>& getSlideNoteVector();
 
-			void draw(std::uint16_t barID, std::uint8_t beatID);
 		};
 	}
 }

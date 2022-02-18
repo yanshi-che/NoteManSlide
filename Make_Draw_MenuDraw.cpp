@@ -32,10 +32,17 @@ Make::Draw::Make_Draw_MenuDraw::Make_Draw_MenuDraw(){
 	SetMenuItemSelectCallBackFunction(MenuItemSelectCallBack);
 }
 
-void Make::Draw::Make_Draw_MenuDraw::setMusicData(std::shared_ptr<File::Make_File_MusicData> md) {
+void Make::Draw::Make_Draw_MenuDraw::setMusicDataFromNewFile(const std::shared_ptr<File::Make_File_MusicData> md) {
 	p_musicData	= md;
 	if (p_musicData!=nullptr) {
 		Singleton::Make_Singleton_BeatLineManager::getInstance()->initialize(p_musicData);
+	}
+}
+
+void Make::Draw::Make_Draw_MenuDraw::setMusicDataFromSaveFile(std::unique_ptr<File::Make_File_MusicData> md,const json::value val) {
+	p_musicData = std::move(md);
+	if (p_musicData != nullptr) {
+		Singleton::Make_Singleton_BeatLineManager::getInstance()->initializeBySavaData(p_musicData,val);
 	}
 }
 
@@ -44,7 +51,7 @@ void Make::Draw::Make_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemNam
 	case NewFile:
 		if (p_musicData == nullptr) {
 			File::Make_File_MusicFileIO mfIO;
-			setMusicData(mfIO.getMusicFile());
+			setMusicDataFromNewFile(mfIO.getMusicFile());
 		}
 		else {
 			File::Make_File_MusicFileIO mfIO;
@@ -53,7 +60,26 @@ void Make::Draw::Make_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemNam
 				DeleteSoundMem(p_musicData->getMusicHandle());
 				p_musicData.reset();
 				Singleton::Make_Singleton_BeatLineManager::getInstance()->finalize();
-				setMusicData(std::move(data));
+				setMusicDataFromNewFile(std::move(data));
+			}
+		}
+		break;
+	case Open:
+		if (p_musicData == nullptr) {
+			File::Make_File_SaveFileIO sfIO;
+			std::pair<std::unique_ptr<File::Make_File_MusicData>, json::value> pair = sfIO.readSaveData();
+			if (pair.first != nullptr) {
+				setMusicDataFromSaveFile(std::move(pair.first), pair.second);
+			}
+		}
+		else {
+			File::Make_File_SaveFileIO sfIO;
+			std::pair<std::unique_ptr<File::Make_File_MusicData>, json::value> pair = sfIO.readSaveData();
+			if (pair.first != nullptr) {
+				DeleteSoundMem(p_musicData->getMusicHandle());
+				p_musicData.reset();
+				Singleton::Make_Singleton_BeatLineManager::getInstance()->finalize();
+				setMusicDataFromSaveFile(std::move(pair.first), pair.second);
 			}
 		}
 		break;
