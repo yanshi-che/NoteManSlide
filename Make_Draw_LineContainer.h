@@ -11,7 +11,7 @@
 
 #include "dxlib/DxLib.h"
 #include "Make_Note_NormalNoteContainer.h"
-#include "Make_Singleton_NoteManager.h"
+#include "Make_Note_NoteManager.h"
 #include "Make_Singleton_MouseOperationCheck.h"
 
 namespace Make {
@@ -27,13 +27,13 @@ namespace Make {
 
 			static std::uint16_t barIDForChangeQuontize;//小節ごとのクオンタイズ変更のための変数
 
-			Singleton::Make_Singleton_NoteManager* p_noteManager;
+			const std::shared_ptr<Note::Make_Note_NoteManager>& p_noteManager;
 			Singleton::Make_Singleton_MouseOperationCheck* p_mouseCheck;
 
 			const std::uint16_t barID; //何小節目に属しているか
 			const std::uint8_t beatID;//その小節の何番目の線か
 			const float time;//曲の開始から何秒か
-			const std::uint8_t& amountOfLane; //レーンの数
+			const std::uint8_t laneAmount; //レーンの数
 			float yMax;//座標の最大値
 			float yMin;//座標の最小値
 			std::uint32_t color;//拍線の色
@@ -51,7 +51,7 @@ namespace Make {
 			void drawLine() ;
 			void drawBarID() ;
 		public:
-			Make_Draw_LineContainer(const std::uint16_t barID,const std::uint8_t amountOfLane,const float time,const std::uint8_t beatID,const float y,const float yMax);
+			Make_Draw_LineContainer(const std::uint16_t barID,const float time,const std::uint8_t beatID,const float y,const float yMax,const std::shared_ptr<Note::Make_Note_NoteManager>& p_noteManager);
 			static void setNoteType(const std::uint8_t type) ;
 			static std::uint16_t getbarIDForChangeQuontize();
 

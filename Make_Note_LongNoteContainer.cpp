@@ -2,15 +2,15 @@
 
 float Make::Note::Make_Note_LongNoteContainer::noteWidth = 15.0;
 
-Make::Note::Make_Note_LongNoteContainer::Make_Note_LongNoteContainer(const std::uint16_t barID,const std::uint8_t beatID,const float& y,const std::uint8_t amountOfLane,const float time) :
-	barID(barID), beatID(beatID),amountOfLane(amountOfLane),time(time),r_y(y) {
-	noteHeight1.resize(amountOfLane);
-	noteHeight2.resize(amountOfLane);
-	noteX.resize(amountOfLane);
-	noteFlag.resize(amountOfLane);
-	noteGroup.resize(amountOfLane);
-	float laneWidth = (Global::DRAW_X_MAX - Global::DRAW_X_MIN) / amountOfLane;
-	for (int i = 0; i < amountOfLane; ++i) {
+Make::Note::Make_Note_LongNoteContainer::Make_Note_LongNoteContainer(const std::uint16_t barID,const std::uint8_t beatID,const float& y,const std::uint8_t laneAmount,const float time) :
+	barID(barID), beatID(beatID),laneAmount(laneAmount),time(time),r_y(y) {
+	noteHeight1.resize(laneAmount);
+	noteHeight2.resize(laneAmount);
+	noteX.resize(laneAmount);
+	noteFlag.resize(laneAmount);
+	noteGroup.resize(laneAmount);
+	float laneWidth = (Global::DRAW_X_MAX - Global::DRAW_X_MIN) / laneAmount;
+	for (int i = 0; i < laneAmount; ++i) {
 		noteX.at(i) = laneWidth * i + Global::DRAW_X_MIN + laneWidth / 2.0f;
 		noteFlag.at(i) = { false,false };
 		noteHeight1.at(i) = 0;

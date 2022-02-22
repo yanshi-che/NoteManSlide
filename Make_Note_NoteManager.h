@@ -11,8 +11,8 @@
 
 
 namespace Make {
-	namespace Singleton {
-		class Make_Singleton_NoteManager
+	namespace Note {
+		class Make_Note_NoteManager
 		{
 		private:
 			std::vector<std::vector<std::shared_ptr<Note::Make_Note_NormalNoteContainer>>> normalNote;
@@ -27,17 +27,14 @@ namespace Make {
 			std::uint16_t longNoteGroup;
 			bool noteErase;
 
-			static Make_Singleton_NoteManager* p_instance;
-			Make_Singleton_NoteManager();
 		public:
-			static Make_Singleton_NoteManager* getInstance();
-			static void destroyInstance();
+			Make_Note_NoteManager();
 
 			void draw(const std::uint16_t barID,const std::uint8_t beatID);
 			void initVector(const std::uint16_t barLength,const std::uint8_t quontize);
 			void initOneVector(const std::uint8_t quontize,const std::uint16_t barID);
 			void resizeOneVector(const std::uint16_t barID, const std::uint8_t quontize);
-			void makeNoteInstance(const std::uint16_t barID,const std::uint8_t beatID,const float& y,const std::uint8_t amountOfLane,const float time);
+			void makeNoteInstance(const std::uint16_t barID,const std::uint8_t beatID,const float& y, const std::uint8_t laneAmount,const float time);
 			void resetVector(const bool isAll,const std::uint16_t barID);
 			void removeLongNote(const std::uint16_t barID,const std::uint8_t beatID,const std::uint8_t laneID);
 			void setNormalNote(const std::uint16_t barID,const std::uint8_t beatID,const std::uint8_t laneID);

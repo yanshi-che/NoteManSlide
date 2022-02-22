@@ -2,14 +2,14 @@
 
 std::uint8_t Make::Note::Make_Note_SlideNoteContainer::lineThickness = 8;
 
-Make::Note::Make_Note_SlideNoteContainer::Make_Note_SlideNoteContainer(const std::uint16_t barID,const std::uint8_t beatID, const float& y,const std::uint8_t amountOfLane,const float time) :
-	barID(barID), beatID(beatID), amountOfLane(amountOfLane), time(time), r_y(y) {
+Make::Note::Make_Note_SlideNoteContainer::Make_Note_SlideNoteContainer(const std::uint16_t barID,const std::uint8_t beatID, const float& y,const std::uint8_t laneAmount,const float time) :
+	barID(barID), beatID(beatID), laneAmount(laneAmount), time(time), r_y(y) {
 	colorR = GetColor(228, 75, 198);
 	colorL = GetColor(62, 253, 249);
 
-	laneX.resize(amountOfLane + 1);
-	float laneWidth = (Global::DRAW_X_MAX - Global::DRAW_X_MIN) / amountOfLane;
-	for (int i = 0; i <= amountOfLane; ++i) {
+	laneX.resize(laneAmount + 1);
+	float laneWidth = (Global::DRAW_X_MAX - Global::DRAW_X_MIN) / laneAmount;
+	for (int i = 0; i <= laneAmount; ++i) {
 		laneX.at(i) = laneWidth * i + Global::DRAW_X_MIN;
 	}
 	arrowWidthBetween = laneWidth / arrowNumInLane;

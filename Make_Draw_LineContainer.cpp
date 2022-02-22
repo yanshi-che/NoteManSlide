@@ -14,19 +14,18 @@ std::uint16_t Make::Draw::Make_Draw_LineContainer::getbarIDForChangeQuontize() {
 	return barIDForChangeQuontize;
 }
 
-Make::Draw::Make_Draw_LineContainer::Make_Draw_LineContainer(const std::uint16_t barID,const std::uint8_t amountOfLane,const float time,const std::uint8_t beatID,const float y,const float yMax) :
-	barID(barID),amountOfLane(amountOfLane),time(time), beatID(beatID){
+Make::Draw::Make_Draw_LineContainer::Make_Draw_LineContainer(const std::uint16_t barID,const float time,const std::uint8_t beatID,const float y,const float yMax, const std::shared_ptr<Note::Make_Note_NoteManager>& p_noteManager) :
+	barID(barID),laneAmount(Global::LANEAMOUNT),time(time), beatID(beatID),p_noteManager(p_noteManager){
 	this->y = y;
 	this->yMax = yMax;
 	yMin = y;
 
 	p_mouseCheck = Singleton::Make_Singleton_MouseOperationCheck::getInstance();
-	p_noteManager = Singleton::Make_Singleton_NoteManager::getInstance();
-	p_noteManager->makeNoteInstance(this->barID,this->beatID,this->y,this->amountOfLane,this->time);
+	this->p_noteManager->makeNoteInstance(this->barID,this->beatID,this->y,this->laneAmount,this->time);
 
-	laneX.resize(amountOfLane + 1);
-	float laneWidth = (Global::DRAW_X_MAX - Global::DRAW_X_MIN) / amountOfLane;
-	for (int i = 0; i <= amountOfLane; ++i) {
+	laneX.resize(laneAmount + 1);
+	float laneWidth = (Global::DRAW_X_MAX - Global::DRAW_X_MIN) / laneAmount;
+	for (int i = 0; i <= laneAmount; ++i) {
 		laneX.at(i) = laneWidth * i + Global::DRAW_X_MIN;
 	}
 
@@ -96,6 +95,8 @@ void Make::Draw::Make_Draw_LineContainer::drawNote()  {
 				if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
 					p_noteManager->setNormalNote(barID, beatID, i);
 					clickObserver = true;
+					barIDForChangeQuontize = barID;
+					barIDColor = GetColor(36, 216, 236);
 					break;
 				}
 			}
@@ -111,6 +112,8 @@ void Make::Draw::Make_Draw_LineContainer::drawNote()  {
 					laneIDForLongNote = i;
 					p_noteManager->setLongNote(barID, beatID, i,&y,true);
 					clickObserver = true;
+					barIDForChangeQuontize = barID;
+					barIDColor = GetColor(36, 216, 236);
 					break;
 				}
 			}
@@ -127,6 +130,8 @@ void Make::Draw::Make_Draw_LineContainer::drawNote()  {
 				if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
 					p_noteManager->setSlideNote(barID, beatID, i,static_cast<float>(mouseX),true);
 					clickObserver = true;
+					barIDForChangeQuontize = barID;
+					barIDColor = GetColor(36, 216, 236);
 					break;
 				}
 			}

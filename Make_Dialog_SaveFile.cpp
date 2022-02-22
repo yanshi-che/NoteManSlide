@@ -28,9 +28,30 @@ INT_PTR CALLBACK  Make::Dialog::Make_Dialog_SaveFile::saveFileDialogProc(HWND hW
 		}
 		break;
 		case IDOK:
-			isShowMusicInfoDlg = false;
-			isInputed = true;
-			EndDialog(hWnd, NULL);
+		{
+			bool isError = false;
+			std::string errorMessage;
+			char saveFilePath[MAX_PATH] = "";
+			char musicFilePath[MAX_PATH] = "";
+			GetDlgItemText(hWnd, IDC_EDITSaveFilePath, saveFilePath,MAX_PATH);
+			GetDlgItemText(hWnd, IDC_EDITMusicFilePath, musicFilePath,MAX_PATH);
+			if (saveFilePath[0] == NULL) {
+				errorMessage.append("セーブファイルパスが未入力です。\n");
+				isError = true;
+			}
+			if (musicFilePath[0] == NULL) {
+				errorMessage.append("音楽ファイルパスが未入力です。\n");
+				isError = true;
+			}
+			if (isError) {
+				MessageBox(hWnd, errorMessage.c_str(), "エラー", MB_OK);
+			}
+			else {
+				isShowMusicInfoDlg = false;
+				isInputed = true;
+				EndDialog(hWnd, NULL);
+			}
+		}
 			break;
 		case IDCANCEL:
 			isShowMusicInfoDlg = false;

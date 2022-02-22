@@ -1,8 +1,6 @@
-#include "Make_Singleton_NoteManager.h"
+#include "Make_Note_NoteManager.h"
 
-Make::Singleton::Make_Singleton_NoteManager* Make::Singleton::Make_Singleton_NoteManager::p_instance = nullptr;
-
-Make::Singleton::Make_Singleton_NoteManager::Make_Singleton_NoteManager(){
+Make::Note::Make_Note_NoteManager::Make_Note_NoteManager(){
 	startBarID = 0;
 	startBeatID = 0;
 	startLaneID = 0;
@@ -12,21 +10,7 @@ Make::Singleton::Make_Singleton_NoteManager::Make_Singleton_NoteManager(){
 	mouseYBefore = 0;
 }
 
-Make::Singleton::Make_Singleton_NoteManager* Make::Singleton::Make_Singleton_NoteManager::getInstance() {
-	if (p_instance == nullptr) {
-		p_instance = new Make_Singleton_NoteManager();
-	}
-	return p_instance;
-}
-
-void Make::Singleton::Make_Singleton_NoteManager::destroyInstance(){
-	if (p_instance != nullptr) {
-		delete p_instance;
-		p_instance = nullptr;
-	}
-}
-
-void Make::Singleton::Make_Singleton_NoteManager::draw(const std::uint16_t barID,const std::uint8_t beatID) {
+void Make::Note::Make_Note_NoteManager::draw(const std::uint16_t barID,const std::uint8_t beatID) {
 	if (normalNote.size() != 0) {
 		normalNote.at(barID).at(beatID)->drawNote();
 		longNote.at(barID).at(beatID)->drawLongNote();
@@ -34,7 +18,7 @@ void Make::Singleton::Make_Singleton_NoteManager::draw(const std::uint16_t barID
 	}
 }
 
-void Make::Singleton::Make_Singleton_NoteManager::initVector(const std::uint16_t barLength,const std::uint8_t quontize) {
+void Make::Note::Make_Note_NoteManager::initVector(const std::uint16_t barLength,const std::uint8_t quontize) {
 	normalNote.resize(barLength);
 	longNote.resize(barLength);
 	slideNote.resize(barLength);
@@ -47,25 +31,25 @@ void Make::Singleton::Make_Singleton_NoteManager::initVector(const std::uint16_t
 	}
 }
 
-void Make::Singleton::Make_Singleton_NoteManager::resizeOneVector(const std::uint16_t barID, const std::uint8_t quontize) {
+void Make::Note::Make_Note_NoteManager::resizeOneVector(const std::uint16_t barID, const std::uint8_t quontize) {
 	normalNote.at(barID).resize(quontize);
 	longNote.at(barID).resize(quontize);
 	slideNote.at(barID).resize(quontize);
 }
 
-void Make::Singleton::Make_Singleton_NoteManager::initOneVector(const std::uint8_t quontize,const std::uint16_t barID) {
+void Make::Note::Make_Note_NoteManager::initOneVector(const std::uint8_t quontize,const std::uint16_t barID) {
 	normalNote.at(barID).resize(quontize);
 	longNote.at(barID).resize(quontize);
 	slideNote.at(barID).resize(quontize);
 }
 
-void Make::Singleton::Make_Singleton_NoteManager::makeNoteInstance(const std::uint16_t barID,const std::uint8_t beatID,const float& y,const std::uint8_t amountOfLane,float time) {
-	normalNote.at(barID).at(beatID) = std::make_shared<Note::Make_Note_NormalNoteContainer>(barID,beatID,y,amountOfLane,time);
-	longNote.at(barID).at(beatID) = std::make_shared<Note::Make_Note_LongNoteContainer>(barID,beatID,y,amountOfLane,time);
-	slideNote.at(barID).at(beatID) = std::make_shared<Note::Make_Note_SlideNoteContainer>(barID, beatID, y, amountOfLane, time);
+void Make::Note::Make_Note_NoteManager::makeNoteInstance(const std::uint16_t barID,const std::uint8_t beatID,const float& y,const std::uint8_t laneAmount,float time) {
+	normalNote.at(barID).at(beatID) = std::make_shared<Note::Make_Note_NormalNoteContainer>(barID,beatID,y,laneAmount,time);
+	longNote.at(barID).at(beatID) = std::make_shared<Note::Make_Note_LongNoteContainer>(barID,beatID,y,laneAmount,time);
+	slideNote.at(barID).at(beatID) = std::make_shared<Note::Make_Note_SlideNoteContainer>(barID, beatID, y, laneAmount, time);
 }
 
-void Make::Singleton::Make_Singleton_NoteManager::resetVector(const bool isAll,const std::uint16_t barID){
+void Make::Note::Make_Note_NoteManager::resetVector(const bool isAll,const std::uint16_t barID){
 	if (isAll) {
 		for (int i = 0,iSize = static_cast<int>(normalNote.size()); i < iSize; ++i) {
 			for (int k = 0,kSize = static_cast<int>(normalNote.at(i).size()); k < kSize; ++k) {
@@ -84,7 +68,7 @@ void Make::Singleton::Make_Singleton_NoteManager::resetVector(const bool isAll,c
 	}
 }
 
-void Make::Singleton::Make_Singleton_NoteManager::removeLongNote(const std::uint16_t barID,const std::uint8_t beatID,const std::uint8_t laneID) {
+void Make::Note::Make_Note_NoteManager::removeLongNote(const std::uint16_t barID,const std::uint8_t beatID,const std::uint8_t laneID) {
 	if (longNote.at(barID).at(beatID)->getLongNoteFlag(laneID).first) {
 		std::uint8_t isFirstOrLastCount = 0;
 		std::uint16_t isNotHaveNote = 0;
@@ -136,13 +120,13 @@ void Make::Singleton::Make_Singleton_NoteManager::removeLongNote(const std::uint
 	}
 }
 
-void Make::Singleton::Make_Singleton_NoteManager::setNormalNote(const std::uint16_t barID,const std::uint8_t beatID,const std::uint8_t laneID) {
+void Make::Note::Make_Note_NoteManager::setNormalNote(const std::uint16_t barID,const std::uint8_t beatID,const std::uint8_t laneID) {
 	if (!longNote.at(barID).at(beatID)->getLongNoteFlag(laneID).first) {
 		normalNote.at(barID).at(beatID)->setNormalNoteFlag(laneID);
 	}
 }
 
-void Make::Singleton::Make_Singleton_NoteManager::setLongNote(const std::uint16_t barID,const std::uint8_t beatID,const std::uint8_t laneID,float* y,const bool isFirst) {
+void Make::Note::Make_Note_NoteManager::setLongNote(const std::uint16_t barID,const std::uint8_t beatID,const std::uint8_t laneID,float* y,const bool isFirst) {
 	if (isFirst) {
 		//ä˘Ç…ÉçÉìÉOÉmÅ[ÉcÇ™ê›íuÇ≥ÇÍÇƒÇ¢ÇΩéûÇ…ìPãéÇ∑ÇÈ
 		removeLongNote(barID, beatID, laneID);
@@ -269,7 +253,7 @@ void Make::Singleton::Make_Singleton_NoteManager::setLongNote(const std::uint16_
 	}
 }
 
-void Make::Singleton::Make_Singleton_NoteManager::setLongNoteBySavaData(const std::uint16_t startBarID, const std::uint8_t startBeatID, const std::uint16_t endBarID, const std::uint8_t endBeatID, const std::uint8_t laneID) {
+void Make::Note::Make_Note_NoteManager::setLongNoteBySavaData(const std::uint16_t startBarID, const std::uint8_t startBeatID, const std::uint16_t endBarID, const std::uint8_t endBeatID, const std::uint8_t laneID) {
 	std::stack<Note::Make_Note_LongNoteContainer*> stackLong;
 	const float startY = longNote.at(startBarID).at(startBeatID)->getY();
 	const float endY = longNote.at(endBarID).at(endBeatID)->getY();
@@ -306,11 +290,11 @@ void Make::Singleton::Make_Singleton_NoteManager::setLongNoteBySavaData(const st
 	++longNoteGroup;
 }
 
-void Make::Singleton::Make_Singleton_NoteManager::setLongNoteGroupe(const std::uint16_t longNoteGroup) {
+void Make::Note::Make_Note_NoteManager::setLongNoteGroupe(const std::uint16_t longNoteGroup) {
 	this->longNoteGroup = longNoteGroup;
 }
 
-void Make::Singleton::Make_Singleton_NoteManager::setSlideNote(const std::uint16_t barID,const std::uint8_t beatID,const std::uint8_t laneID,const float mouseY,const bool isFirst) {
+void Make::Note::Make_Note_NoteManager::setSlideNote(const std::uint16_t barID,const std::uint8_t beatID,const std::uint8_t laneID,const float mouseY,const bool isFirst) {
 	if (isFirst) {
 		if (slideNote.at(barID).at(beatID)->getSlideNoteFlag().first &&
 			slideNote.at(barID).at(beatID)->getNoteStartAndEnd().first.second <= laneID &&
@@ -351,7 +335,7 @@ void Make::Singleton::Make_Singleton_NoteManager::setSlideNote(const std::uint16
 	}
 }
 
-void Make::Singleton::Make_Singleton_NoteManager::setSlideNoteBySavaData(const std::uint16_t barID, const std::uint8_t beatID, const std::uint8_t start, const std::uint8_t end, const bool isRight) {
+void Make::Note::Make_Note_NoteManager::setSlideNoteBySavaData(const std::uint16_t barID, const std::uint8_t beatID, const std::uint8_t start, const std::uint8_t end, const bool isRight) {
 	if (isRight) {
 		slideNote.at(barID).at(beatID)->setSlideNoteFlag(start, end, true);
 	}
@@ -360,14 +344,14 @@ void Make::Singleton::Make_Singleton_NoteManager::setSlideNoteBySavaData(const s
 	}
 }
 
-const std::vector<std::vector<std::shared_ptr<Make::Note::Make_Note_NormalNoteContainer>>>& Make::Singleton::Make_Singleton_NoteManager::getNormalNoteVector() {
+const std::vector<std::vector<std::shared_ptr<Make::Note::Make_Note_NormalNoteContainer>>>& Make::Note::Make_Note_NoteManager::getNormalNoteVector() {
 	return normalNote;
 }
 
-const std::vector<std::vector<std::shared_ptr<Make::Note::Make_Note_LongNoteContainer>>>& Make::Singleton::Make_Singleton_NoteManager::getLongNoteVector() {
+const std::vector<std::vector<std::shared_ptr<Make::Note::Make_Note_LongNoteContainer>>>& Make::Note::Make_Note_NoteManager::getLongNoteVector() {
 	return longNote;
 }
 
-const std::vector<std::vector<std::shared_ptr<Make::Note::Make_Note_SlideNoteContainer>>>& Make::Singleton::Make_Singleton_NoteManager::getSlideNoteVector() {
+const std::vector<std::vector<std::shared_ptr<Make::Note::Make_Note_SlideNoteContainer>>>& Make::Note::Make_Note_NoteManager::getSlideNoteVector() {
 	return slideNote;
 }

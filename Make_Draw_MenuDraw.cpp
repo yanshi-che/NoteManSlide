@@ -1,8 +1,11 @@
 #include "Make_Draw_MenuDraw.h"
 
 std::shared_ptr<Make::File::Make_File_MusicData> Make::Draw::Make_Draw_MenuDraw::p_musicData = nullptr;
+std::shared_ptr<Make::Play::Make_Play_MusicPlayer> Make::Draw::Make_Draw_MenuDraw::p_musicPlayer = nullptr;
+std::shared_ptr<Make::Draw::Make_Draw_BeatLineManager> Make::Draw::Make_Draw_MenuDraw::p_beatLine = nullptr;
 
-Make::Draw::Make_Draw_MenuDraw::Make_Draw_MenuDraw(){
+Make::Draw::Make_Draw_MenuDraw::Make_Draw_MenuDraw(std::shared_ptr<Draw::Make_Draw_BeatLineManager> p_beatLine){
+	this->p_beatLine = p_beatLine;
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, MENUITEM_IDTOP, FALSE, "ファイル(&F)", File);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, File, FALSE, "新規作成(&N)", NewFile);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, File, FALSE, "開く(&O)", Open);
@@ -35,14 +38,14 @@ Make::Draw::Make_Draw_MenuDraw::Make_Draw_MenuDraw(){
 void Make::Draw::Make_Draw_MenuDraw::setMusicDataFromNewFile(const std::shared_ptr<File::Make_File_MusicData> md) {
 	p_musicData	= md;
 	if (p_musicData!=nullptr) {
-		Singleton::Make_Singleton_BeatLineManager::getInstance()->initialize(p_musicData);
+		p_beatLine->initialize(p_musicData);
 	}
 }
 
 void Make::Draw::Make_Draw_MenuDraw::setMusicDataFromSaveFile(std::unique_ptr<File::Make_File_MusicData> md,const json::value val) {
 	p_musicData = std::move(md);
 	if (p_musicData != nullptr) {
-		Singleton::Make_Singleton_BeatLineManager::getInstance()->initializeBySavaData(p_musicData,val);
+		p_beatLine->initializeBySavaData(p_musicData,val);
 	}
 }
 
@@ -51,98 +54,103 @@ void Make::Draw::Make_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemNam
 	case NewFile:
 		if (p_musicData == nullptr) {
 			File::Make_File_MusicFileIO mfIO;
-			setMusicDataFromNewFile(mfIO.getMusicFile());
+			std::pair<std::unique_ptr<File::Make_File_MusicData>, std::unique_ptr<Play::Make_Play_MusicPlayer>> pair = mfIO.getMusicFile();;
+			p_musicPlayer = std::move(pair.second);
+			setMusicDataFromNewFile(std::move(pair.first));
 		}
 		else {
 			File::Make_File_MusicFileIO mfIO;
-			std::unique_ptr<File::Make_File_MusicData> data = mfIO.getMusicFile();
-			if (data != nullptr) {
-				DeleteSoundMem(p_musicData->getMusicHandle());
+			std::pair<std::unique_ptr<File::Make_File_MusicData>, std::unique_ptr<Play::Make_Play_MusicPlayer>> pair = mfIO.getMusicFile();
+			if (pair.first != nullptr && pair.second!= nullptr) {
 				p_musicData.reset();
-				Singleton::Make_Singleton_BeatLineManager::getInstance()->finalize();
-				setMusicDataFromNewFile(std::move(data));
+				p_musicPlayer.reset();
+				p_beatLine->finalize();
+				p_musicPlayer = std::move(pair.second);
+				setMusicDataFromNewFile(std::move(pair.first));
 			}
 		}
 		break;
 	case Open:
 		if (p_musicData == nullptr) {
 			File::Make_File_SaveFileIO sfIO;
-			std::pair<std::unique_ptr<File::Make_File_MusicData>, json::value> pair = sfIO.readSaveData();
-			if (pair.first != nullptr) {
-				setMusicDataFromSaveFile(std::move(pair.first), pair.second);
+			std::tuple<std::unique_ptr<File::Make_File_MusicData>, std::unique_ptr<Play::Make_Play_MusicPlayer>, json::value> tuple = sfIO.readSaveData();
+			if (std::get<0>(tuple) != nullptr && std::get<1>(tuple) != nullptr && std::get<2>(tuple) != NULL) {
+				p_musicPlayer = std::move(std::get<1>(tuple));
+				setMusicDataFromSaveFile(std::move(std::get<0>(tuple)), std::get<2>(tuple));
 			}
 		}
 		else {
 			File::Make_File_SaveFileIO sfIO;
-			std::pair<std::unique_ptr<File::Make_File_MusicData>, json::value> pair = sfIO.readSaveData();
-			if (pair.first != nullptr) {
-				DeleteSoundMem(p_musicData->getMusicHandle());
+			std::tuple<std::unique_ptr<File::Make_File_MusicData>, std::unique_ptr<Play::Make_Play_MusicPlayer>, json::value> tuple = sfIO.readSaveData();
+			if (std::get<0>(tuple) != nullptr && std::get<1>(tuple) != nullptr && std::get<2>(tuple) != NULL) {
 				p_musicData.reset();
-				Singleton::Make_Singleton_BeatLineManager::getInstance()->finalize();
-				setMusicDataFromSaveFile(std::move(pair.first), pair.second);
+				p_musicPlayer.reset();
+				p_beatLine->finalize();
+				p_musicPlayer = std::move(std::get<1>(tuple));
+				setMusicDataFromSaveFile(std::move(std::get<0>(tuple)), std::get<2>(tuple));
 			}
 		}
 		break;
 	case Save:
 		if (p_musicData != nullptr) {
 			File::Make_File_SaveFileIO saIO;
-			saIO.writeSaveData(p_musicData);
+			saIO.writeSaveData(p_musicData,p_beatLine);
 		}
 		break;
 	case Export:
 		if (p_musicData != nullptr) {
 			File::Make_File_JsonIO jsIO;
-			jsIO.saveNewJson(p_musicData);
+			jsIO.saveNewJson(p_musicData,p_beatLine->getNoteManager());
 		}
 		break;
 	case WholeQUARTER:
 		if (p_musicData != nullptr) {
-			Singleton::Make_Singleton_BeatLineManager::getInstance()->setInitBarLineFunc(Global::QUARTER,NULL,true);
+			p_beatLine->setInitBarLineFunc(Global::QUARTER,NULL,true);
 		}
 		break;
 	case WholeEIGHTH:
 		if (p_musicData != nullptr) {
-			Singleton::Make_Singleton_BeatLineManager::getInstance()->setInitBarLineFunc(Global::EIGHTH,NULL,true);
+			p_beatLine->setInitBarLineFunc(Global::EIGHTH,NULL,true);
 		}
 		break;
 	case WholeSIXTEENTH:
 		if (p_musicData != nullptr) {
-			Singleton::Make_Singleton_BeatLineManager::getInstance()->setInitBarLineFunc(Global::SIXTEENTH,NULL,true);
+			p_beatLine->setInitBarLineFunc(Global::SIXTEENTH,NULL,true);
 		}
 		break;
 	case WholeTHIRTYSECOND:
 		if (p_musicData != nullptr) {
-			Singleton::Make_Singleton_BeatLineManager::getInstance()->setInitBarLineFunc(Global::THIRTYSECOND,NULL,true);
+			p_beatLine->setInitBarLineFunc(Global::THIRTYSECOND,NULL,true);
 		}
 		break;
 	case WholeTRIPLET:
 		if (p_musicData != nullptr) {
-			Singleton::Make_Singleton_BeatLineManager::getInstance()->setInitBarLineFunc(Global::TRIPLET,NULL,true);
+			p_beatLine->setInitBarLineFunc(Global::TRIPLET,NULL,true);
 		}
 		break;
 	case PartQUARTER:
 		if (p_musicData != nullptr) {
-			Singleton::Make_Singleton_BeatLineManager::getInstance()->setInitBarLineFunc(Global::QUARTER, Draw::Make_Draw_LineContainer::getbarIDForChangeQuontize(), false);
+			p_beatLine->setInitBarLineFunc(Global::QUARTER, Draw::Make_Draw_LineContainer::getbarIDForChangeQuontize(), false);
 		}
 		break;
 	case PartEIGHTH:
 		if (p_musicData != nullptr) {
-			Singleton::Make_Singleton_BeatLineManager::getInstance()->setInitBarLineFunc(Global::EIGHTH, Draw::Make_Draw_LineContainer::getbarIDForChangeQuontize(), false);
+			p_beatLine->setInitBarLineFunc(Global::EIGHTH, Draw::Make_Draw_LineContainer::getbarIDForChangeQuontize(), false);
 		}
 		break;
 	case PartSIXTEENTH:
 		if (p_musicData != nullptr) {
-			Singleton::Make_Singleton_BeatLineManager::getInstance()->setInitBarLineFunc(Global::SIXTEENTH, Draw::Make_Draw_LineContainer::getbarIDForChangeQuontize(), false);
+			p_beatLine->setInitBarLineFunc(Global::SIXTEENTH, Draw::Make_Draw_LineContainer::getbarIDForChangeQuontize(), false);
 		}
 		break;
 	case PartTHIRTYSECOND:
 		if (p_musicData != nullptr) {
-			Singleton::Make_Singleton_BeatLineManager::getInstance()->setInitBarLineFunc(Global::THIRTYSECOND, Draw::Make_Draw_LineContainer::getbarIDForChangeQuontize(), false);
+			p_beatLine->setInitBarLineFunc(Global::THIRTYSECOND, Draw::Make_Draw_LineContainer::getbarIDForChangeQuontize(), false);
 		}
 		break;
 	case PartTRIPLET:
 		if (p_musicData != nullptr) {
-			Singleton::Make_Singleton_BeatLineManager::getInstance()->setInitBarLineFunc(Global::TRIPLET, Draw::Make_Draw_LineContainer::getbarIDForChangeQuontize(), false);
+			p_beatLine->setInitBarLineFunc(Global::TRIPLET, Draw::Make_Draw_LineContainer::getbarIDForChangeQuontize(), false);
 		}
 		break;
 	case Normal:

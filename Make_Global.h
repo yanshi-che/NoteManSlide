@@ -9,6 +9,7 @@ namespace Make {
 		constexpr const std::uint8_t WINDOW_COLORBIT{ 32 };//ウインドウのカラービット
 		constexpr const float DRAW_X_MIN{ 40.0f };//ウインドウの横幅
 		constexpr const float DRAW_X_MAX{ 700.0f };//ウインドウの横幅
+		constexpr const std::uint8_t LANEAMOUNT{ 6 };//レーンの数
 
 		constexpr const float MINUTE{ 60.0f };
 

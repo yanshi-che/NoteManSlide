@@ -18,9 +18,52 @@ INT_PTR CALLBACK Make::Dialog::Make_Dialog_MusicInfo::MusicInfoDialogProc(HWND h
 		}
 		break;
 		case IDOK:
-			isShowMusicInfoDlg = false;
-			isInputed = true;
-			EndDialog(hWnd, NULL);
+		{
+			bool isError = false;
+			std::string errorMessage;
+			char filePath[MAX_PATH] = "";
+			char name[NAMECHARMAX] = "";
+			char artist[ARTISTCHARMAX] = "";
+			char bpm[BPMCHARMAX] = "";
+			GetDlgItemText(hWnd, IDC_EDITFilePath, filePath, MAX_PATH);
+			GetDlgItemText(hWnd, IDC_EDITNAME, name, NAMECHARMAX);
+			GetDlgItemText(hWnd, IDC_EDITARTIST, artist, ARTISTCHARMAX);
+			GetDlgItemText(hWnd, IDC_EDITBPM, bpm, BPMCHARMAX);
+			std::regex isFloat(R"(^\d{1,3}\.\d{1,2})");
+			if (filePath[0] == NULL) {
+				errorMessage.append("ファイルパスが未入力です。\n");
+				isError = true;
+			}
+			if (name[0] == NULL) {
+				errorMessage.append("曲名が未入力です。\n");
+				isError = true;
+			}
+			if (artist[0] == NULL) {
+				errorMessage.append("アーティストが未入力です。\n");
+				isError = true;
+			}
+			if (GetDlgItemInt(hWnd, IDC_EDITLEVEL, NULL, true) < LEVELMIN || LEVELMAX < GetDlgItemInt(hWnd, IDC_EDITLEVEL, NULL, true)) {
+				errorMessage.append("レベルが範囲外です。\n");
+				isError = true;
+			}
+			if (!std::regex_match(bpm, isFloat)) {
+				errorMessage.append("BPMがフォーマットと異なります\n");
+				isError = true;
+			}
+			if (GetDlgItemInt(hWnd, IDC_EDITTotalMinutes, NULL, true) == NULL) {
+				errorMessage.append("再生時間が未入力です。\n");
+				isError = true;
+			}
+
+			if (isError) {
+				MessageBox(hWnd, errorMessage.c_str(), "エラー", MB_OK);
+			}
+			else {
+				isShowMusicInfoDlg = false;
+				isInputed = true;
+				EndDialog(hWnd, NULL);
+			}
+		}
 			break;
 		case IDCANCEL:
 			isShowMusicInfoDlg = false;
@@ -35,7 +78,7 @@ INT_PTR CALLBACK Make::Dialog::Make_Dialog_MusicInfo::MusicInfoDialogProc(HWND h
 	return 0;
 }
 
-void Make::Dialog::Make_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MAX_PATH], char(&name)[MAX_PATH], char(&artist)[MAX_PATH], std::uint8_t& level, std::uint16_t& bpm, float& totalMinutes, std::uint16_t& beginDelay, std::uint8_t& amountOfLane) {
+void Make::Dialog::Make_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MAX_PATH], char(&name)[MAX_PATH], char(&artist)[MAX_PATH], std::uint8_t& level, float& bpm, float& totalMinutes, std::uint16_t& beginDelay) {
 	HWND hMainWnd = nullptr;
 	HWND hDialogWnd = nullptr;
 	HINSTANCE hInstance = nullptr;
@@ -51,10 +94,9 @@ void Make::Dialog::Make_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MA
 	SetDlgItemText(hDialogWnd, IDC_STATICNAME, "曲名(日本語入力できない場合はペーストしてください)");
 	SetDlgItemText(hDialogWnd, IDC_STATICARTIST, "アーティスト名");
 	SetDlgItemText(hDialogWnd, IDC_STATICLEVEL, "譜面の難易度(1～20)");
-	SetDlgItemText(hDialogWnd, IDC_STATICBPM, "BPM");
+	SetDlgItemText(hDialogWnd, IDC_STATICBPM, "BPM(例:150.68)");
 	SetDlgItemText(hDialogWnd, IDC_STATICTotalMinutes, "再生時間(秒)");
 	SetDlgItemText(hDialogWnd, IDC_STATICBeginDelay, "曲が始まるまでの時間(秒)");
-	SetDlgItemText(hDialogWnd, IDC_STATICLANE, "レーン数(4～8)");
 
 	//EDIITBOXの文字数制限
 	SendMessage(GetDlgItem(hDialogWnd, IDC_EDITNAME), EM_SETLIMITTEXT, NAMECHARMAX, NULL);
@@ -63,7 +105,6 @@ void Make::Dialog::Make_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MA
 	SendMessage(GetDlgItem(hDialogWnd, IDC_EDITBPM), EM_SETLIMITTEXT, BPMCHARMAX, NULL);
 	SendMessage(GetDlgItem(hDialogWnd, IDC_EDITTotalMinutes), EM_SETLIMITTEXT, TOTALMINUTESCHARMAX, NULL);
 	SendMessage(GetDlgItem(hDialogWnd, IDC_EDITBeginDelay), EM_SETLIMITTEXT, BEGINDELAYCHARMAX, NULL);
-	SendMessage(GetDlgItem(hDialogWnd, IDC_EDITLANE), EM_SETLIMITTEXT, amountOfLaneCHARMAX, NULL);
 
 	//ダイアログをDXライブラリに登録(DXライブラリは単一のダイアログのみ対応)
 	SetDialogBoxHandle(hDialogWnd);
@@ -82,21 +123,15 @@ void Make::Dialog::Make_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MA
 		GetDlgItemText(hDialogWnd, IDC_EDITNAME, name, MAX_PATH);
 		GetDlgItemText(hDialogWnd, IDC_EDITARTIST, artist, MAX_PATH);
 		level = GetDlgItemInt(hDialogWnd, IDC_EDITLEVEL, NULL, true);
-		bpm = GetDlgItemInt(hDialogWnd, IDC_EDITBPM, NULL, true);
+		char bpmText[BPMCHARMAX] = "";
+		GetDlgItemText(hDialogWnd, IDC_EDITBPM, bpmText, BPMCHARMAX);
+		bpm = std::stof(bpmText);
 		totalMinutes = GetDlgItemInt(hDialogWnd, IDC_EDITTotalMinutes, NULL, true) / Global::MINUTE;
 		beginDelay = GetDlgItemInt(hDialogWnd, IDC_EDITBeginDelay, NULL, true);
-		amountOfLane = GetDlgItemInt(hDialogWnd, IDC_EDITLANE, NULL, true);
 		if (level < LEVELMIN) {
 			level = LEVELMIN;
 		}else if(LEVELMAX < level){
 			level = LEVELMAX;
-		}
-
-		if(amountOfLane < LANEMIN){
-			amountOfLane = LANEMIN;
-		}
-		else if(LANEMAX < amountOfLane){
-			amountOfLane = LANEMAX;
 		}
 	}
 

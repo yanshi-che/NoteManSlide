@@ -12,7 +12,7 @@
 #include "Make_File_BaseFile.h"
 #include "Make_File_MusicData.h"
 #include "Make_File_FileStructData.h"
-#include "Make_Singleton_NoteManager.h"
+#include "Make_Note_NoteManager.h"
 #include "Make_Global.h"
 
 using namespace boost;
@@ -24,7 +24,8 @@ namespace Make{
 		private:
 			void getFilePath(char (&filePath)[MAX_PATH]);
 		public:
-			void saveNewJson(const std::shared_ptr<Make_File_MusicData>& p_musicData);
+			void getJsonVal(const std::shared_ptr<Make_File_MusicData>& p_musicData, const std::shared_ptr<Note::Make_Note_NoteManager>& p_noteManager, json::value& val);
+			void saveNewJson(const std::shared_ptr<Make_File_MusicData>& p_musicData,const std::shared_ptr<Note::Make_Note_NoteManager>& p_noteManager);
 		};
 	}
 }

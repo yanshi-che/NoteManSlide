@@ -13,19 +13,17 @@
 #define IDC_EDITBPM                     1006
 #define IDC_EDITTotalMinutes            1007
 #define IDC_EDITBeginDelay              1008
-#define IDC_EDITLANE                    1009
-#define IDC_STATICBPM                   1010
-#define IDC_STATICTotalMinutes          1011
-#define IDC_STATICBeginDelay            1012
-#define IDC_STATICLANE                  1013
-#define IDC_STATICNAME                  1014
-#define IDC_STATICARTIST                1015
-#define IDC_STATICLEVEL                 1016
-#define IDC_EDITSaveFilePath            1017
-#define IDC_BUTTONSaveFilePath          1018
-#define IDC_BUTTONMusicFilePath         1019
-#define IDC_STATICERRORSENTENCE         1020
-#define IDC_EDITMusicFilePath           1021
+#define IDC_STATICBPM                   1009
+#define IDC_STATICTotalMinutes          1010
+#define IDC_STATICBeginDelay            1011
+#define IDC_STATICNAME                  1012
+#define IDC_STATICARTIST                1013
+#define IDC_STATICLEVEL                 1014
+#define IDC_EDITSaveFilePath            1015
+#define IDC_BUTTONSaveFilePath          1016
+#define IDC_BUTTONMusicFilePath         1017
+#define IDC_STATICERRORSENTENCE         1018
+#define IDC_EDITMusicFilePath           1019
 
 // Next default values for new objects
 //

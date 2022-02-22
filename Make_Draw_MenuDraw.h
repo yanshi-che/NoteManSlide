@@ -3,6 +3,7 @@
 #include "dxlib/DxLib.h"
 #include "boost/json.hpp"
 #include <memory>
+#include <tuple>
 #include <utility>
 
 #include "Make_Global.h"
@@ -11,7 +12,8 @@
 #include "Make_File_JsonIO.h"
 #include "Make_File_SaveFileIO.h"
 #include "Make_Draw_LineContainer.h"
-#include "Make_Singleton_BeatLineManager.h"
+#include "Make_Draw_BeatLineManager.h"
+#include "Make_Play_MusicPlayer.h"
 
 using namespace boost;
 
@@ -48,11 +50,13 @@ namespace Make {
 				Slide,
 			};
 			static std::shared_ptr<File::Make_File_MusicData> p_musicData;
+			static std::shared_ptr<Play::Make_Play_MusicPlayer> p_musicPlayer;
+			static std::shared_ptr<Draw::Make_Draw_BeatLineManager> p_beatLine;
 			static void MenuItemSelectCallBack(const TCHAR* itemName, int itemID);//ƒƒjƒ…[‚ª‘I‘ğ‚³‚ê‚½‚çŒÄ‚Î‚ê‚éŠÖ”
 			static void setMusicDataFromNewFile(const std::shared_ptr<File::Make_File_MusicData> md);
 			static void setMusicDataFromSaveFile(std::unique_ptr<File::Make_File_MusicData> md, const json::value val);
 		public:
-			Make_Draw_MenuDraw();
+			Make_Draw_MenuDraw(std::shared_ptr<Draw::Make_Draw_BeatLineManager> p_beatLine);
 		};
 
 	}

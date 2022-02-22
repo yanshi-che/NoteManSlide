@@ -19,7 +19,7 @@ namespace Make {
 			const std::uint16_t barID; //何小節目に属しているか
 			const std::uint8_t beatID;//その小節の何番目の線か
 			const float time;//曲の開始から何秒か
-			const std::uint8_t amountOfLane; //レーンの数
+			const std::uint8_t laneAmount; //レーンの数
 			const float& r_y; //拍線の座標
 			std::uint32_t colorR;
 			std::uint32_t colorL;

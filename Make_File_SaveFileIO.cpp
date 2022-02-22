@@ -12,23 +12,21 @@ void Make::File::Make_File_SaveFileIO::getSaveFilePath(char(&saveFilePath)[MAX_P
 	dlg.getSaveFilePathFromDlg(saveFilePath, musicFilePath);
 }
 
-void Make::File::Make_File_SaveFileIO::writeSaveData(const std::shared_ptr<Make_File_MusicData>& p_musicData) {
+void Make::File::Make_File_SaveFileIO::writeSaveData(const std::shared_ptr<Make_File_MusicData>& p_musicData,const std::shared_ptr<Draw::Make_Draw_BeatLineManager>& p_beatLine) {
 	//セーブするファイルのパスを取得
 	char filePath[MAX_PATH] = "";//セーブするファイルのパス
 	getFilePath(filePath);
-	if (filePath == "") {
-		return;
-	}
+
 	//json作成用の変数
 	json::object obj;
 	json::value val;
 	json::storage_ptr sp = json::make_shared_resource< json::monotonic_resource >();
 
 	//MusicDataObjectの作成
-	obj["MusicData"] = json::value_from(MusicData(p_musicData->getName(), p_musicData->getArtist(), p_musicData->getLevel(), p_musicData->getBpm(), p_musicData->getBarLength(), p_musicData->getTotalMinutes(), p_musicData->getBeginDelay(), p_musicData->getAmountOfLane()), sp);
+	obj["MusicData"] = json::value_from(MusicData(p_musicData->getName(), p_musicData->getArtist(), p_musicData->getLevel(), p_musicData->getBpm(), p_musicData->getBarLength(), p_musicData->getTotalMinutes(), p_musicData->getBeginDelay()), sp);
 
 	//BarLineDataObjectの作成
-	const std::vector<std::vector<std::shared_ptr<Draw::Make_Draw_LineContainer>>>& barVec = Singleton::Make_Singleton_BeatLineManager::getInstance()->getBarVec();
+	const std::vector<std::vector<std::shared_ptr<Draw::Make_Draw_LineContainer>>>& barVec = p_beatLine->getBarVec();
 
 	std::vector<BarLineData> barLineDataVec;
 	for (int i = 0, iSize = static_cast<int>(barVec.size()); i<iSize ; i++) {
@@ -38,9 +36,9 @@ void Make::File::Make_File_SaveFileIO::writeSaveData(const std::shared_ptr<Make_
 	obj["BarLineData"] = json::value_from(barLineDataVec, sp);
 
 	//NoteDataObjectの作成
-	const std::vector<std::vector<std::shared_ptr<Note::Make_Note_NormalNoteContainer>>>& normalNote = Singleton::Make_Singleton_NoteManager::getInstance()->getNormalNoteVector();
-	const std::vector<std::vector<std::shared_ptr<Note::Make_Note_LongNoteContainer>>>& longNote = Singleton::Make_Singleton_NoteManager::getInstance()->getLongNoteVector();
-	const std::vector<std::vector<std::shared_ptr<Note::Make_Note_SlideNoteContainer>>>& slideNote = Singleton::Make_Singleton_NoteManager::getInstance()->getSlideNoteVector();
+	const std::vector<std::vector<std::shared_ptr<Note::Make_Note_NormalNoteContainer>>>& normalNote = p_beatLine->getNoteManager()->getNormalNoteVector();
+	const std::vector<std::vector<std::shared_ptr<Note::Make_Note_LongNoteContainer>>>& longNote = p_beatLine->getNoteManager()->getLongNoteVector();
+	const std::vector<std::vector<std::shared_ptr<Note::Make_Note_SlideNoteContainer>>>& slideNote = p_beatLine->getNoteManager()->getSlideNoteVector();
 
 	struct longNotePoint {//終点が読み込まれるまでlongNoteの始点情報を保管するためのもの
 		std::uint16_t oldIndex;
@@ -53,7 +51,7 @@ void Make::File::Make_File_SaveFileIO::writeSaveData(const std::shared_ptr<Make_
 	bool isLongGroupLast = false;
 	for (int i = 0, iSize = static_cast<int>(normalNote.size()); i < iSize; ++i) {
 		for (int k = 0, kSize = static_cast<int>(normalNote.at(i).size()); k < kSize; ++k) {
-			for (int l = 0, lSize = static_cast<int>(p_musicData->getAmountOfLane()); l < lSize; ++l) {
+			for (int l = 0, lSize = static_cast<int>(Global::LANEAMOUNT); l < lSize; ++l) {
 				if (normalNote.at(i).at(k)->getNormalNoteFlag(l)) {
 					noteDataVector.push_back(NoteDataForSave(normalNote.at(i).at(k)->getBarID(), normalNote.at(i).at(k)->getBeatID(), Global::NOTETYPENORMAL, l, NULL, NULL, NULL, NULL));
 				}
@@ -95,17 +93,11 @@ void Make::File::Make_File_SaveFileIO::writeSaveData(const std::shared_ptr<Make_
 	writeFile.close();
 }
 
-std::pair<std::unique_ptr<Make::File::Make_File_MusicData>, json::value> Make::File::Make_File_SaveFileIO::readSaveData() {
+std::tuple<std::unique_ptr<Make::File::Make_File_MusicData>, std::unique_ptr<Make::Play::Make_Play_MusicPlayer>, json::value> Make::File::Make_File_SaveFileIO::readSaveData() {
 	//セーブするファイルのパスを取得
 	char saveFilePath[MAX_PATH] = "";//セーブファイルのパス
 	char musicFilePath[MAX_PATH] = "";//音楽ファイルのパス
 	getSaveFilePath(saveFilePath,musicFilePath);
-	if (saveFilePath == "" || musicFilePath == "") {
-		Dialog::Make_Dialog_FailFile f;
-		std::string errSentence = "ファイル読み込みに失敗しました";
-		f.failFileDlg(errSentence);
-		return std::pair<std::unique_ptr<Make::File::Make_File_MusicData>, json::value>(nullptr,NULL);
-	}
 
 	//json作成用の変数
 	json::object obj;
@@ -114,18 +106,26 @@ std::pair<std::unique_ptr<Make::File::Make_File_MusicData>, json::value> Make::F
 
 	//音楽ファイルをメモリに展開とハンドルの入手
 	int musicHandle = 0;//音楽ファイルのハンドル
+	int softSoundHandle = 0;
+	int channels, bitsPerSample, samplesParSec;
 	try {
 		musicHandle = LoadSoundMem(musicFilePath);
 		if (musicHandle == -1) {
 			throw "音楽ファイルの読み込みに失敗しました";
 		}
+		softSoundHandle = LoadSoftSound(musicFilePath);
+		if (softSoundHandle == -1) {
+			throw "ソフトウェアサウンドハンドルの読み込みに失敗しました";
+		}
+		GetSoftSoundFormat(softSoundHandle, &channels, &bitsPerSample, &samplesParSec);
 	}
 	catch (const char *e) {
 		Dialog::Make_Dialog_FailFile f;
 		std::string errSentence(e, 37);
 		f.failFileDlg(errSentence);
-		return std::pair<std::unique_ptr<Make::File::Make_File_MusicData>, json::value>(nullptr, NULL);
+		return std::tuple<std::unique_ptr<Make_File_MusicData>, std::unique_ptr<Play::Make_Play_MusicPlayer>, json::value>(nullptr, nullptr,NULL);
 	}
+	DeleteSoftSound(softSoundHandle);
 
 	//ファイルの読み込み
 	std::ifstream readfile(saveFilePath);
@@ -138,10 +138,8 @@ std::pair<std::unique_ptr<Make::File::Make_File_MusicData>, json::value> Make::F
 	//読み込んだファイルの文字列からjson形式にパース
 	val = json::parse(s,sp);
 
-	//音楽データの作成
 	MusicData mData = json::value_to<MusicData>(val);
-	std::unique_ptr<Make_File_MusicData> p_musicdataForReturn =
-		std::make_unique<Make_File_MusicData>(musicHandle,mData.name,mData.artist,mData.level,mData.bpm,mData.barLength,mData.totalMinutes,mData.beginDelay,mData.amountOfLane);
 
-	return std::pair<std::unique_ptr<Make::File::Make_File_MusicData>, json::value>(std::move(p_musicdataForReturn),val);
+	return std::tuple<std::unique_ptr<Make_File_MusicData>, std::unique_ptr<Play::Make_Play_MusicPlayer>, json::value>(std::make_unique<Make_File_MusicData>(mData.name, mData.artist, mData.level, mData.bpm, mData.barLength, mData.totalMinutes, mData.beginDelay),
+		std::make_unique<Play::Make_Play_MusicPlayer>(musicHandle,channels,bitsPerSample,samplesParSec),val);
 }

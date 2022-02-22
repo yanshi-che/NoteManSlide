@@ -1,6 +1,6 @@
 #include "Make_File_FileStructData.h"
 
-Make::File::MusicData::MusicData(std::string name, std::string artist, std::uint8_t level, std::uint16_t bpm, std::uint16_t barLength, float totalMinutes, std::uint16_t beginDelay, std::uint8_t amountOfLane) {
+Make::File::MusicData::MusicData(std::string name, std::string artist, std::uint8_t level, float bpm, std::uint16_t barLength, float totalMinutes, std::uint16_t beginDelay) {
 	this->name = name;
 	this->artist = artist;
 	this->level = level;
@@ -8,7 +8,6 @@ Make::File::MusicData::MusicData(std::string name, std::string artist, std::uint
 	this->barLength = barLength;
 	this->totalMinutes = totalMinutes;
 	this->beginDelay = beginDelay;
-	this->amountOfLane = amountOfLane;
 }
 
 void Make::File::tag_invoke(const json::value_from_tag&, json::value& jv, const MusicData& m) {
@@ -20,16 +19,15 @@ void Make::File::tag_invoke(const json::value_from_tag&, json::value& jv, const 
 		{ "barLength", m.barLength },
 		{ "totalMinute", m.totalMinutes },
 		{"beginDelay",m.beginDelay},
-		{"amountOfLane",m.amountOfLane}
 	};
 }
 
 Make::File::MusicData Make::File::tag_invoke(const json::value_to_tag<MusicData>&, const json::value& jv) {
 	const json::value& val = jv.as_object().at("MusicData");
 	return MusicData(json::serialize(val.at("name").as_string()),json::serialize(val.at("artist").as_string()),
-		static_cast<std::uint8_t>(val.at("level").as_int64()), static_cast<std::uint16_t>(val.at("bpm").as_int64()),
+		static_cast<std::uint8_t>(val.at("level").as_int64()), static_cast<float>(val.at("bpm").as_double()),
 		static_cast<std::uint16_t>(val.at("barLength").as_int64()),static_cast<float>(val.at("totalMinute").as_double()),
-		static_cast<std::uint16_t>(val.at("beginDelay").as_int64()), static_cast<std::uint8_t>(val.at("amountOfLane").as_int64()));
+		static_cast<std::uint16_t>(val.at("beginDelay").as_int64()));
 }
 
 Make::File::BarLineData::BarLineData(std::uint16_t barID,std::uint8_t quontize) {

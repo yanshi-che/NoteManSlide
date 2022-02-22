@@ -10,11 +10,11 @@ namespace Make {
 		{
 		private:
 			const std::uint8_t COUNTOFBEAT;
-			float analyseBarLengthPerMinutes(std::uint16_t bpm) const noexcept;
-			void analyseBarLength(std::uint16_t bpm,float totalMinutes, std::uint16_t& barLength) const noexcept;
+			float analyseBarLengthPerMinutes(float bpm) const noexcept;
+			void analyseBarLength(float bpm,float totalMinutes, std::uint16_t& barLength) const noexcept;
 		public:
 			Make_File_MusicAnalyse();
-			void analyse(std::uint16_t bpm,float totalMinutes,std::uint16_t& barLength);
+			void analyse(float bpm,float totalMinutes,std::uint16_t& barLength);
 		};
 
 	}
