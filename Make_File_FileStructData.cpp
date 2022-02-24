@@ -108,15 +108,15 @@ std::vector<Make::File::NoteDataForSave> Make::File::tag_invoke(const json::valu
 	const json::array array = jv.as_object().at("NoteData").as_array();
 	for (int i = 0,iSize = static_cast<int>(array.size()); i < iSize; ++i) {
 		n.push_back(NoteDataForSave(
-			static_cast<std::uint16_t>(array[i].at("barID").as_int64()),
-			static_cast<std::uint8_t>(array[i].at("beatID").as_int64()),
-			static_cast<std::uint8_t>(array[i].at("noteType").as_int64()),
-			static_cast<std::uint8_t>(array[i].at("laneIndex").as_int64()),
-			static_cast<std::uint16_t>(array[i].at("longNoteGroupIndex").as_int64()),
-			static_cast<std::uint8_t>(array[i].at("rightOrLeft").as_int64()),
-			static_cast<std::uint8_t>(array[i].at("directionRightOrLeft").as_int64()),
-			static_cast<std::uint8_t>(array[i].at("slideLaneIndexStart").as_int64()),
-			static_cast<std::uint8_t>(array[i].at("slideLaneIndexEnd").as_int64())));
+			static_cast<std::uint16_t>(array.at(i).at("barID").as_int64()),
+			static_cast<std::uint8_t>(array.at(i).at("beatID").as_int64()),
+			static_cast<std::uint8_t>(array.at(i).at("noteType").as_int64()),
+			static_cast<std::uint8_t>(array.at(i).at("laneIndex").as_int64()),
+			static_cast<std::uint16_t>(array.at(i).at("longNoteGroupIndex").as_int64()),
+			static_cast<std::uint8_t>(array.at(i).at("rightOrLeft").as_int64()),
+			static_cast<std::uint8_t>(array.at(i).at("directionRightOrLeft").as_int64()),
+			static_cast<std::uint8_t>(array.at(i).at("slideLaneIndexStart").as_int64()),
+			static_cast<std::uint8_t>(array.at(i).at("slideLaneIndexEnd").as_int64())));
 	}
 	return n;
 }

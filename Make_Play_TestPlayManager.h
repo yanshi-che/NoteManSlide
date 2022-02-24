@@ -13,6 +13,7 @@
 #include "Make_Play_NormalNote.h"
 #include "Make_Play_LongNote.h"
 #include "Make_Play_SlideNote.h"
+#include "Make_Play_Score.h"
 
 using namespace boost;
 
@@ -22,6 +23,7 @@ namespace Make {
 		{
 		private:
 			std::shared_ptr<Make_Play_MusicPlayer> p_musicPlayer; //音楽再生用クラス
+			std::unique_ptr<Make_Play_Score> p_score;//スコア表示
 			std::unique_ptr<Make_Play_Lane> p_lane;//レーン周りの描画
 			std::vector<std::unique_ptr<Make_Play_BarLine>> barLineVec; //小節線
 			//各ノーツ格納用

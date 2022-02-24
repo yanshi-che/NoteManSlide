@@ -26,11 +26,11 @@ namespace Make {
 		constexpr const std::uint8_t THIRTYSECOND{ 32 };// ‚R‚Q•ª‰¹•„
 		constexpr const std::uint8_t TRIPLET{ 12 };// ‚R˜A•„
 		//ƒeƒXƒgƒvƒŒƒC‰æ–Ê‚Ì•`‰æŠÖ˜A
-		constexpr const double PLAY_LANE_X_MAX{ 360.0};
-		constexpr const double PLAY_LANE_X_MIN{ 180.0};
-		constexpr const double JUDGELINE_Y{ 600 };
-		constexpr const double noteHeight{ 4.0 };
-		constexpr const double lengthFromLane{ 5.0 };
+		constexpr const double PLAY_LANE_X_MAX{ 550.0};
+		constexpr const double PLAY_LANE_X_MIN{ 190.0};
+		constexpr const double JUDGELINE_Y{ 680 };
+		constexpr const double NOTE_HEIGHT{ 4.0 };
+		constexpr const double LENGTH_FROM_LANE{ 5.0 };
 		//”»’è
 		constexpr const double PERFECT{ 0.03333 };
 		constexpr const double GREAT{ 0.06666 };

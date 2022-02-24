@@ -4,15 +4,18 @@
 Make::Play::Make_Play_TestPlayManager::Make_Play_TestPlayManager() {
 	p_musicPlayer = nullptr;
 	p_lane = nullptr;
+	p_score = nullptr;
 }
 
 void Make::Play::Make_Play_TestPlayManager::draw() {
 	p_lane->draw();
+	p_score->draw();
 }
 
 void Make::Play::Make_Play_TestPlayManager::finalize() {
 	p_musicPlayer.reset();
 	p_lane.reset();
+	p_score.reset();
 }
 
 void Make::Play::Make_Play_TestPlayManager::initialize(const json::value& val, const std::shared_ptr<Make_Play_MusicPlayer>& p_musicPlayer, const std::shared_ptr<File::Make_File_MusicData>& p_musicData) {
@@ -31,14 +34,16 @@ void Make::Play::Make_Play_TestPlayManager::initialize(const json::value& val, c
 
 	std::vector<bool> isFirst;//ロングノーツの初期化でつかうフラグ
 	std::vector<double> startTime;//ロングノーツの初期化で始点の時間を保管
-	isFirst.reserve(laneAmount);
+	isFirst.resize(laneAmount);
+	startTime.resize(laneAmount);
 	for (int i = 0; i < laneAmount; ++i) {
 		normalCount.at(i) = 0;
 		longCount.at(i) = 0;
-		slideCount.at(i) = 0;
 		isFirst.at(i) = false;
 		startTime.at(i) = 0;
 	}
+	slideCount.at(0) = 0;
+	slideCount.at(1) = 0;
 
 	//小節線の初期化
 	barLineVec.resize(p_musicData->getBarLength());
@@ -58,8 +63,11 @@ void Make::Play::Make_Play_TestPlayManager::initialize(const json::value& val, c
 
 	//レーン周りの描画
 	p_lane = std::make_unique<Make_Play_Lane>();
+	//スコアの描画
+	p_score = std::make_unique<Make_Play_Score>();
 
-	json::array noteDataArray = val.as_object().at("NoteData").as_array();
+	//ノーツの初期化
+	const json::array noteDataArray = val.as_object().at("NoteData").as_array();
 	std::uint8_t noteType;
 	std::uint8_t laneIndex;
 	std::uint8_t directionRightOrLeft;
@@ -67,8 +75,8 @@ void Make::Play::Make_Play_TestPlayManager::initialize(const json::value& val, c
 	std::uint8_t slideNoteIndexEnd;
 	std::function<void(std::uint8_t, std::uint8_t)> nextNoteFunc = [&](std::uint8_t n, std::uint8_t l) {return nextNote(n,l); };
 	for (int i = 0, iSize = static_cast<int>(noteDataArray.size()); i< iSize; ++i) {
-		noteType = static_cast<std::uint8_t>(noteDataArray.at(i).at("noteType").as_int64());
-		laneIndex = static_cast<std::uint8_t>(noteDataArray.at(i).at("laneInde").as_int64());
+		noteType = static_cast<std::uint8_t>(noteDataArray.at(i).at("noteType").as_uint64());
+		laneIndex = static_cast<std::uint8_t>(noteDataArray.at(i).at("laneIndex").as_uint64());
 		if (noteType == Global::NOTETYPE_NORMAL) {
 			normalNoteVec.at(laneIndex)
 				.push_back(std::make_unique<Make_Play_NormalNote>(
@@ -89,20 +97,20 @@ void Make::Play::Make_Play_TestPlayManager::initialize(const json::value& val, c
 			}
 		}
 		else if (noteType == Global::NOTETYPE_SLIDER || noteType == Global::NOTETYPE_SLIDEL) {
-			if (noteDataArray.at(i).at("rightOrLeft").as_int64() == 1) {
+			if (noteDataArray.at(i).at("rightOrLeft").as_uint64() == 1) {
 				laneIndex = 0;
 			}
 			else {
 				laneIndex = 1;
 			}
-			if (noteDataArray.at(i).at("directionRightOrLeft").as_int64() == 1) {
+			if (noteDataArray.at(i).at("directionRightOrLeft").as_uint64() == 1) {
 				directionRightOrLeft = 0;
 			}
 			else {
 				directionRightOrLeft = 1;
 			}
-			slideNoteIndexStart = static_cast<std::uint8_t>(noteDataArray.at(i).at("slideLaneIndexStart").as_int64());
-			slideNoteIndexEnd = static_cast<std::uint8_t>(noteDataArray.at(i).at("slideLaneIndexEnd").as_int64());
+			slideNoteIndexStart = static_cast<std::uint8_t>(noteDataArray.at(i).at("slideLaneIndexStart").as_uint64());
+			slideNoteIndexEnd = static_cast<std::uint8_t>(noteDataArray.at(i).at("slideLaneIndexEnd").as_uint64());
 			slideNoteVec.at(laneIndex)
 				.push_back(std::make_unique<Make_Play_SlideNote>(
 					noteDataArray.at(i).at("time").as_double(), noteType,

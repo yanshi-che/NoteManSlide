@@ -25,6 +25,7 @@ namespace Make {
 			bool turn; //¡©•ª‚Ìˆ—‡‚©
 		public:
 			Make_Play_SlideNote(const double time, const std::uint8_t noteType, const double laneXRight, const double laneXLeft,const std::uint8_t rightOrLeft, const std::uint8_t directionRightOrLeft,const std::uint8_t slideLaneIndexStart,const std::uint8_t slideLaneIndexEnd,const std::function<void(std::uint8_t, std::uint8_t)> nextNote);
+			void check(double nowTime);
 			void setTurn(bool t);
 			void setDone(bool b);
 			void update(double nowTime);
