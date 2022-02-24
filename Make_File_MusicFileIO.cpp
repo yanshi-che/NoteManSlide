@@ -6,12 +6,16 @@ std::pair < std::unique_ptr < Make::File::Make_File_MusicData > , std::unique_pt
 	char tempArtist[MAX_PATH] = "";//アーティスト名
 
 	std::uint8_t level = 1;//譜面の難易度
-	float bpm = 0;//曲のbpm
-	float totalMinutes = 0;//音楽ファイルの総再生時間
-	std::uint16_t beginDelay = 0;//音声ファイルを再生してから曲が流れ始めるまでの時間
+	double bpm = 0;//曲のbpm
+	double totalMinutes = 0;//音楽ファイルの総再生時間
+	double beginDelay = 0;//音声ファイルを再生してから曲が流れ始めるまでの時間
 
 	Dialog::Make_Dialog_MusicInfo gfm;
 	gfm.getMusicInfoFromDlg(filePath,tempName,tempArtist,level,bpm,totalMinutes,beginDelay);
+
+	if (filePath[0] == NULL) {
+		return std::pair <std::unique_ptr<Make_File_MusicData>, std::unique_ptr<Play::Make_Play_MusicPlayer>>(nullptr, nullptr);
+	}
 
 	std::string name(tempName);//曲名
 	std::string artist(tempArtist);//アーティスト名
@@ -32,7 +36,7 @@ std::pair < std::unique_ptr < Make::File::Make_File_MusicData > , std::unique_pt
 	}
 	catch (const char* e) {
 		Dialog::Make_Dialog_FailFile f;
-		std::string errSentence(e, 37);
+		std::string errSentence(e);
 		f.failFileDlg(errSentence);
 		return std::pair <std::unique_ptr<Make_File_MusicData>, std::unique_ptr<Play::Make_Play_MusicPlayer>>(nullptr,nullptr);
 	}

@@ -1,11 +1,12 @@
 #pragma once
 
-#include "dxlib/DxLib.h"
-#include "boost/json.hpp"
+#include <functional>
 #include <memory>
 #include <tuple>
 #include <utility>
 
+#include "dxlib/DxLib.h"
+#include "boost/json.hpp"
 #include "Make_Global.h"
 #include "Make_File_MusicData.h"
 #include "Make_File_MusicFileIO.h"
@@ -14,6 +15,7 @@
 #include "Make_Draw_LineContainer.h"
 #include "Make_Draw_BeatLineManager.h"
 #include "Make_Play_MusicPlayer.h"
+#include "Make_Play_TestPlayManager.h"
 
 using namespace boost;
 
@@ -47,16 +49,24 @@ namespace Make {
 				NoteType,//ノーツの種類の変更
 				Normal,
 				Long,
-				Slide,
+				SlideR,
+				SlideL
 			};
 			static std::shared_ptr<File::Make_File_MusicData> p_musicData;
 			static std::shared_ptr<Play::Make_Play_MusicPlayer> p_musicPlayer;
+			static std::shared_ptr<Play::Make_Play_TestPlayManager> p_testPlay;
 			static std::shared_ptr<Draw::Make_Draw_BeatLineManager> p_beatLine;
+			static std::function<void()> drawFunc;
+			static bool isPlaying;
+			static bool isFileOpen;
+
 			static void MenuItemSelectCallBack(const TCHAR* itemName, int itemID);//メニューが選択されたら呼ばれる関数
 			static void setMusicDataFromNewFile(const std::shared_ptr<File::Make_File_MusicData> md);
 			static void setMusicDataFromSaveFile(std::unique_ptr<File::Make_File_MusicData> md, const json::value val);
 		public:
-			Make_Draw_MenuDraw(std::shared_ptr<Draw::Make_Draw_BeatLineManager> p_beatLine);
+			Make_Draw_MenuDraw();
+			void resetDrawFunc();
+			std::function<void()> getDrawFunc();
 		};
 
 	}

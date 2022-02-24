@@ -1,6 +1,6 @@
 #include "Make_Draw_LineContainer.h"
 
-std::uint8_t Make::Draw::Make_Draw_LineContainer::noteType = Make::Global::NOTETYPENORMAL;
+std::uint8_t Make::Draw::Make_Draw_LineContainer::noteType = Make::Global::NOTETYPE_NORMAL;
 
 bool Make::Draw::Make_Draw_LineContainer::clickObserver = false;
 
@@ -14,8 +14,8 @@ std::uint16_t Make::Draw::Make_Draw_LineContainer::getbarIDForChangeQuontize() {
 	return barIDForChangeQuontize;
 }
 
-Make::Draw::Make_Draw_LineContainer::Make_Draw_LineContainer(const std::uint16_t barID,const float time,const std::uint8_t beatID,const float y,const float yMax, const std::shared_ptr<Note::Make_Note_NoteManager>& p_noteManager) :
-	barID(barID),laneAmount(Global::LANEAMOUNT),time(time), beatID(beatID),p_noteManager(p_noteManager){
+Make::Draw::Make_Draw_LineContainer::Make_Draw_LineContainer(const std::uint16_t barID,const double time,const std::uint8_t beatID,const double y,const double yMax, const std::shared_ptr<Note::Make_Note_NoteManager>& p_noteManager) :
+	barID(barID),laneAmount(Global::LANE_AMOUNT),time(time), beatID(beatID),p_noteManager(p_noteManager){
 	this->y = y;
 	this->yMax = yMax;
 	yMin = y;
@@ -24,7 +24,7 @@ Make::Draw::Make_Draw_LineContainer::Make_Draw_LineContainer(const std::uint16_t
 	this->p_noteManager->makeNoteInstance(this->barID,this->beatID,this->y,this->laneAmount,this->time);
 
 	laneX.resize(laneAmount + 1);
-	float laneWidth = (Global::DRAW_X_MAX - Global::DRAW_X_MIN) / laneAmount;
+	double laneWidth = (Global::DRAW_X_MAX - Global::DRAW_X_MIN) / laneAmount;
 	for (int i = 0; i <= laneAmount; ++i) {
 		laneX.at(i) = laneWidth * i + Global::DRAW_X_MIN;
 	}
@@ -76,20 +76,20 @@ void Make::Draw::Make_Draw_LineContainer::drawBarID()  {
 		if(barIDForChangeQuontize != barID){
 			barIDColor = GetColor(255,255,255);
 		}
-		DrawStringF( 0 , y - barIDThickness, barIDStr.c_str(),barIDColor);
+		DrawStringF( 0 , static_cast<float>(y - barIDThickness), barIDStr.c_str(),barIDColor);
 	}
 }
 
 void Make::Draw::Make_Draw_LineContainer::drawLine()  {
 	if (y < Make::Global::WINDOW_HEIGHT && y>0) {
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, brend);
-		DrawLineAA(Global::DRAW_X_MIN, y, Global::DRAW_X_MAX, y, color, lineThickness);
+		DrawLineAA(static_cast<float>(Global::DRAW_X_MIN), static_cast<float>(y), static_cast<float>(Global::DRAW_X_MAX), static_cast<float>(y) , color, lineThickness);
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	}
 }
 
 void Make::Draw::Make_Draw_LineContainer::drawNote()  {
-	if (noteType == Global::NOTETYPENORMAL) {
+	if (noteType == Global::NOTETYPE_NORMAL) {
 		if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(mouseX,mouseY) && checkClickBorder()) {
 			for (int i = 0,iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
 				if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
@@ -105,7 +105,7 @@ void Make::Draw::Make_Draw_LineContainer::drawNote()  {
 			clickObserver = false;
 		}
 	}
-	else if (noteType == Global::NOTETYPELONG) {
+	else if (noteType == Global::NOTETYPE_LONG) {
 		if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(mouseX, mouseY) && checkClickBorder()) {
 			for (int i = 0, iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
 				if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
@@ -119,16 +119,16 @@ void Make::Draw::Make_Draw_LineContainer::drawNote()  {
 			}
 		}
 		if (clickObserver && p_mouseCheck->isMouseClickLeftUp(mouseX, mouseY)) {
-			float tempMouseY = static_cast<float>(mouseY);
+			double tempMouseY = static_cast<double>(mouseY);
 			p_noteManager->setLongNote(NULL, NULL, laneIDForLongNote, &tempMouseY , false);
 			clickObserver = false;
 		}
 	}
-	else if (noteType == Global::NOTETYPESLIDE) {
+	else if (noteType == Global::NOTETYPE_SLIDER) {
 		if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(mouseX, mouseY) && checkClickBorder()) {
 			for (int i = 0, iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
 				if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
-					p_noteManager->setSlideNote(barID, beatID, i,static_cast<float>(mouseX),true);
+					p_noteManager->setSlideNote(barID, beatID, i,static_cast<double>(mouseX),true,true);
 					clickObserver = true;
 					barIDForChangeQuontize = barID;
 					barIDColor = GetColor(36, 216, 236);
@@ -139,7 +139,29 @@ void Make::Draw::Make_Draw_LineContainer::drawNote()  {
 		if (clickObserver && p_mouseCheck->isMouseClickLeftUp(mouseX, mouseY)) {
 			for (int i = 0, iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
 				if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
-					p_noteManager->setSlideNote(NULL, NULL, i,static_cast<float>(mouseX),false);
+					p_noteManager->setSlideNote(NULL, NULL, i,static_cast<double>(mouseX),false,true);
+					clickObserver = false;
+					break;
+				}
+			}
+		}
+	}
+	else if (noteType == Global::NOTETYPE_SLIDEL) {
+		if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(mouseX, mouseY) && checkClickBorder()) {
+			for (int i = 0, iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
+				if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
+					p_noteManager->setSlideNote(barID, beatID, i, static_cast<double>(mouseX), true,false);
+					clickObserver = true;
+					barIDForChangeQuontize = barID;
+					barIDColor = GetColor(36, 216, 236);
+					break;
+				}
+			}
+		}
+		if (clickObserver && p_mouseCheck->isMouseClickLeftUp(mouseX, mouseY)) {
+			for (int i = 0, iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
+				if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
+					p_noteManager->setSlideNote(NULL, NULL, i, static_cast<double>(mouseX), false,false);
 					clickObserver = false;
 					break;
 				}
@@ -154,11 +176,11 @@ void Make::Draw::Make_Draw_LineContainer::setNoteType(std::uint8_t type)  {
 	noteType = type;
 }
 
-void Make::Draw::Make_Draw_LineContainer::setYMin(const float y) {
+void Make::Draw::Make_Draw_LineContainer::setYMin(const double y) {
 	yMin = y;
 }
 
-void Make::Draw::Make_Draw_LineContainer::updateY(const float upY) {
+void Make::Draw::Make_Draw_LineContainer::updateY(const double upY) {
 	if (upY < 0 && yMin < y || 0 < upY && y < yMax) {
 		y += upY;
 		if (yMax < y) {
@@ -171,11 +193,11 @@ void Make::Draw::Make_Draw_LineContainer::updateY(const float upY) {
 }
 
 
-void Make::Draw::Make_Draw_LineContainer::updateYMax(const float y) {
+void Make::Draw::Make_Draw_LineContainer::updateYMax(const double y) {
 	yMax += y;
 }
 
-void Make::Draw::Make_Draw_LineContainer::updateByInitOneBar(const float yWidth) {
+void Make::Draw::Make_Draw_LineContainer::updateByInitOneBar(const double yWidth) {
 	y += yWidth;
 	yMin += yWidth;
 	updateYMax(yWidth);
@@ -189,19 +211,19 @@ bool Make::Draw::Make_Draw_LineContainer::checkClickBorder() {
 }
 
 
-float Make::Draw::Make_Draw_LineContainer::getTime() {
+double Make::Draw::Make_Draw_LineContainer::getTime() {
 	return time;
 }
 
 
-float Make::Draw::Make_Draw_LineContainer::getY() {
+double Make::Draw::Make_Draw_LineContainer::getY() {
 	return y;
 }
 
-float Make::Draw::Make_Draw_LineContainer::getYMin() {
+double Make::Draw::Make_Draw_LineContainer::getYMin() {
 	return yMin;
 }
 
-float Make::Draw::Make_Draw_LineContainer::getYMax() {
+double Make::Draw::Make_Draw_LineContainer::getYMax() {
 	return yMax;
 }

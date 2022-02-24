@@ -13,11 +13,11 @@ namespace Make{
 			std::string name;
 			std::string artist;
 			std::uint8_t level;
-			float bpm;
+			double bpm;
 			std::uint16_t barLength;//曲全体の小節数
-			float totalMinutes;//曲の再生時間(分)
-			std::uint16_t beginDelay;//曲が始まるまでのずれ
-			MusicData(std::string name, std::string artist, std::uint8_t level, float bpm, std::uint16_t barLength, float totalMinutes, std::uint16_t beginDelay);
+			double totalMinutes;//曲の再生時間(分)
+			double beginDelay;//曲が始まるまでのずれ
+			MusicData(std::string name, std::string artist, std::uint8_t level, double bpm, std::uint16_t barLength, double totalMinutes, double beginDelay);
 		};
 
 		void tag_invoke(const json::value_from_tag&, json::value& jv, const MusicData& m);//valu_from用のオーバロード関数
@@ -25,15 +25,16 @@ namespace Make{
 		MusicData tag_invoke(const json::value_to_tag<MusicData>&, const json::value& jv);//jsonファイルパース用オーバーロード関数
 
 		struct NoteDataForJson { //jsonファイル書き込み用の構造体
-			float time;//ノーツの時間
+			double time;//ノーツの時間
 			std::uint8_t noteType;//ノーツの種類 1ならNormal 2ならLong 3ならSlide
 			std::uint8_t laneIndex;//ノーツが属するレーン
 			std::uint16_t longNoteGroupIndex;//各ロングノーツが属するグループ
 			std::uint16_t noteIndex;//そのレーンで何番目のノーツか
 			std::uint8_t rightOrLeft;//1なら右 2なら左
+			std::uint8_t directionRightOrLeft;//1なら右 2なら左
 			std::uint8_t slideLaneIndexStart;//スライドノーツの開始レーン
 			std::uint8_t slideLaneIndexEnd;//スライドノーツの終了レーン
-			NoteDataForJson(float time, std::uint8_t noteType, std::uint8_t laneIndex, std::uint16_t longNoteGroupIndex, std::uint16_t noteIndex, std::uint8_t rightOrLeft, std::uint8_t slideLaneIndexStart, std::uint8_t slideLaneIndexEnd);
+			NoteDataForJson(double time, std::uint8_t noteType, std::uint8_t laneIndex, std::uint16_t longNoteGroupIndex, std::uint16_t noteIndex, std::uint8_t rightOrLeft, std::uint8_t directionRightOrLeft, std::uint8_t slideLaneIndexStart, std::uint8_t slideLaneIndexEnd);
 		};
 
 		void tag_invoke(const json::value_from_tag&, json::value& jv, const NoteDataForJson& n);//valu_from用のオーバロード関数
@@ -54,9 +55,10 @@ namespace Make{
 			std::uint8_t laneIndex;//ノーツが属するレーン
 			std::uint16_t longNoteGroupIndex;//各ロングノーツが属するグループ
 			std::uint8_t rightOrLeft;//1なら右 2なら左
+			std::uint8_t directionRightOrLeft;//1なら右 2なら左
 			std::uint8_t slideLaneIndexStart;//スライドノーツの開始レーン
 			std::uint8_t slideLaneIndexEnd;//スライドノーツの終了レーン
-			NoteDataForSave(std::uint16_t barID, std::uint8_t beatID, std::uint8_t noteType, std::uint8_t laneIndex, std::uint16_t longNoteGroupIndex, std::uint8_t rightOrLeft, std::uint8_t slideLaneIndexStart, std::uint8_t slideLaneIndexEnd);
+			NoteDataForSave(std::uint16_t barID, std::uint8_t beatID, std::uint8_t noteType, std::uint8_t laneIndex, std::uint16_t longNoteGroupIndex, std::uint8_t rightOrLeft, std::uint8_t directionRightOrLeft, std::uint8_t slideLaneIndexStart, std::uint8_t slideLaneIndexEnd);
 		};
 
 		void tag_invoke(const json::value_from_tag&, json::value& jv, const NoteDataForSave& n);//valu_from用のオーバロード関数

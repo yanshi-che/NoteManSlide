@@ -51,21 +51,21 @@ void Make::File::Make_File_SaveFileIO::writeSaveData(const std::shared_ptr<Make_
 	bool isLongGroupLast = false;
 	for (int i = 0, iSize = static_cast<int>(normalNote.size()); i < iSize; ++i) {
 		for (int k = 0, kSize = static_cast<int>(normalNote.at(i).size()); k < kSize; ++k) {
-			for (int l = 0, lSize = static_cast<int>(Global::LANEAMOUNT); l < lSize; ++l) {
+			for (int l = 0, lSize = static_cast<int>(Global::LANE_AMOUNT); l < lSize; ++l) {
 				if (normalNote.at(i).at(k)->getNormalNoteFlag(l)) {
-					noteDataVector.push_back(NoteDataForSave(normalNote.at(i).at(k)->getBarID(), normalNote.at(i).at(k)->getBeatID(), Global::NOTETYPENORMAL, l, NULL, NULL, NULL, NULL));
+					noteDataVector.push_back(NoteDataForSave(normalNote.at(i).at(k)->getBarID(), normalNote.at(i).at(k)->getBeatID(), Global::NOTETYPE_NORMAL, l, NULL, NULL,NULL, NULL, NULL));
 				}
 				else if (longNote.at(i).at(k)->getLongNoteFlag(l).second) {
 					for (int n = 0, nSize = static_cast<int>(longNotePointDeq.size()); n < nSize; ++n) {
 						if (longNote.at(i).at(k)->getNoteGroup(l) == longNotePointDeq.at(n).oldIndex) {
-							noteDataVector.push_back(NoteDataForSave(longNote.at(i).at(k)->getBarID(), longNote.at(i).at(k)->getBeatID(), Global::NOTETYPELONG, l, longNotePointDeq.at(n).newIndex, NULL, NULL, NULL));
+							noteDataVector.push_back(NoteDataForSave(longNote.at(i).at(k)->getBarID(), longNote.at(i).at(k)->getBeatID(), Global::NOTETYPE_LONG, l, longNotePointDeq.at(n).newIndex, NULL,NULL, NULL, NULL));
 							isLongGroupLast = true;
 							longNotePointDeq.erase(longNotePointDeq.begin() + n);
 							break;
 						}
 					}
 					if (!isLongGroupLast) {
-						noteDataVector.push_back(NoteDataForSave(longNote.at(i).at(k)->getBarID(), longNote.at(i).at(k)->getBeatID(), Global::NOTETYPELONG, l, longNoteGroupIndex, NULL, NULL, NULL));
+						noteDataVector.push_back(NoteDataForSave(longNote.at(i).at(k)->getBarID(), longNote.at(i).at(k)->getBeatID(), Global::NOTETYPE_LONG, l, longNoteGroupIndex, NULL, NULL,NULL, NULL));
 						longNotePointDeq.push_back(longNotePoint(longNote.at(i).at(k)->getNoteGroup(l),longNoteGroupIndex));
 						++longNoteGroupIndex;
 					}
@@ -73,12 +73,24 @@ void Make::File::Make_File_SaveFileIO::writeSaveData(const std::shared_ptr<Make_
 				}
 			}
 			if (slideNote.at(i).at(k)->getSlideNoteFlag().first) {
-				noteDataVector.push_back(NoteDataForSave(normalNote.at(i).at(k)->getBarID(), normalNote.at(i).at(k)->getBeatID(), Global::NOTETYPESLIDE, NULL,NULL, 1,
-					slideNote.at(i).at(k)->getNoteStartAndEnd().first.first, slideNote.at(i).at(k)->getNoteStartAndEnd().first.second));
+				if (slideNote.at(i).at(k)->getSlideNoteDirectionRightOrLeft().first) {
+					noteDataVector.push_back(NoteDataForSave(normalNote.at(i).at(k)->getBarID(), normalNote.at(i).at(k)->getBeatID(), Global::NOTETYPE_SLIDER, NULL, NULL, 1,1,
+						slideNote.at(i).at(k)->getNoteStartAndEnd().first.first, slideNote.at(i).at(k)->getNoteStartAndEnd().first.second));
+				}
+				else {
+					noteDataVector.push_back(NoteDataForSave(normalNote.at(i).at(k)->getBarID(), normalNote.at(i).at(k)->getBeatID(), Global::NOTETYPE_SLIDER, NULL, NULL, 1, 2,
+						slideNote.at(i).at(k)->getNoteStartAndEnd().first.first, slideNote.at(i).at(k)->getNoteStartAndEnd().first.second));
+				}
 			}
 			if (slideNote.at(i).at(k)->getSlideNoteFlag().second) {
-				noteDataVector.push_back(NoteDataForSave(normalNote.at(i).at(k)->getBarID(), normalNote.at(i).at(k)->getBeatID(), Global::NOTETYPESLIDE, NULL,NULL, 2,
-					slideNote.at(i).at(k)->getNoteStartAndEnd().second.first, slideNote.at(i).at(k)->getNoteStartAndEnd().second.second));
+				if (slideNote.at(i).at(k)->getSlideNoteDirectionRightOrLeft().second) {
+					noteDataVector.push_back(NoteDataForSave(normalNote.at(i).at(k)->getBarID(), normalNote.at(i).at(k)->getBeatID(), Global::NOTETYPE_SLIDEL, NULL, NULL, 2,1,
+						slideNote.at(i).at(k)->getNoteStartAndEnd().second.first, slideNote.at(i).at(k)->getNoteStartAndEnd().second.second));
+				}
+				else {
+					noteDataVector.push_back(NoteDataForSave(normalNote.at(i).at(k)->getBarID(), normalNote.at(i).at(k)->getBeatID(), Global::NOTETYPE_SLIDEL, NULL, NULL, 2,2,
+						slideNote.at(i).at(k)->getNoteStartAndEnd().second.first, slideNote.at(i).at(k)->getNoteStartAndEnd().second.second));
+				}
 			}
 		}
 	}
@@ -99,6 +111,9 @@ std::tuple<std::unique_ptr<Make::File::Make_File_MusicData>, std::unique_ptr<Mak
 	char musicFilePath[MAX_PATH] = "";//音楽ファイルのパス
 	getSaveFilePath(saveFilePath,musicFilePath);
 
+	if (saveFilePath[0] == NULL || musicFilePath[0] == NULL) {
+		return std::tuple<std::unique_ptr<Make_File_MusicData>, std::unique_ptr<Play::Make_Play_MusicPlayer>, json::value>(nullptr, nullptr, NULL);
+	}
 	//json作成用の変数
 	json::object obj;
 	json::value val;
@@ -128,11 +143,22 @@ std::tuple<std::unique_ptr<Make::File::Make_File_MusicData>, std::unique_ptr<Mak
 	DeleteSoftSound(softSoundHandle);
 
 	//ファイルの読み込み
-	std::ifstream readfile(saveFilePath);
 	std::string s = "";
 	std::string line = "";
-	while (std::getline(readfile, line)) {
-		s.append(line);
+	try {
+		std::ifstream readfile(saveFilePath);
+		if (!readfile) {
+			throw "ファイルの読み込みに失敗しました";
+		}
+		while (std::getline(readfile, line)) {
+			s.append(line);
+		}
+	}
+	catch (const char* e) {
+		Dialog::Make_Dialog_FailFile f;
+		std::string errSentence(e);
+		f.failFileDlg(errSentence);
+		return std::tuple<std::unique_ptr<Make_File_MusicData>, std::unique_ptr<Play::Make_Play_MusicPlayer>, json::value>(nullptr, nullptr, NULL);
 	}
 
 	//読み込んだファイルの文字列からjson形式にパース

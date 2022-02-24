@@ -1,6 +1,6 @@
 #include "Make_Draw_ScrollBar.h"
 
-Make::Draw::Make_Draw_ScrollBar::Make_Draw_ScrollBar(const float scrollWidth,std::vector<std::vector<std::shared_ptr<Make_Draw_LineContainer>>>& barVec,const float& yMagnificationByMouseWheel) :
+Make::Draw::Make_Draw_ScrollBar::Make_Draw_ScrollBar(const double scrollWidth,std::vector<std::vector<std::shared_ptr<Make_Draw_LineContainer>>>& barVec,const double& yMagnificationByMouseWheel) :
 	barVec(barVec), yMagnificationByMouseWheel(yMagnificationByMouseWheel) {
 	mouseX = 0;
 	mouseY = 0;
@@ -8,8 +8,8 @@ Make::Draw::Make_Draw_ScrollBar::Make_Draw_ScrollBar(const float scrollWidth,std
 	widthMinOnClick = 0;
 	barYBefore = 0;
 	p_mouseCheck = Singleton::Make_Singleton_MouseOperationCheck::getInstance();
-	scrollWidthRate = (Global::WINDOW_HEIGHT - backWidth * 2.0f - barHeightMin) / scrollWidth;
-	barHeight = (Global::WINDOW_HEIGHT - backWidth * 2.0f) * scrollWidthRate + barHeightMin;
+	scrollWidthRate = (Global::WINDOW_HEIGHT - backWidth * 2.0 - barHeightMin) / scrollWidth;
+	barHeight = (Global::WINDOW_HEIGHT - backWidth * 2.0) * scrollWidthRate + barHeightMin;
 	y = Global::WINDOW_HEIGHT - (barHeight + backWidth);
 	clickObserver = false;
 	function = nullptr;
@@ -17,8 +17,8 @@ Make::Draw::Make_Draw_ScrollBar::Make_Draw_ScrollBar(const float scrollWidth,std
 	barColor = GetColor(179, 179, 179);
 	arrowUpColor = GetColor(179, 179, 179);
 	arrowDownColor = GetColor(179, 179, 179);
-	barPointX[0] = Global::WINDOW_WIDTH - backWidth + (backWidth - barWidth) * 0.5f;
-	barPointX[1] = Global::WINDOW_WIDTH - (backWidth - barWidth) * 0.5f;
+	barPointX[0] = Global::WINDOW_WIDTH - backWidth + (backWidth - barWidth) * 0.5;
+	barPointX[1] = Global::WINDOW_WIDTH - (backWidth - barWidth) * 0.5;
 	arrowPointX[0] = Global::WINDOW_WIDTH - arrowWidthX - arrowWidthYAndSpace;//ç∂ë§
 	arrowPointX[1] = Global::WINDOW_WIDTH - arrowWidthX * 0.5 - arrowWidthYAndSpace;//ê^ÇÒíÜ
 	arrowPointX[2] = Global::WINDOW_WIDTH - arrowWidthYAndSpace;//âEë§
@@ -45,7 +45,7 @@ void Make::Draw::Make_Draw_ScrollBar::barFunction() {
 	if ((GetMouseInput() & MOUSE_INPUT_LEFT) &&
 		backWidth + widthMinOnClick < mouseY && mouseY < Global::WINDOW_HEIGHT - backWidth - widthMaxOnClick) {
 		barYBefore = y;
-		setBarY(static_cast<float>(mouseY) - widthMinOnClick);
+		setBarY(static_cast<double>(mouseY) - widthMinOnClick);
 		updateLineContainerY((barYBefore - y) / scrollWidthRate);
 	}
 }
@@ -124,19 +124,23 @@ void Make::Draw::Make_Draw_ScrollBar::draw() {
 }
 
 void Make::Draw::Make_Draw_ScrollBar::drawArrow() {
-	DrawTriangleAA(arrowPointX[0], arrowPointY[1], arrowPointX[1], arrowPointY[3], arrowPointX[2], arrowPointY[1], arrowUpColor, true);//è„ñÓàÛ
-	DrawTriangleAA(arrowPointX[0], arrowPointY[0], arrowPointX[1], arrowPointY[2], arrowPointX[2], arrowPointY[0], arrowDownColor, true);//â∫ñÓàÛ
+	DrawTriangleAA(static_cast<float>(arrowPointX[0]), static_cast<float>(arrowPointY[1]),
+		static_cast<float>(arrowPointX[1]), static_cast<float>(arrowPointY[3]),
+		static_cast<float>(arrowPointX[2]), static_cast<float>(arrowPointY[1]), arrowUpColor, true);//è„ñÓàÛ
+	DrawTriangleAA(static_cast<float>(arrowPointX[0]), static_cast<float>(arrowPointY[0]),
+		static_cast<float>(arrowPointX[1]), static_cast<float>(arrowPointY[2]),
+		static_cast<float>(arrowPointX[2]),static_cast<float>(arrowPointY[0]), arrowDownColor, true);//â∫ñÓàÛ
 }
 
 void Make::Draw::Make_Draw_ScrollBar::drawBack() {
-	DrawBoxAA(Global::WINDOW_WIDTH - backWidth, 0, Global::WINDOW_WIDTH, Global::WINDOW_HEIGHT, backColor, true);
+	DrawBoxAA(static_cast<float>(Global::WINDOW_WIDTH - backWidth), 0, static_cast<float>(Global::WINDOW_WIDTH), static_cast<float>(Global::WINDOW_HEIGHT), backColor, true);
 }
 
 void Make::Draw::Make_Draw_ScrollBar::drawBar() {
-	DrawBoxAA(barPointX[0], y, barPointX[1], y + barHeight, barColor, true);
+	DrawBoxAA(static_cast<float>(barPointX[0]), static_cast<float>(y), static_cast<float>(barPointX[1]), static_cast<float>(y + barHeight), barColor, true);
 }
 
-void Make::Draw::Make_Draw_ScrollBar::setBarY(const float sY) {
+void Make::Draw::Make_Draw_ScrollBar::setBarY(const double sY) {
 	y = sY;
 	if (yScrMax < y + barHeight) {
 		y = yScrMax - barHeight;
@@ -146,7 +150,7 @@ void Make::Draw::Make_Draw_ScrollBar::setBarY(const float sY) {
 	}
 }
 
-void Make::Draw::Make_Draw_ScrollBar::updateLineContainerY(const float y) {
+void Make::Draw::Make_Draw_ScrollBar::updateLineContainerY(const double y) {
 	for (int i = 0,iSize = static_cast<int>(barVec.size()); i < iSize; ++i) {
 		for (int k = 0,kSize = static_cast<int>(barVec.at(i).size()); k < kSize; ++k) {
 			barVec.at(i).at(k)->updateY(y);
@@ -154,7 +158,7 @@ void Make::Draw::Make_Draw_ScrollBar::updateLineContainerY(const float y) {
 	}
 }
 
-void Make::Draw::Make_Draw_ScrollBar::updateBarY(const float upY) {
+void Make::Draw::Make_Draw_ScrollBar::updateBarY(const double upY) {
 	if (0 < upY && yScrMin < y || upY < 0 && y + barHeight < yScrMax) {
 		y -= upY * scrollWidthRate;
 		if (yScrMax < y + barHeight) {

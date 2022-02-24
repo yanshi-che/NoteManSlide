@@ -7,7 +7,7 @@ Make::Draw::Make_Draw_BeatLineManager::Make_Draw_BeatLineManager(){
 	p_noteManager = nullptr;
 	y = 0;
 	totalScoreWidth = 0;
-	yMagnificationByMouseWheel = 25.0f;
+	yMagnificationByMouseWheel = 25.0;
 	initBarLineFunction = nullptr;
 	quontize = Global::QUARTER;
 	std::uint16_t barIDForInitOneVector = 0;
@@ -15,6 +15,7 @@ Make::Draw::Make_Draw_BeatLineManager::Make_Draw_BeatLineManager(){
 
 void Make::Draw::Make_Draw_BeatLineManager::draw() {
 	if (p_musicData != nullptr) {
+		p_laneDraw->draw();
 		y = GetMouseWheelRotVolF() * yMagnificationByMouseWheel;
 		if (y != 0) {
 			scrBar->updateBarY(y);
@@ -28,7 +29,6 @@ void Make::Draw::Make_Draw_BeatLineManager::draw() {
 				barVec.at(i).at(k)->draw();
 			}
 		}
-		p_laneDraw->draw();
 		if (initBarLineFunction != nullptr) {
 			initBarLineFunction();
 			initBarLineFunction = nullptr;
@@ -50,26 +50,26 @@ void Make::Draw::Make_Draw_BeatLineManager::initialize(const std::shared_ptr<Fil
 	initBarVec(Global::QUARTER, checkSeparate(Global::QUARTER));
 }
 
-void Make::Draw::Make_Draw_BeatLineManager::initBarVec(std::uint8_t initialQuontize,float separateBarWidth) {
-	float timeSum = p_musicData->getBeginDelay();
-	const float timePerBeat = (Global::MINUTE / p_musicData->getBpm() / (initialQuontize / Global::QUARTER));
-	float initY = initialY;
-	const float yWidth = yWidthRegular * separateBarWidth;
-	float yMax = 0;
+void Make::Draw::Make_Draw_BeatLineManager::initBarVec(std::uint8_t initialQuontize,double separateBarWidth) {
+	double timeSum = p_musicData->getBeginDelay();
+	const double timePerBeat = (Global::MINUTE / p_musicData->getBpm() / (initialQuontize / Global::QUARTER));
+	double initY = initialY;
+	const double yWidth = yWidthRegular * separateBarWidth;
+	double yMax = 0;
 	totalScoreWidth = 0;
 	p_noteManager->initVector(p_musicData->getBarLength(),initialQuontize);
 	barVec.resize(p_musicData->getBarLength());
 	for (int i = 0,iSize = p_musicData->getBarLength(); i < iSize; i++) {
 		barVec.at(i).resize(initialQuontize);
 		for (int k = 0; k < initialQuontize; k++) {
-			yMax = initY + (yWidth * p_musicData->getBarLength() * initialQuontize) - Make::Global::WINDOW_HEIGHT *0.5f;
+			yMax = initY + (yWidth * p_musicData->getBarLength() * initialQuontize) - Global::WINDOW_HEIGHT *0.5;
 			barVec.at(i).at(k)=std::make_shared<Draw::Make_Draw_LineContainer>(i, timeSum, k, initY,yMax,p_noteManager);
 			timeSum += timePerBeat;
 			initY -= yWidth;
 			totalScoreWidth += yWidth;
 		}
 	}
-	totalScoreWidth += Make::Global::WINDOW_HEIGHT * 0.5f;
+	totalScoreWidth += Global::WINDOW_HEIGHT * 0.5;
 	initScrollBar();
 }
 
@@ -77,24 +77,24 @@ void Make::Draw::Make_Draw_BeatLineManager::initializeBySavaData(const std::shar
 	p_musicData = data;
 	initOtherClass();
 	//各拍数ごとの時間
-	const float timePerBeatQuarter = Global::MINUTE / p_musicData->getBpm();
-	const float timePerBeatEighth = timePerBeatQuarter * (static_cast<float>(Global::QUARTER) / static_cast<float>(Global::EIGHTH));
-	const float timePerBeatSixteenth = timePerBeatQuarter * (static_cast<float>(Global::QUARTER) / static_cast<float>(Global::SIXTEENTH));
-	const float timePerBeatThirtySecond = timePerBeatQuarter * (static_cast<float>(Global::QUARTER) / static_cast<float>(Global::THIRTYSECOND));
-	const float timePerBeatTriplet = timePerBeatQuarter * (static_cast<float>(Global::QUARTER) / static_cast<float>(Global::TRIPLET));
+	const double timePerBeatQuarter = Global::MINUTE / p_musicData->getBpm();
+	const double timePerBeatEighth = timePerBeatQuarter * (static_cast<double>(Global::QUARTER) / static_cast<double>(Global::EIGHTH));
+	const double timePerBeatSixteenth = timePerBeatQuarter * (static_cast<double>(Global::QUARTER) / static_cast<double>(Global::SIXTEENTH));
+	const double timePerBeatThirtySecond = timePerBeatQuarter * (static_cast<double>(Global::QUARTER) / static_cast<double>(Global::THIRTYSECOND));
+	const double timePerBeatTriplet = timePerBeatQuarter * (static_cast<double>(Global::QUARTER) / static_cast<double>(Global::TRIPLET));
 
 	//各拍数ごとの拍線間の距離
-	const float yWidthQuarter = yWidthRegular * checkSeparate(Global::QUARTER);
-	const float yWidthEighth = yWidthRegular * checkSeparate(Global::EIGHTH);
-	const float yWidthSixteenth = yWidthRegular * checkSeparate(Global::SIXTEENTH);
-	const float yWidthThirtySecond = yWidthRegular * checkSeparate(Global::THIRTYSECOND);
-	const float yWidthTriplet = yWidthRegular * checkSeparate(Global::TRIPLET);
+	const double yWidthQuarter = yWidthRegular * checkSeparate(Global::QUARTER);
+	const double yWidthEighth = yWidthRegular * checkSeparate(Global::EIGHTH);
+	const double yWidthSixteenth = yWidthRegular * checkSeparate(Global::SIXTEENTH);
+	const double yWidthThirtySecond = yWidthRegular * checkSeparate(Global::THIRTYSECOND);
+	const double yWidthTriplet = yWidthRegular * checkSeparate(Global::TRIPLET);
 
-	float timeSum = p_musicData->getBeginDelay();
-	float timePerBeat = 0;
-	float initY = initialY;
-	float yMax = 0;
-	float yWidth = 0;
+	double timeSum = p_musicData->getBeginDelay();
+	double timePerBeat = 0;
+	double initY = initialY;
+	double yMax = 0;
+	double yWidth = 0;
 	totalScoreWidth = 0;
 	p_noteManager->initVector(p_musicData->getBarLength(), NULL);
 	barVec.resize(p_musicData->getBarLength());
@@ -126,7 +126,7 @@ void Make::Draw::Make_Draw_BeatLineManager::initializeBySavaData(const std::shar
 		}
 
 		for (int k = 0; k < quo; k++) {
-			yMax = initY + (yWidth * p_musicData->getBarLength() * quo) - Make::Global::WINDOW_HEIGHT * 0.5f;
+			yMax = initY + (yWidth * p_musicData->getBarLength() * quo) - Global::WINDOW_HEIGHT * 0.5;
 			barVec.at(i).at(k) = std::make_shared<Draw::Make_Draw_LineContainer>(i,timeSum, k, initY, yMax,p_noteManager);
 			timeSum += timePerBeat;
 			initY -= yWidth;
@@ -138,6 +138,7 @@ void Make::Draw::Make_Draw_BeatLineManager::initializeBySavaData(const std::shar
 	json::array noteDataArray = val.as_object().at("NoteData").as_array();
 	std::uint8_t noteType = 0;
 	bool isRight = true;
+	bool isDirectionRight = true;
 	bool isFirst = true;
 	struct longDrawPoint {//終点が読み込まれるまでlongDrawの始点情報を保管するためのもの
 		std::uint16_t barID;
@@ -148,12 +149,12 @@ void Make::Draw::Make_Draw_BeatLineManager::initializeBySavaData(const std::shar
 	std::deque<longDrawPoint> longDrawPointDeq;//終点が読み込まれるまでlongDrawの始点情報を保管
 	for (int i = 0, iSize = static_cast<int>(noteDataArray.size()); i < iSize; ++i) {
 		noteType = static_cast<std::uint8_t>(noteDataArray.at(i).at("noteType").as_int64());
-		if (noteType == Global::NOTETYPENORMAL) {
+		if (noteType == Global::NOTETYPE_NORMAL) {
 			p_noteManager->setNormalNote(static_cast<std::uint16_t>(noteDataArray.at(i).at("barID").as_int64()),
 				static_cast<std::uint8_t>(noteDataArray.at(i).at("beatID").as_int64()),
 				static_cast<std::uint8_t>(noteDataArray.at(i).at("laneIndex").as_int64()));
 		}
-		else if (noteType == Global::NOTETYPELONG) {
+		else if (noteType == Global::NOTETYPE_LONG) {
 			for (int k = 0, kSize = static_cast<int>(longDrawPointDeq.size()); k < kSize; ++k) {
 				if (longDrawPointDeq.at(k).longDrawGroupIndex == noteDataArray.at(i).at("longNoteGroupIndex").as_int64()) {
 					p_noteManager->setLongNoteBySavaData(longDrawPointDeq.at(k).barID,longDrawPointDeq.at(k).beatID,
@@ -172,20 +173,26 @@ void Make::Draw::Make_Draw_BeatLineManager::initializeBySavaData(const std::shar
 			}
 			isFirst = true;
 		}
-		else if (noteType == Global::NOTETYPESLIDE) {
+		else if (noteType == Global::NOTETYPE_SLIDER || noteType == Global::NOTETYPE_SLIDEL) {
 			if (noteDataArray.at(i).at("rightOrLeft").as_int64() == 1) {
 				isRight = true;
 			}
 			else {
 				isRight = false;
 			}
+			if (noteDataArray.at(i).at("directionRightOrLeft").as_int64() == 1) {
+				isDirectionRight = true;
+			}
+			else {
+				isDirectionRight = false;
+			}
 			p_noteManager->setSlideNoteBySavaData(static_cast<std::uint16_t>(noteDataArray.at(i).at("barID").as_int64()),
 				static_cast<std::uint8_t>(noteDataArray.at(i).at("beatID").as_int64()),
 				static_cast<std::uint8_t>(noteDataArray.at(i).at("slideLaneIndexStart").as_int64()),
-				static_cast<std::uint8_t>(noteDataArray.at(i).at("slideLaneIndexEnd").as_int64()),isRight);
+				static_cast<std::uint8_t>(noteDataArray.at(i).at("slideLaneIndexEnd").as_int64()),isRight,isDirectionRight);
 		}
 	}
-	totalScoreWidth += Make::Global::WINDOW_HEIGHT * 0.5f;
+	totalScoreWidth += Global::WINDOW_HEIGHT * 0.5;
 	initScrollBar();
 }
 
@@ -210,7 +217,7 @@ void Make::Draw::Make_Draw_BeatLineManager::initOneBarLineByQuontizeChange() {
 	std::uint16_t beforeQuontize = static_cast<std::uint16_t>(barVec.at(id).size());
 	//ロングノーツがまたがっていたら削除処理
 	for (int i = 1,iSize= static_cast<int>(barVec.at(id).size()); i < iSize; ++i) {
-		for (int k = 0, kSize = Global::LANEAMOUNT; k < kSize; ++k) {
+		for (int k = 0, kSize = Global::LANE_AMOUNT; k < kSize; ++k) {
 			p_noteManager->removeLongNote(id, i, k);
 		}
 	}
@@ -218,19 +225,19 @@ void Make::Draw::Make_Draw_BeatLineManager::initOneBarLineByQuontizeChange() {
 	resetScrollBar();
 	resetBarVec(false);
 	p_noteManager->resetVector(false,barIDForInitOneVector);
-	float separate = checkSeparate(quontize);
+	double separate = checkSeparate(quontize);
 
 	//ノーツの初期化
 	p_noteManager->initOneVector(quontize,barIDForInitOneVector);
 
 	// 新たな拍線の作成
-	const float timePerBeat = (Global::MINUTE / p_musicData->getBpm() / (quontize / Global::QUARTER));
-	float timeSum = barVec.at(id).at(0)->getTime();
-	const float yWidth = yWidthRegular * separate;
-	float initY = barVec.at(id).at(0)->getY();
-	float yMax = barVec.at(id).at(0)->getYMax();
-	float yMin = barVec.at(id).at(0)->getYMin();
-	float yChange = 0;//変更した小節全体の幅
+	const double timePerBeat = (Global::MINUTE / p_musicData->getBpm() / (quontize / Global::QUARTER));
+	double timeSum = barVec.at(id).at(0)->getTime();
+	const double yWidth = yWidthRegular * separate;
+	double initY = barVec.at(id).at(0)->getY();
+	double yMax = barVec.at(id).at(0)->getYMax();
+	double yMin = barVec.at(id).at(0)->getYMin();
+	double yChange = 0;//変更した小節全体の幅
 	barVec.at(id).resize(quontize);
 	for (int i = 1; i < quontize; ++i) {
 		timeSum += timePerBeat;
@@ -264,23 +271,23 @@ void Make::Draw::Make_Draw_BeatLineManager::initOneBarLineByQuontizeChange() {
 	scrBar->updateBarY(barVec.at(0).at(0)->getY() - initialY);
 }
 
-float Make::Draw::Make_Draw_BeatLineManager::checkSeparate(const std::uint8_t quontize) {
+double Make::Draw::Make_Draw_BeatLineManager::checkSeparate(const std::uint8_t quontize) {
 	if (quontize == Global::QUARTER) {
-		return(1.0f);
+		return(1.0);
 	}
 	else if (quontize == Global::EIGHTH) {
-		return(0.5f);
+		return(0.5);
 	}
 	else if (quontize == Global::SIXTEENTH) {
-		return(0.25f);
+		return(0.25);
 	}
 	else if (quontize == Global::THIRTYSECOND) {
-		return(0.125f);
+		return(0.125);
 	}
 	else if (quontize == Global::TRIPLET) {
-		return(0.3333f);
+		return(0.33333333);
 	}
-	return(1.0f);
+	return(1.0);
 }
 
 void Make::Draw::Make_Draw_BeatLineManager::resetBarVec(bool isAll) {
@@ -312,6 +319,10 @@ void Make::Draw::Make_Draw_BeatLineManager::setInitBarLineFunc(const std::uint8_
 	else {
 		initBarLineFunction = [&]{return initOneBarLineByQuontizeChange(); };
 	}
+}
+
+const std::function<void()> Make::Draw::Make_Draw_BeatLineManager::getDrawFunc() {
+	return [&] {return draw(); };
 }
 
 const std::vector<std::vector<std::shared_ptr<Make::Draw::Make_Draw_LineContainer>>>& Make::Draw::Make_Draw_BeatLineManager::getBarVec() {

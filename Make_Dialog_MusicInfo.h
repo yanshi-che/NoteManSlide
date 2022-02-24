@@ -15,7 +15,7 @@ namespace Make {
 		constexpr const std::uint8_t LEVELCHARMAX{2};
 		constexpr const std::uint8_t BPMCHARMAX{6};
 		constexpr const std::uint8_t TOTALMINUTESCHARMAX{4};
-		constexpr const std::uint8_t BEGINDELAYCHARMAX{2};
+		constexpr const std::uint8_t BEGINDELAYCHARMAX{5};
 		constexpr const std::uint8_t LEVELMAX{ 20 };
 		constexpr const std::uint8_t LEVELMIN{ 1 };
 		constexpr const std::uint8_t LANEMAX{8};
@@ -27,7 +27,7 @@ namespace Make {
 			static bool isInputed;
 			static INT_PTR CALLBACK MusicInfoDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		public:
-			void getMusicInfoFromDlg(char(&filePath)[MAX_PATH], char(&name)[MAX_PATH],char(&artist)[MAX_PATH],std::uint8_t& level,float& bpm, float& totalMinutes, std::uint16_t& beginDelay);
+			void getMusicInfoFromDlg(char(&filePath)[MAX_PATH], char(&name)[MAX_PATH],char(&artist)[MAX_PATH],std::uint8_t& level,double& bpm, double& totalMinutes, double& beginDelay);
 		};
 	}
 }
