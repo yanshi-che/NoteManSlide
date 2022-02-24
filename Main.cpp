@@ -5,7 +5,7 @@
 class Fps {
 	int mStartTime;         //測定開始時刻
 	int mCount;             //カウンタ
-	float mFps;             //fps
+	double mFps;             //fps
 	static const int N = 60;//平均を取るサンプル数
 	static const int FPS = 60;	//設定したFPS
 
@@ -22,7 +22,7 @@ public:
 		}
 		if (mCount == N) { //60フレーム目なら平均を計算する
 			int t = GetNowCount();
-			mFps = 1000.f / ((t - mStartTime) / (float)N);
+			mFps = 1000.0 / ((t - mStartTime) / (double)N);
 			mCount = 0;
 			mStartTime = t;
 		}
@@ -50,20 +50,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetOutApplicationLogValidFlag(FALSE);
 	ChangeWindowMode(true);
 	SetGraphMode(Make::Global::WINDOW_WIDTH,Make::Global::WINDOW_HEIGHT,Make::Global::WINDOW_COLORBIT); //スクリーンの大きさの設定
+	SetMainWindowText("noteman");
 
 	if (DxLib_Init() == -1)		// ＤＸライブラリ初期化処理
 	{
 		return -1;			// エラーが起きたら直ちに終了
 	}
 	SetDrawScreen(DX_SCREEN_BACK);//裏画面で画面生成
-
+	SetBackgroundColor(20,20,20);
 	Make::Make_DrawManager dm;
 	Fps fps;
 
 	dm.initialize();
 	// while(裏画面を表画面に反映, メッセージ処理, 画面クリア)
 	while (ProcessMessage() == 0 && ClearDrawScreen() == 0) {
-		fps.Update();	//更新
+		fps.Update();
 		fps.Draw();
 		dm.update();
 		dm.draw();

@@ -39,10 +39,8 @@ void Make::Dialog::Make_Dialog_FailFile::failFileDlg(const std::string& sentence
 
 	ShowWindow(hDialogWnd, SW_SHOW);
 
-	while (isShowMusicInfoDlg) {
+	while (isShowMusicInfoDlg && ProcessMessage() == 0 && ClearDrawScreen() == 0) {
 		//ダイアログボックスの入力が終わるまで待つ
-		ProcessMessage();
-		ClearDrawScreen();
 		ScreenFlip();
 	}
 	isShowMusicInfoDlg = true;

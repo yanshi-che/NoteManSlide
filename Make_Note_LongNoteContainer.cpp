@@ -1,31 +1,32 @@
 #include "Make_Note_LongNoteContainer.h"
 
-float Make::Note::Make_Note_LongNoteContainer::noteWidth = 15.0;
+double Make::Note::Make_Note_LongNoteContainer::noteWidth = 15.0;
 
-Make::Note::Make_Note_LongNoteContainer::Make_Note_LongNoteContainer(const std::uint16_t barID,const std::uint8_t beatID,const float& y,const std::uint8_t laneAmount,const float time) :
+Make::Note::Make_Note_LongNoteContainer::Make_Note_LongNoteContainer(const std::uint16_t barID,const std::uint8_t beatID,const double& y,const std::uint8_t laneAmount,const double time) :
 	barID(barID), beatID(beatID),laneAmount(laneAmount),time(time),r_y(y) {
 	noteHeight1.resize(laneAmount);
 	noteHeight2.resize(laneAmount);
 	noteX.resize(laneAmount);
 	noteFlag.resize(laneAmount);
 	noteGroup.resize(laneAmount);
-	float laneWidth = (Global::DRAW_X_MAX - Global::DRAW_X_MIN) / laneAmount;
+	double laneWidth = (Global::DRAW_X_MAX - Global::DRAW_X_MIN) / laneAmount;
 	for (int i = 0; i < laneAmount; ++i) {
-		noteX.at(i) = laneWidth * i + Global::DRAW_X_MIN + laneWidth / 2.0f;
+		noteX.at(i) = laneWidth * i + Global::DRAW_X_MIN + laneWidth / 2.0;
 		noteFlag.at(i) = { false,false };
 		noteHeight1.at(i) = 0;
 		noteHeight2.at(i) = 0;
 	}
 	color = GetColor(255,255,255);
-	notePointX = noteWidth * 1.2f;
-	notePointY = noteWidth * 0.3f;
+	notePointX = noteWidth * 1.2;
+	notePointY = noteWidth * 0.3;
 }
 
 void Make::Note::Make_Note_LongNoteContainer::drawLongNote() {
 	if (r_y < Make::Global::WINDOW_HEIGHT && r_y>0) {
 		for (int i = 0, iSize = static_cast<int>(noteFlag.size()); i < iSize; ++i) {
 			if (noteFlag.at(i).first && noteFlag.at(i).second) {
-				DrawBoxAA(noteX.at(i) - notePointX, r_y - notePointY - noteHeight1.at(i), noteX.at(i) + notePointX, r_y + notePointY + noteHeight2.at(i), color, true);
+				DrawBoxAA(static_cast<float>(noteX.at(i) - notePointX), static_cast<float>(r_y - notePointY - noteHeight1.at(i)),
+					static_cast<float>(noteX.at(i) + notePointX), static_cast<float>(r_y + notePointY + noteHeight2.at(i)), color, true);
 			}
 		}
 	}
@@ -54,7 +55,7 @@ void Make::Note::Make_Note_LongNoteContainer::setLongNoteFlag(const std::uint8_t
 	}
 }
 
-void Make::Note::Make_Note_LongNoteContainer::setNoteHeight(const std::uint8_t laneID,const float noteHeight,const bool isFirst) {
+void Make::Note::Make_Note_LongNoteContainer::setNoteHeight(const std::uint8_t laneID,const double noteHeight,const bool isFirst) {
 	if (isFirst) {
 		this->noteHeight1.at(laneID) = noteHeight;
 	}
@@ -67,7 +68,7 @@ void Make::Note::Make_Note_LongNoteContainer::setNoteGroup(const std::uint8_t la
 	noteGroup.at(laneID) = group;
 }
 
-const float& Make::Note::Make_Note_LongNoteContainer::getY() {
+const double& Make::Note::Make_Note_LongNoteContainer::getY() {
 	return r_y;
 }
 
@@ -79,7 +80,7 @@ const std::uint16_t& Make::Note::Make_Note_LongNoteContainer::getNoteGroup(const
 	return noteGroup.at(laneID);
 }
 
-const float& Make::Note::Make_Note_LongNoteContainer::getTime() {
+const double& Make::Note::Make_Note_LongNoteContainer::getTime() {
 	return time;
 }
 

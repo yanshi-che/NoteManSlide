@@ -11,8 +11,9 @@ namespace Make {
 		{
 		private:
 			const std::uint32_t laneColor;     //レーンの色
+			const std::uint32_t backColor;     //レーンの背景色
 			const std::uint8_t laneThickness;  //レーンの太さ
-			float laneWidth; //レーンの幅
+			double laneWidth; //レーンの幅
 			std::uint8_t laneAmount;		   //レーンの数
 		public:
 			Make_Draw_LaneDraw();

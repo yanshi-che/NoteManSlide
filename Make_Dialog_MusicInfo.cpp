@@ -25,11 +25,14 @@ INT_PTR CALLBACK Make::Dialog::Make_Dialog_MusicInfo::MusicInfoDialogProc(HWND h
 			char name[NAMECHARMAX] = "";
 			char artist[ARTISTCHARMAX] = "";
 			char bpm[BPMCHARMAX] = "";
+			char beginDelayText[BEGINDELAYCHARMAX] = "";
 			GetDlgItemText(hWnd, IDC_EDITFilePath, filePath, MAX_PATH);
 			GetDlgItemText(hWnd, IDC_EDITNAME, name, NAMECHARMAX);
 			GetDlgItemText(hWnd, IDC_EDITARTIST, artist, ARTISTCHARMAX);
 			GetDlgItemText(hWnd, IDC_EDITBPM, bpm, BPMCHARMAX);
-			std::regex isFloat(R"(^\d{1,3}\.\d{1,2})");
+			GetDlgItemText(hWnd, IDC_EDITBeginDelay, beginDelayText, BEGINDELAYCHARMAX);
+			std::regex isFloatForBpm(R"(^\d{1,3}\.\d{1,2})");
+			std::regex isFloatForBeginDelay(R"(^\d{1,2}\.\d{1,2})");
 			if (filePath[0] == NULL) {
 				errorMessage.append("ファイルパスが未入力です。\n");
 				isError = true;
@@ -46,12 +49,16 @@ INT_PTR CALLBACK Make::Dialog::Make_Dialog_MusicInfo::MusicInfoDialogProc(HWND h
 				errorMessage.append("レベルが範囲外です。\n");
 				isError = true;
 			}
-			if (!std::regex_match(bpm, isFloat)) {
+			if (!std::regex_match(bpm, isFloatForBpm)) {
 				errorMessage.append("BPMがフォーマットと異なります\n");
 				isError = true;
 			}
 			if (GetDlgItemInt(hWnd, IDC_EDITTotalMinutes, NULL, true) == NULL) {
 				errorMessage.append("再生時間が未入力です。\n");
+				isError = true;
+			}
+			if (!std::regex_match(beginDelayText, isFloatForBeginDelay)) {
+				errorMessage.append("曲が始まるまでの時間がフォーマットと異なります\n");
 				isError = true;
 			}
 
@@ -78,7 +85,7 @@ INT_PTR CALLBACK Make::Dialog::Make_Dialog_MusicInfo::MusicInfoDialogProc(HWND h
 	return 0;
 }
 
-void Make::Dialog::Make_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MAX_PATH], char(&name)[MAX_PATH], char(&artist)[MAX_PATH], std::uint8_t& level, float& bpm, float& totalMinutes, std::uint16_t& beginDelay) {
+void Make::Dialog::Make_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MAX_PATH], char(&name)[MAX_PATH], char(&artist)[MAX_PATH], std::uint8_t& level, double& bpm, double& totalMinutes, double& beginDelay) {
 	HWND hMainWnd = nullptr;
 	HWND hDialogWnd = nullptr;
 	HINSTANCE hInstance = nullptr;
@@ -91,12 +98,12 @@ void Make::Dialog::Make_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MA
 
 	//各項目の説明の設定
 	SetDlgItemText(hDialogWnd, IDC_BUTTONFilePath, "ファイル選択");
-	SetDlgItemText(hDialogWnd, IDC_STATICNAME, "曲名(日本語入力できない場合はペーストしてください)");
-	SetDlgItemText(hDialogWnd, IDC_STATICARTIST, "アーティスト名");
+	SetDlgItemText(hDialogWnd, IDC_STATICNAME, "曲名(日本語は対応していません)");
+	SetDlgItemText(hDialogWnd, IDC_STATICARTIST, "アーティスト名(日本語は対応していません)");
 	SetDlgItemText(hDialogWnd, IDC_STATICLEVEL, "譜面の難易度(1～20)");
 	SetDlgItemText(hDialogWnd, IDC_STATICBPM, "BPM(例:150.68)");
 	SetDlgItemText(hDialogWnd, IDC_STATICTotalMinutes, "再生時間(秒)");
-	SetDlgItemText(hDialogWnd, IDC_STATICBeginDelay, "曲が始まるまでの時間(秒)");
+	SetDlgItemText(hDialogWnd, IDC_STATICBeginDelay, "曲が始まるまでの時間(秒)\n例:1.5");
 
 	//EDIITBOXの文字数制限
 	SendMessage(GetDlgItem(hDialogWnd, IDC_EDITNAME), EM_SETLIMITTEXT, NAMECHARMAX, NULL);
@@ -111,7 +118,7 @@ void Make::Dialog::Make_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MA
 
 	ShowWindow(hDialogWnd, SW_SHOW);
 
-	while (isShowMusicInfoDlg) {
+	while (isShowMusicInfoDlg && ProcessMessage() == 0 &&ClearDrawScreen() == 0) {
 		//ダイアログボックスの入力が終わるまで待つ
 		ProcessMessage();
 		ClearDrawScreen();
@@ -125,9 +132,11 @@ void Make::Dialog::Make_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MA
 		level = GetDlgItemInt(hDialogWnd, IDC_EDITLEVEL, NULL, true);
 		char bpmText[BPMCHARMAX] = "";
 		GetDlgItemText(hDialogWnd, IDC_EDITBPM, bpmText, BPMCHARMAX);
-		bpm = std::stof(bpmText);
+		bpm = std::stod(bpmText);
 		totalMinutes = GetDlgItemInt(hDialogWnd, IDC_EDITTotalMinutes, NULL, true) / Global::MINUTE;
-		beginDelay = GetDlgItemInt(hDialogWnd, IDC_EDITBeginDelay, NULL, true);
+		char beginDelayText[BEGINDELAYCHARMAX] = "";
+		GetDlgItemText(hDialogWnd, IDC_EDITBeginDelay, beginDelayText, BEGINDELAYCHARMAX);
+		beginDelay = std::stod(beginDelayText);
 		if (level < LEVELMIN) {
 			level = LEVELMIN;
 		}else if(LEVELMAX < level){

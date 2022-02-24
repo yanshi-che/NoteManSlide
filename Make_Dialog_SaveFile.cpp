@@ -86,10 +86,8 @@ void Make::Dialog::Make_Dialog_SaveFile::getSaveFilePathFromDlg(char(&saveFilePa
 
 	ShowWindow(hDialogWnd, SW_SHOW);
 
-	while (isShowMusicInfoDlg) {
+	while (isShowMusicInfoDlg && ProcessMessage() == 0 && ClearDrawScreen() == 0) {
 		//ダイアログボックスの入力が終わるまで待つ
-		ProcessMessage();
-		ClearDrawScreen();
 		ScreenFlip();
 	}
 

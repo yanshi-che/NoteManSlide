@@ -1,6 +1,6 @@
 #include "Make_File_FileStructData.h"
 
-Make::File::MusicData::MusicData(std::string name, std::string artist, std::uint8_t level, float bpm, std::uint16_t barLength, float totalMinutes, std::uint16_t beginDelay) {
+Make::File::MusicData::MusicData(std::string name, std::string artist, std::uint8_t level, double bpm, std::uint16_t barLength, double totalMinutes, double beginDelay) {
 	this->name = name;
 	this->artist = artist;
 	this->level = level;
@@ -25,9 +25,9 @@ void Make::File::tag_invoke(const json::value_from_tag&, json::value& jv, const 
 Make::File::MusicData Make::File::tag_invoke(const json::value_to_tag<MusicData>&, const json::value& jv) {
 	const json::value& val = jv.as_object().at("MusicData");
 	return MusicData(json::serialize(val.at("name").as_string()),json::serialize(val.at("artist").as_string()),
-		static_cast<std::uint8_t>(val.at("level").as_int64()), static_cast<float>(val.at("bpm").as_double()),
-		static_cast<std::uint16_t>(val.at("barLength").as_int64()),static_cast<float>(val.at("totalMinute").as_double()),
-		static_cast<std::uint16_t>(val.at("beginDelay").as_int64()));
+		static_cast<std::uint8_t>(val.at("level").as_int64()), val.at("bpm").as_double(),
+		static_cast<std::uint16_t>(val.at("barLength").as_int64()),val.at("totalMinute").as_double(),
+		val.at("beginDelay").as_double());
 }
 
 Make::File::BarLineData::BarLineData(std::uint16_t barID,std::uint8_t quontize) {
@@ -51,13 +51,14 @@ std::vector<Make::File::BarLineData> Make::File::tag_invoke(const json::value_to
 	return b;
 }
 
-Make::File::NoteDataForJson::NoteDataForJson(float time, std::uint8_t noteType, std::uint8_t laneIndex, std::uint16_t longNoteGroupIndex, std::uint16_t noteIndex, std::uint8_t rightOrLeft, std::uint8_t slideLaneIndexStart, std::uint8_t slideLaneIndexEnd) {
+Make::File::NoteDataForJson::NoteDataForJson(double time, std::uint8_t noteType, std::uint8_t laneIndex, std::uint16_t longNoteGroupIndex, std::uint16_t noteIndex, std::uint8_t rightOrLeft, std::uint8_t directionRightOrLeft, std::uint8_t slideLaneIndexStart, std::uint8_t slideLaneIndexEnd) {
 	this->time = time;
 	this->noteType = noteType;
 	this->laneIndex = laneIndex;
 	this->longNoteGroupIndex = longNoteGroupIndex;
 	this->noteIndex = noteIndex;
 	this->rightOrLeft = rightOrLeft;
+	this->directionRightOrLeft = directionRightOrLeft;
 	this->slideLaneIndexStart = slideLaneIndexStart;
 	this->slideLaneIndexEnd = slideLaneIndexEnd;
 }
@@ -70,18 +71,20 @@ void Make::File::tag_invoke(const json::value_from_tag&, json::value& jv, const 
 		{"longNoteGroupIndex",n.longNoteGroupIndex},
 		{"noteIndex",n.noteIndex},
 		{"rightOrLeft",n.rightOrLeft},
+		{"directionRightOrLeft",n.directionRightOrLeft},
 		{"slideLaneIndexStart",n.slideLaneIndexStart},
 		{"slideLaneIndexEnd",n.slideLaneIndexEnd}
 	};
 }
 
-Make::File::NoteDataForSave::NoteDataForSave(std::uint16_t barID, std::uint8_t beatID, std::uint8_t noteType, std::uint8_t laneIndex, std::uint16_t longNoteGroupIndex, std::uint8_t rightOrLeft, std::uint8_t slideLaneIndexStart, std::uint8_t slideLaneIndexEnd) {
+Make::File::NoteDataForSave::NoteDataForSave(std::uint16_t barID, std::uint8_t beatID, std::uint8_t noteType, std::uint8_t laneIndex, std::uint16_t longNoteGroupIndex, std::uint8_t rightOrLeft, std::uint8_t directionRightOrLeft, std::uint8_t slideLaneIndexStart, std::uint8_t slideLaneIndexEnd) {
 	this->barID = barID;
 	this->beatID = beatID;
 	this->noteType = noteType;
 	this->laneIndex = laneIndex;
 	this->longNoteGroupIndex = longNoteGroupIndex;
 	this->rightOrLeft = rightOrLeft;
+	this->directionRightOrLeft = directionRightOrLeft;
 	this->slideLaneIndexStart = slideLaneIndexStart;
 	this->slideLaneIndexEnd = slideLaneIndexEnd;
 }
@@ -94,6 +97,7 @@ void Make::File::tag_invoke(const json::value_from_tag&, json::value& jv, const 
 		{ "laneIndex", n.laneIndex },
 		{"longNoteGroupIndex",n.longNoteGroupIndex},
 		{"rightOrLeft",n.rightOrLeft},
+		{"directionRightOrLeft",n.directionRightOrLeft},
 		{"slideLaneIndexStart",n.slideLaneIndexStart},
 		{"slideLaneIndexEnd",n.slideLaneIndexEnd}
 	};
@@ -110,6 +114,7 @@ std::vector<Make::File::NoteDataForSave> Make::File::tag_invoke(const json::valu
 			static_cast<std::uint8_t>(array[i].at("laneIndex").as_int64()),
 			static_cast<std::uint16_t>(array[i].at("longNoteGroupIndex").as_int64()),
 			static_cast<std::uint8_t>(array[i].at("rightOrLeft").as_int64()),
+			static_cast<std::uint8_t>(array[i].at("directionRightOrLeft").as_int64()),
 			static_cast<std::uint8_t>(array[i].at("slideLaneIndexStart").as_int64()),
 			static_cast<std::uint8_t>(array[i].at("slideLaneIndexEnd").as_int64())));
 	}

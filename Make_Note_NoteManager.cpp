@@ -43,7 +43,7 @@ void Make::Note::Make_Note_NoteManager::initOneVector(const std::uint8_t quontiz
 	slideNote.at(barID).resize(quontize);
 }
 
-void Make::Note::Make_Note_NoteManager::makeNoteInstance(const std::uint16_t barID,const std::uint8_t beatID,const float& y,const std::uint8_t laneAmount,float time) {
+void Make::Note::Make_Note_NoteManager::makeNoteInstance(const std::uint16_t barID,const std::uint8_t beatID,const double& y,const std::uint8_t laneAmount,double time) {
 	normalNote.at(barID).at(beatID) = std::make_shared<Note::Make_Note_NormalNoteContainer>(barID,beatID,y,laneAmount,time);
 	longNote.at(barID).at(beatID) = std::make_shared<Note::Make_Note_LongNoteContainer>(barID,beatID,y,laneAmount,time);
 	slideNote.at(barID).at(beatID) = std::make_shared<Note::Make_Note_SlideNoteContainer>(barID, beatID, y, laneAmount, time);
@@ -126,7 +126,7 @@ void Make::Note::Make_Note_NoteManager::setNormalNote(const std::uint16_t barID,
 	}
 }
 
-void Make::Note::Make_Note_NoteManager::setLongNote(const std::uint16_t barID,const std::uint8_t beatID,const std::uint8_t laneID,float* y,const bool isFirst) {
+void Make::Note::Make_Note_NoteManager::setLongNote(const std::uint16_t barID,const std::uint8_t beatID,const std::uint8_t laneID,double* y,const bool isFirst) {
 	if (isFirst) {
 		//既にロングノーツが設置されていた時に撤去する
 		removeLongNote(barID, beatID, laneID);
@@ -152,7 +152,6 @@ void Make::Note::Make_Note_NoteManager::setLongNote(const std::uint16_t barID,co
 		std::uint8_t count = 0;
 		bool isFirstNote = true;
 
-		//TODO ロングノーツの描画を、現在の一番最初と最後から伸ばす方式から、前後の拍線との距離から、各拍線上に小分けに描画する
 		if (0 < *p_yBefore - *y) { //拍線の順番に沿ってロングノーツを伸ばした時
 			for (int i = startBarID,iSize = static_cast<int>(longNote.size()); i < iSize; ++i) {//範囲内の拍線の検索
 				for (int k = 0,kSize = static_cast<int>(longNote.at(i).size()); k < kSize; ++k) {
@@ -255,8 +254,8 @@ void Make::Note::Make_Note_NoteManager::setLongNote(const std::uint16_t barID,co
 
 void Make::Note::Make_Note_NoteManager::setLongNoteBySavaData(const std::uint16_t startBarID, const std::uint8_t startBeatID, const std::uint16_t endBarID, const std::uint8_t endBeatID, const std::uint8_t laneID) {
 	std::stack<Note::Make_Note_LongNoteContainer*> stackLong;
-	const float startY = longNote.at(startBarID).at(startBeatID)->getY();
-	const float endY = longNote.at(endBarID).at(endBeatID)->getY();
+	const double startY = longNote.at(startBarID).at(startBeatID)->getY();
+	const double endY = longNote.at(endBarID).at(endBeatID)->getY();
 
 	//始点終点の処理
 	longNote.at(startBarID).at(startBeatID)->setLongNoteFlag(laneID,true);
@@ -294,19 +293,19 @@ void Make::Note::Make_Note_NoteManager::setLongNoteGroupe(const std::uint16_t lo
 	this->longNoteGroup = longNoteGroup;
 }
 
-void Make::Note::Make_Note_NoteManager::setSlideNote(const std::uint16_t barID,const std::uint8_t beatID,const std::uint8_t laneID,const float mouseY,const bool isFirst) {
+void Make::Note::Make_Note_NoteManager::setSlideNote(const std::uint16_t barID,const std::uint8_t beatID,const std::uint8_t laneID,const double mouseY,const bool isFirst, const bool isRight) {
 	if (isFirst) {
 		if (slideNote.at(barID).at(beatID)->getSlideNoteFlag().first &&
 			slideNote.at(barID).at(beatID)->getNoteStartAndEnd().first.second <= laneID &&
 			laneID <= slideNote.at(barID).at(beatID)->getNoteStartAndEnd().first.first) {
-			slideNote.at(barID).at(beatID)->setSlideNoteFlag(NULL,NULL,true);
+			slideNote.at(barID).at(beatID)->setSlideNoteFlag(NULL,NULL,isRight,false);
 			noteErase = true;
 			return;
 		}
 		else if(slideNote.at(barID).at(beatID)->getSlideNoteFlag().second &&
 			slideNote.at(barID).at(beatID)->getNoteStartAndEnd().second.first <= laneID &&
 			laneID <= slideNote.at(barID).at(beatID)->getNoteStartAndEnd().second.second){
-			slideNote.at(barID).at(beatID)->setSlideNoteFlag(NULL, NULL, false);
+			slideNote.at(barID).at(beatID)->setSlideNoteFlag(NULL, NULL, isRight,false);
 			noteErase = true;
 			return;
 		}
@@ -320,27 +319,37 @@ void Make::Note::Make_Note_NoteManager::setSlideNote(const std::uint16_t barID,c
 			noteErase = false;
 			return;
 		}
-		if (0 < mouseYBefore - mouseY) {
+		if (isRight) {
 			if (slideNote.at(startBarID).at(startBeatID)->getSlideNoteFlag().first) {
-				slideNote.at(startBarID).at(startBeatID)->setSlideNoteFlag(NULL, NULL, true);
+				slideNote.at(startBarID).at(startBeatID)->setSlideNoteFlag(NULL, NULL, isRight,false);
 			}
-			slideNote.at(startBarID).at(startBeatID)->setSlideNoteFlag(startLaneID, laneID, true);
+			if (0 < mouseYBefore - mouseY) {
+				slideNote.at(startBarID).at(startBeatID)->setSlideNoteFlag(startLaneID, laneID, isRight,false);
+			}
+			else if (mouseYBefore - mouseY < 0) {
+				slideNote.at(startBarID).at(startBeatID)->setSlideNoteFlag(startLaneID, laneID, isRight,true);
+			}
 		}
-		else if(mouseYBefore - mouseY < 0){
+		else {
 			if (slideNote.at(startBarID).at(startBeatID)->getSlideNoteFlag().second) {
-				slideNote.at(startBarID).at(startBeatID)->setSlideNoteFlag(NULL, NULL, false);
+				slideNote.at(startBarID).at(startBeatID)->setSlideNoteFlag(NULL, NULL, isRight,false);
 			}
-			slideNote.at(startBarID).at(startBeatID)->setSlideNoteFlag(startLaneID, laneID, false);
+			if (0 < mouseYBefore - mouseY) {
+				slideNote.at(startBarID).at(startBeatID)->setSlideNoteFlag(startLaneID, laneID, isRight,false);
+			}
+			else if (mouseYBefore - mouseY < 0) {
+				slideNote.at(startBarID).at(startBeatID)->setSlideNoteFlag(startLaneID, laneID, isRight,true);
+			}
 		}
 	}
 }
 
-void Make::Note::Make_Note_NoteManager::setSlideNoteBySavaData(const std::uint16_t barID, const std::uint8_t beatID, const std::uint8_t start, const std::uint8_t end, const bool isRight) {
+void Make::Note::Make_Note_NoteManager::setSlideNoteBySavaData(const std::uint16_t barID, const std::uint8_t beatID, const std::uint8_t start, const std::uint8_t end, const bool isRight, const bool isDirectionRight) {
 	if (isRight) {
-		slideNote.at(barID).at(beatID)->setSlideNoteFlag(start, end, true);
+		slideNote.at(barID).at(beatID)->setSlideNoteFlag(start, end, true,isDirectionRight);
 	}
 	else{
-		slideNote.at(barID).at(beatID)->setSlideNoteFlag(start, end, false);
+		slideNote.at(barID).at(beatID)->setSlideNoteFlag(start, end, false,isDirectionRight);
 	}
 }
 

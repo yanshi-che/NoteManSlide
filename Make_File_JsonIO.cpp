@@ -22,8 +22,8 @@ void Make::File::Make_File_JsonIO::getJsonVal(const std::shared_ptr<Make_File_Mu
 
 	std::vector<NoteDataForJson> noteDataVector;
 	std::vector<std::uint16_t> noteIndex;
-	noteIndex.resize(Global::LANEAMOUNT);
-	for (int i = 0, iSize = static_cast<int>(Global::LANEAMOUNT); i < iSize; ++i) {
+	noteIndex.resize(Global::LANE_AMOUNT);
+	for (int i = 0, iSize = static_cast<int>(Global::LANE_AMOUNT); i < iSize; ++i) {
 		noteIndex.at(i) = 0;
 	}
 	struct longNotePoint {//終点が読み込まれるまでlongNoteの始点情報を保管するためのもの
@@ -36,22 +36,22 @@ void Make::File::Make_File_JsonIO::getJsonVal(const std::shared_ptr<Make_File_Mu
 	bool isLongGroupLast = false;
 	for (int i = 0, iSize = static_cast<int>(normalNote.size()); i < iSize; ++i) {
 		for (int k = 0, kSize = static_cast<int>(normalNote.at(i).size()); k < kSize; ++k) {
-			for (int l = 0, lSize = static_cast<int>(Global::LANEAMOUNT); l < lSize; ++l) {
+			for (int l = 0, lSize = static_cast<int>(Global::LANE_AMOUNT); l < lSize; ++l) {
 				if (normalNote.at(i).at(k)->getNormalNoteFlag(l)) {//ノーマルノーツ
-					noteDataVector.push_back(NoteDataForJson(normalNote.at(i).at(k)->getTime(), Global::NOTETYPENORMAL, l, NULL, noteIndex.at(l), NULL, NULL, NULL));
+					noteDataVector.push_back(NoteDataForJson(normalNote.at(i).at(k)->getTime(), Global::NOTETYPE_NORMAL, l, NULL, noteIndex.at(l), NULL, NULL, NULL, NULL));
 					++noteIndex.at(l);
 				}
 				else if (longNote.at(i).at(k)->getLongNoteFlag(l).second) {//ロングノーツ
 					for (int n = 0, nSize = static_cast<int>(longNotePointDeq.size()); n < nSize; ++n) {
 						if (longNote.at(i).at(k)->getNoteGroup(l) == longNotePointDeq.at(n).oldIndex) {
-							noteDataVector.push_back(NoteDataForJson(longNote.at(i).at(k)->getTime(), Global::NOTETYPELONG, l, longNotePointDeq.at(n).newIndex, noteIndex.at(l), NULL, NULL, NULL));
+							noteDataVector.push_back(NoteDataForJson(longNote.at(i).at(k)->getTime(), Global::NOTETYPE_LONG, l, longNotePointDeq.at(n).newIndex, noteIndex.at(l), NULL,NULL, NULL, NULL));
 							isLongGroupLast = true;
 							longNotePointDeq.erase(longNotePointDeq.begin() + n);
 							break;
 						}
 					}
 					if (!isLongGroupLast) {
-						noteDataVector.push_back(NoteDataForJson(longNote.at(i).at(k)->getTime(), Global::NOTETYPELONG, l, longNoteGroupIndex, noteIndex.at(l), NULL, NULL, NULL));
+						noteDataVector.push_back(NoteDataForJson(longNote.at(i).at(k)->getTime(), Global::NOTETYPE_LONG, l, longNoteGroupIndex, noteIndex.at(l), NULL,NULL, NULL, NULL));
 						longNotePointDeq.push_back(longNotePoint(longNote.at(i).at(k)->getNoteGroup(l), longNoteGroupIndex));
 						++longNoteGroupIndex;
 					}
@@ -59,12 +59,24 @@ void Make::File::Make_File_JsonIO::getJsonVal(const std::shared_ptr<Make_File_Mu
 				}
 			}
 			if (slideNote.at(i).at(k)->getSlideNoteFlag().first) {//スライドノーツ
-				noteDataVector.push_back(NoteDataForJson(slideNote.at(i).at(k)->getTime(), Global::NOTETYPESLIDE, NULL, NULL, NULL, 1,
-					slideNote.at(i).at(k)->getNoteStartAndEnd().first.first, slideNote.at(i).at(k)->getNoteStartAndEnd().first.second));
+				if (slideNote.at(i).at(k)->getSlideNoteDirectionRightOrLeft().first) {
+					noteDataVector.push_back(NoteDataForJson(slideNote.at(i).at(k)->getTime(), Global::NOTETYPE_SLIDER, NULL, NULL, NULL, 1, 1,
+						slideNote.at(i).at(k)->getNoteStartAndEnd().first.first, slideNote.at(i).at(k)->getNoteStartAndEnd().first.second));
+				}
+				else {
+					noteDataVector.push_back(NoteDataForJson(slideNote.at(i).at(k)->getTime(), Global::NOTETYPE_SLIDER, NULL, NULL, NULL, 1, 2,
+						slideNote.at(i).at(k)->getNoteStartAndEnd().first.first, slideNote.at(i).at(k)->getNoteStartAndEnd().first.second));
+				}
 			}
 			if (slideNote.at(i).at(k)->getSlideNoteFlag().second) {
-				noteDataVector.push_back(NoteDataForJson(slideNote.at(i).at(k)->getTime(), Global::NOTETYPESLIDE, NULL, NULL, NULL, 2,
-					slideNote.at(i).at(k)->getNoteStartAndEnd().second.first, slideNote.at(i).at(k)->getNoteStartAndEnd().second.second));
+				if (slideNote.at(i).at(k)->getSlideNoteDirectionRightOrLeft().second) {
+					noteDataVector.push_back(NoteDataForJson(slideNote.at(i).at(k)->getTime(), Global::NOTETYPE_SLIDEL, NULL, NULL, NULL, 2,1,
+						slideNote.at(i).at(k)->getNoteStartAndEnd().second.first, slideNote.at(i).at(k)->getNoteStartAndEnd().second.second));
+				}
+				else {
+					noteDataVector.push_back(NoteDataForJson(slideNote.at(i).at(k)->getTime(), Global::NOTETYPE_SLIDEL, NULL, NULL, NULL, 2,2,
+						slideNote.at(i).at(k)->getNoteStartAndEnd().second.first, slideNote.at(i).at(k)->getNoteStartAndEnd().second.second));
+				}
 			}
 		}
 	}
@@ -78,10 +90,7 @@ void Make::File::Make_File_JsonIO::saveNewJson(const std::shared_ptr<Make_File_M
 	//セーブするファイルのパスを取得
 	char filePath[MAX_PATH] = "";//セーブするファイルのパス
 	getFilePath(filePath);
-	if (filePath == "") {
-		Dialog::Make_Dialog_FailFile f;
-		std::string errSentence = "ファイル読み込みに失敗しました";
-		f.failFileDlg(errSentence);
+	if (filePath[0] == NULL) {
 		return;
 	}
 
