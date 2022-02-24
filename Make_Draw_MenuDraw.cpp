@@ -128,6 +128,25 @@ void Make::Draw::Make_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemNam
 		p_musicPlayer.reset();
 		SendMessage(GetMainWindowHandle(), WM_CLOSE, NULL, NULL);
 		break;
+	case Play:
+		if (p_musicData != nullptr){
+			File::Make_File_JsonIO jsIO;
+			json::value val;
+			jsIO.getJsonVal(p_musicData, p_beatLine->getNoteManager(),val);
+			p_testPlay = std::make_shared<Play::Make_Play_TestPlayManager>();
+			p_testPlay->initialize(val,p_musicPlayer,p_musicData);
+			drawFunc = p_testPlay->getDrawFunc();
+			isPlaying = true;
+		}
+		break;
+	case Stop:
+		if (p_musicData != nullptr) {
+			drawFunc = p_beatLine->getDrawFunc();
+			p_testPlay->finalize();
+			p_testPlay.reset();
+			isPlaying = false;
+		}
+		break;
 	case WholeQUARTER:
 		if (p_musicData != nullptr && !isPlaying) {
 			p_beatLine->setInitBarLineFunc(Global::QUARTER,NULL,true);
