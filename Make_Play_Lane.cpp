@@ -18,43 +18,36 @@ void Make::Play::Make_Play_Lane::draw() {
 	drawKeyHitLane();
 	drawJudgeLine();
 	drawLane();
-	drawDown();
 }
 
 void Make::Play::Make_Play_Lane::drawBack() {
 	DrawBoxAA(static_cast<float>(laneX[0]), 0, static_cast<float>(laneX[Global::LANE_AMOUNT]), static_cast<float>(Global::WINDOW_HEIGHT), backColor,true);
 }
 
-void Make::Play::Make_Play_Lane::drawDown() {
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200);
-	DrawBoxAA(static_cast<float>(laneX[0] + 1), static_cast<float>(Global::JUDGELINE_Y + 1.0), static_cast<float>(laneX[Global::LANE_AMOUNT]), static_cast<float>(Global::WINDOW_HEIGHT), backColor,true);
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
-}
-
 void Make::Play::Make_Play_Lane::drawKeyHitLane() {
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 30);
-	if (0 < p_keyHitCheck->getHitKey(Global::lane0)) {
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 20);
+	if (0 < p_keyHitCheck->getHitKeyForNote(Global::lane0)) {
 		DrawBoxAA(static_cast<float>(laneX[0] + keyHitLineWidth), 0, static_cast<float>(laneX[1] - keyHitLineWidth), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
 	}
-	if (0 < p_keyHitCheck->getHitKey(Global::lane1)) {
+	if (0 < p_keyHitCheck->getHitKeyForNote(Global::lane1)) {
 		DrawBoxAA(static_cast<float>(laneX[1] + keyHitLineWidth), 0, static_cast<float>(laneX[2] - keyHitLineWidth), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
 	}
-	if (0 < p_keyHitCheck->getHitKey(Global::lane2)) {
+	if (0 < p_keyHitCheck->getHitKeyForNote(Global::lane2)) {
 		DrawBoxAA(static_cast<float>(laneX[2] + keyHitLineWidth), 0, static_cast<float>(laneX[3] - keyHitLineWidth), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
 	}
-	if (0 < p_keyHitCheck->getHitKey(Global::lane3)) {
+	if (0 < p_keyHitCheck->getHitKeyForNote(Global::lane3)) {
 		DrawBoxAA(static_cast<float>(laneX[3] + keyHitLineWidth), 0, static_cast<float>(laneX[4] - keyHitLineWidth), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
 	}
-	if (0 < p_keyHitCheck->getHitKey(Global::lane4)) {
+	if (0 < p_keyHitCheck->getHitKeyForNote(Global::lane4)) {
 		DrawBoxAA(static_cast<float>(laneX[4] + keyHitLineWidth), 0, static_cast<float>(laneX[5] - keyHitLineWidth), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
 	}
-	if (0 < p_keyHitCheck->getHitKey(Global::lane5)) {
+	if (0 < p_keyHitCheck->getHitKeyForNote(Global::lane5)) {
 		DrawBoxAA(static_cast<float>(laneX[5] + keyHitLineWidth), 0, static_cast<float>(laneX[Global::LANE_AMOUNT] - keyHitLineWidth), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
 	}
-	if (0 < p_keyHitCheck->getHitKey(Global::laneRR) || 0 < p_keyHitCheck->getHitKey(Global::laneRL)) {
+	if (0 < p_keyHitCheck->getHitKeyForNote(Global::laneRR) || 0 < p_keyHitCheck->getHitKeyForNote(Global::laneRL)) {
 		DrawBoxAA(static_cast<float>(laneX[Global::LANE_AMOUNT] + keyHitLineWidth), 0, static_cast<float>(laneX[Global::LANE_AMOUNT] - keyHitLineWidth + laneWidth * 0.3), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
 	}
-	if (0 < p_keyHitCheck->getHitKey(Global::laneLR) || 0 < p_keyHitCheck->getHitKey(Global::laneLL)) {
+	if (0 < p_keyHitCheck->getHitKeyForNote(Global::laneLR) || 0 < p_keyHitCheck->getHitKeyForNote(Global::laneLL)) {
 		DrawBoxAA(static_cast<float>(laneX[0] + keyHitLineWidth - laneWidth * 0.3), 0, static_cast<float>(laneX[0] - keyHitLineWidth), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
 	}
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);

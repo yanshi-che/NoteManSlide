@@ -129,7 +129,7 @@ void Make::Draw::Make_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemNam
 		SendMessage(GetMainWindowHandle(), WM_CLOSE, NULL, NULL);
 		break;
 	case Play:
-		if (p_musicData != nullptr){
+		if (p_musicData != nullptr && !isPlaying){
 			File::Make_File_JsonIO jsIO;
 			json::value val;
 			jsIO.getJsonVal(p_musicData, p_beatLine->getNoteManager(),val);
@@ -140,10 +140,11 @@ void Make::Draw::Make_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemNam
 		}
 		break;
 	case Stop:
-		if (p_musicData != nullptr) {
+		if (p_musicData != nullptr && isPlaying) {
 			drawFunc = p_beatLine->getDrawFunc();
 			p_testPlay->finalize();
 			p_testPlay.reset();
+			p_musicPlayer->stopMusic();
 			isPlaying = false;
 		}
 		break;

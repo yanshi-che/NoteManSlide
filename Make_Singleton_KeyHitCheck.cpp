@@ -97,6 +97,13 @@ void Make::Singleton::Make_Singleton_KeyHitCheck::checkHitKey() {
 	}
 }
 
-std::uint16_t Make::Singleton::Make_Singleton_KeyHitCheck::getHitKey(std::uint16_t keyNum) {
+std::uint16_t Make::Singleton::Make_Singleton_KeyHitCheck::getHitKeyForNote(std::uint16_t keyNum) {
 	return key[keyNum];
+}
+
+bool Make::Singleton::Make_Singleton_KeyHitCheck::getHitKeyUsual(std::uint16_t keyNum) {
+	if (buf[keyNum] == 1) {
+		return true;
+	}
+	return false;
 }
