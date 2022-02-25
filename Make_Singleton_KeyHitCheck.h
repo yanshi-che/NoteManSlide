@@ -21,7 +21,8 @@ namespace Make {
 			static void destroyInstance();
 
 			void checkHitKey();
-			std::uint16_t getHitKey(std::uint16_t keyNum);
+			std::uint16_t getHitKeyForNote(std::uint16_t keyNum);
+			bool getHitKeyUsual(std::uint16_t keyNum);
 		};
 	}
 }

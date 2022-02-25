@@ -12,7 +12,7 @@ Make::Note::Make_Note_SlideNoteContainer::Make_Note_SlideNoteContainer(const std
 	for (int i = 0; i <= laneAmount; ++i) {
 		laneX.at(i) = laneWidth * i + Global::DRAW_X_MIN;
 	}
-	arrowWidthBetween = laneWidth / arrowNumInLane;
+	arrowWidthBetween = laneWidth / Global::ARROW_NUM_LANE;
 
 	noteFlag = { false,false };
 	noteStartAndEndLane = { {0,0},{0,0} };
@@ -23,21 +23,21 @@ void Make::Note::Make_Note_SlideNoteContainer::drawArrow() {
 		if (noteFlag.first) {
 			if (noteDirectionRightOrLeft.first) {
 				for (int i = noteStartAndEndLane.first.second + 1; noteStartAndEndLane.first.first < i; --i) {
-					for (int k = 0; k < arrowNumInLane; ++k) {
+					for (int k = 0; k < Global::ARROW_NUM_LANE; ++k) {
 						DrawLineAA(static_cast<float>(laneX.at(i) - arrowWidthBetween * k), static_cast<float>(r_y),
-							static_cast<float>(laneX.at(i) - arrowWidthBetween * k - arrowHeight), static_cast<float>(r_y + arrowLength), colorR, lineThickness);
+							static_cast<float>(laneX.at(i) - arrowWidthBetween * k - Global::ARROW_HEIGHT), static_cast<float>(r_y + Global::ARROW_LENGTH), colorR, lineThickness);
 						DrawLineAA(static_cast<float>(laneX.at(i) - arrowWidthBetween * k), static_cast<float>(r_y),
-							static_cast<float>(laneX.at(i) - arrowWidthBetween * k - arrowHeight), static_cast<float>(r_y - arrowLength), colorR, lineThickness);
+							static_cast<float>(laneX.at(i) - arrowWidthBetween * k - Global::ARROW_HEIGHT), static_cast<float>(r_y - Global::ARROW_LENGTH), colorR, lineThickness);
 					}
 				}
 			}
 			else {
 				for (int i = noteStartAndEndLane.first.second; i < noteStartAndEndLane.first.first + 1; ++i) {
-					for (int k = 0; k < arrowNumInLane; ++k) {
+					for (int k = 0; k < Global::ARROW_NUM_LANE; ++k) {
 						DrawLineAA(static_cast<float>(laneX.at(i) + arrowWidthBetween * k), static_cast<float>(r_y),
-							static_cast<float>(laneX.at(i) + arrowWidthBetween * k + arrowHeight), static_cast<float>(r_y + arrowLength), colorR, lineThickness);
+							static_cast<float>(laneX.at(i) + arrowWidthBetween * k + Global::ARROW_HEIGHT), static_cast<float>(r_y + Global::ARROW_LENGTH), colorR, lineThickness);
 						DrawLineAA(static_cast<float>(laneX.at(i) + arrowWidthBetween * k), static_cast<float>(r_y),
-							static_cast<float>(laneX.at(i) + arrowWidthBetween * k + arrowHeight), static_cast<float>(r_y - arrowLength), colorR, lineThickness);
+							static_cast<float>(laneX.at(i) + arrowWidthBetween * k + Global::ARROW_HEIGHT), static_cast<float>(r_y - Global::ARROW_LENGTH), colorR, lineThickness);
 					}
 				}
 			}
@@ -45,21 +45,21 @@ void Make::Note::Make_Note_SlideNoteContainer::drawArrow() {
 		if (noteFlag.second) {
 			if (noteDirectionRightOrLeft.second) {
 				for (int i = noteStartAndEndLane.second.second + 1; noteStartAndEndLane.second.first < i; --i) {
-					for (int k = 0; k < arrowNumInLane; ++k) {
+					for (int k = 0; k < Global::ARROW_NUM_LANE; ++k) {
 						DrawLineAA(static_cast<float>(laneX.at(i) - arrowWidthBetween * k), static_cast<float>(r_y),
-							static_cast<float>(laneX.at(i) - arrowWidthBetween * k - arrowHeight), static_cast<float>(r_y + arrowLength), colorL, lineThickness);
+							static_cast<float>(laneX.at(i) - arrowWidthBetween * k - Global::ARROW_HEIGHT), static_cast<float>(r_y + Global::ARROW_LENGTH), colorL, lineThickness);
 						DrawLineAA(static_cast<float>(laneX.at(i) - arrowWidthBetween * k), static_cast<float>(r_y),
-							static_cast<float>(laneX.at(i) - arrowWidthBetween * k - arrowHeight), static_cast<float>(r_y - arrowLength), colorL, lineThickness);
+							static_cast<float>(laneX.at(i) - arrowWidthBetween * k - Global::ARROW_HEIGHT), static_cast<float>(r_y - Global::ARROW_LENGTH), colorL, lineThickness);
 					}
 				}
 			}
 			else {
 				for (int i = noteStartAndEndLane.second.second ; i < noteStartAndEndLane.second.first + 1; ++i) {
-					for (int k = 0; k < arrowNumInLane; ++k) {
+					for (int k = 0; k < Global::ARROW_NUM_LANE; ++k) {
 						DrawLineAA(static_cast<float>(laneX.at(i) + arrowWidthBetween * k), static_cast<float>(r_y),
-							static_cast<float>(laneX.at(i) + arrowWidthBetween * k + arrowHeight), static_cast<float>(r_y + arrowLength), colorL, lineThickness);
+							static_cast<float>(laneX.at(i) + arrowWidthBetween * k + Global::ARROW_HEIGHT), static_cast<float>(r_y + Global::ARROW_LENGTH), colorL, lineThickness);
 						DrawLineAA(static_cast<float>(laneX.at(i) + arrowWidthBetween * k), static_cast<float>(r_y),
-							static_cast<float>(laneX.at(i) + arrowWidthBetween * k + arrowHeight), static_cast<float>(r_y - arrowLength), colorL, lineThickness);
+							static_cast<float>(laneX.at(i) + arrowWidthBetween * k + Global::ARROW_HEIGHT), static_cast<float>(r_y - Global::ARROW_LENGTH), colorL, lineThickness);
 					}
 				}
 			}
@@ -69,8 +69,7 @@ void Make::Note::Make_Note_SlideNoteContainer::drawArrow() {
 
 void Make::Note::Make_Note_SlideNoteContainer::drawSlideNote() {
 	if (r_y < Make::Global::WINDOW_HEIGHT && r_y>0) {
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 120);
-		drawArrow();
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
 		if (noteFlag.first) {
 			if (noteDirectionRightOrLeft.first) {
 				DrawLineAA(static_cast<float>(laneX.at(noteStartAndEndLane.first.first)), static_cast<float>(r_y),
@@ -91,6 +90,7 @@ void Make::Note::Make_Note_SlideNoteContainer::drawSlideNote() {
 					static_cast<float>(laneX.at(noteStartAndEndLane.second.second)), static_cast<float>(r_y), colorL, lineThickness);
 			}
 		}
+		drawArrow();
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	}
 }

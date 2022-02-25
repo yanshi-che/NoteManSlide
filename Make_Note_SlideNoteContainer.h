@@ -9,9 +9,6 @@
 
 namespace Make {
 	namespace Note {
-		constexpr const std::uint8_t arrowNumInLane{ 4 };//1ƒŒ[ƒ“‚ ‚½‚è‚Ì–îˆó‚Ì”
-		constexpr const double arrowHeight{ 8.0 };//•`‰æ‚·‚é–îˆó‚Ì•G
-		constexpr const double arrowLength{ 8.0 };//•`‰æ‚·‚é–îˆó‚Ì•G
 		class Make_Note_SlideNoteContainer
 		{
 		private:

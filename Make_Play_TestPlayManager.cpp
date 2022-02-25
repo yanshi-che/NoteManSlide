@@ -5,11 +5,77 @@ Make::Play::Make_Play_TestPlayManager::Make_Play_TestPlayManager() {
 	p_musicPlayer = nullptr;
 	p_lane = nullptr;
 	p_score = nullptr;
+	startClock = 0;
+	isStart = false;
+	isMusicStart = false;
+	nowTime = 0;
+	startDelay = 5.0;
+	downColor = GetColor(0, 0, 0);
+	p_keyHitCheck = Singleton::Make_Singleton_KeyHitCheck::getInstance();
 }
 
 void Make::Play::Make_Play_TestPlayManager::draw() {
 	p_lane->draw();
 	p_score->draw();
+	if (!isStart) {
+		DrawString(300, 330, "Press Y to Start", GetColor(255, 255, 255));
+		if (p_keyHitCheck->getHitKeyUsual(KEY_INPUT_Y)) {
+			this->startClock = GetNowHiPerformanceCount();
+			isStart = true;
+		}
+	}
+	else {
+		nowTime = (double)((GetNowHiPerformanceCount() - startClock)) / 1000000.0;
+		if (!isMusicStart && startDelay <= nowTime) {
+			p_musicPlayer->startMusicFromHead();
+			isMusicStart = true;
+		}
+		for (int i = 0, iSize = static_cast<int>(barLineVec.size()); i < iSize; ++i) {
+			barLineVec.at(i)->update(nowTime);
+			barLineVec.at(i)->draw();
+		}
+		//座標更新
+		for (int i = 0, iSize = Global::LANE_AMOUNT; i < iSize; ++i) {
+			for (int k = 0, kSize = static_cast<int>(normalNoteVec.at(i).size()); k < kSize; ++k) {
+				normalNoteVec.at(i).at(k)->update(nowTime);
+				normalNoteVec.at(i).at(k)->draw();
+			}
+			for (int k = 0, kSize = static_cast<int>(longNoteVec.at(i).size()); k < kSize; ++k) {
+				longNoteVec.at(i).at(k)->update(nowTime);
+				longNoteVec.at(i).at(k)->draw();
+			}
+			if (normalNote.at(i) != nullptr) {
+				normalNote.at(i)->check(nowTime);
+			}
+			if (longNote.at(i) != nullptr) {
+				longNote.at(i)->check(nowTime);
+			}
+		}
+		for (int i = 0, iSize = static_cast<int>(slideNoteVec.size()); i < iSize; ++i) {
+			if (slideNoteVec.at(0).size() != NULL) {
+				slideNoteVec.at(0).at(i)->update(nowTime);
+				slideNoteVec.at(0).at(i)->draw();
+			}
+			if (slideNoteVec.at(1).size() != NULL) {
+				slideNoteVec.at(1).at(i)->update(nowTime);
+				slideNoteVec.at(1).at(i)->draw();
+			}
+		}
+		if (slideNote.at(0) != nullptr) {
+			slideNote.at(0)->check(nowTime);
+		}
+		if (slideNote.at(1) != nullptr) {
+			slideNote.at(1)->check(nowTime);
+		}
+	}
+	
+	drawDown();
+}
+
+void Make::Play::Make_Play_TestPlayManager::drawDown() {
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200);
+	DrawBoxAA(static_cast<float>(Global::PLAY_LANE_X_MIN + 1), static_cast<float>(Global::JUDGELINE_Y + 1.0), static_cast<float>(Global::PLAY_LANE_X_MAX - 1), static_cast<float>(Global::WINDOW_HEIGHT), downColor, true);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 }
 
 void Make::Play::Make_Play_TestPlayManager::finalize() {
@@ -24,10 +90,10 @@ void Make::Play::Make_Play_TestPlayManager::initialize(const json::value& val, c
 
 	normalNoteVec.resize(laneAmount);
 	longNoteVec.resize(laneAmount);
-	slideNoteVec.resize(laneAmount);
+	slideNoteVec.resize(2);
 	normalNote.resize(laneAmount);
 	longNote.resize(laneAmount);
-	slideNote.resize(laneAmount);
+	slideNote.resize(2);
 	normalCount.resize(laneAmount);
 	longCount.resize(laneAmount);
 	slideCount.resize(2);
@@ -39,7 +105,7 @@ void Make::Play::Make_Play_TestPlayManager::initialize(const json::value& val, c
 	for (int i = 0; i < laneAmount; ++i) {
 		normalCount.at(i) = 0;
 		longCount.at(i) = 0;
-		isFirst.at(i) = false;
+		isFirst.at(i) = true;
 		startTime.at(i) = 0;
 	}
 	slideCount.at(0) = 0;
@@ -48,7 +114,7 @@ void Make::Play::Make_Play_TestPlayManager::initialize(const json::value& val, c
 	//小節線の初期化
 	barLineVec.resize(p_musicData->getBarLength());
 	const double timePerBeat = (Global::MINUTE / p_musicData->getBpm()) * Global::QUARTER;
-	double timeSum = p_musicData->getBeginDelay();
+	double timeSum = p_musicData->getBeginDelay() + startDelay;
 	for (int i = 0, iSize = static_cast<int>(barLineVec.size()); i < iSize; ++i) {
 		barLineVec.at(i) = std::make_unique<Make_Play_BarLine>(timeSum);
 		timeSum += timePerBeat;
@@ -58,7 +124,7 @@ void Make::Play::Make_Play_TestPlayManager::initialize(const json::value& val, c
 	double laneX[laneAmount + 1];
 	const double laneWidth = (Global::PLAY_LANE_X_MAX - Global::PLAY_LANE_X_MIN) / laneAmount;
 	for (int i = 0; i <= laneAmount; ++i) {
-		laneX[i] = laneWidth * i + Global::DRAW_X_MIN;
+		laneX[i] = laneWidth * i + Global::PLAY_LANE_X_MIN;
 	}
 
 	//レーン周りの描画
@@ -68,6 +134,8 @@ void Make::Play::Make_Play_TestPlayManager::initialize(const json::value& val, c
 
 	//ノーツの初期化
 	const json::array noteDataArray = val.as_object().at("NoteData").as_array();
+	const double sixteenthTime = timePerBeat / Global::SIXTEENTH;
+	const double arrowWidthBetween = laneWidth / Global::ARROW_NUM_LANE;
 	std::uint8_t noteType;
 	std::uint8_t laneIndex;
 	std::uint8_t directionRightOrLeft;
@@ -80,19 +148,19 @@ void Make::Play::Make_Play_TestPlayManager::initialize(const json::value& val, c
 		if (noteType == Global::NOTETYPE_NORMAL) {
 			normalNoteVec.at(laneIndex)
 				.push_back(std::make_unique<Make_Play_NormalNote>(
-					noteDataArray.at(i).at("time").as_double(), noteType,
-					laneIndex, laneX[laneIndex], laneX[laneIndex + 1], nextNoteFunc));
+					noteDataArray.at(i).at("time").as_double() + startDelay, noteType,
+					laneIndex, laneX[laneIndex], laneX[laneIndex + 1], nextNoteFunc,p_score));
 		}
 		else if (noteType == Global::NOTETYPE_LONG) {
 			if (isFirst.at(laneIndex)) {
-				startTime.at(laneIndex) = noteDataArray.at(i).at("time").as_double();
+				startTime.at(laneIndex) = noteDataArray.at(i).at("time").as_double()+ startDelay;
 				isFirst.at(laneIndex) = false;
 			}
 			else {
 				longNoteVec.at(laneIndex)
 					.push_back(std::make_unique<Make_Play_LongNote>(
-						startTime.at(laneIndex),noteDataArray.at(i).at("time").as_double(), noteType,
-						laneIndex, laneX[laneIndex], laneX[laneIndex + 1], nextNoteFunc));
+						startTime.at(laneIndex),noteDataArray.at(i).at("time").as_double() + startDelay,sixteenthTime ,noteType,
+						laneIndex, laneX[laneIndex], laneX[laneIndex + 1], nextNoteFunc,p_score));
 				isFirst.at(laneIndex) = true;
 			}
 		}
@@ -111,11 +179,54 @@ void Make::Play::Make_Play_TestPlayManager::initialize(const json::value& val, c
 			}
 			slideNoteIndexStart = static_cast<std::uint8_t>(noteDataArray.at(i).at("slideLaneIndexStart").as_uint64());
 			slideNoteIndexEnd = static_cast<std::uint8_t>(noteDataArray.at(i).at("slideLaneIndexEnd").as_uint64());
-			slideNoteVec.at(laneIndex)
-				.push_back(std::make_unique<Make_Play_SlideNote>(
-					noteDataArray.at(i).at("time").as_double(), noteType,
-					laneX[slideNoteIndexStart], laneX[slideNoteIndexEnd],laneIndex,directionRightOrLeft,slideNoteIndexStart,slideNoteIndexEnd, nextNoteFunc));
+			if (laneIndex == 0) {
+				if (directionRightOrLeft == 0) {//右の右向き
+					slideNoteVec.at(laneIndex)
+						.push_back(std::make_unique<Make_Play_SlideNote>(
+							noteDataArray.at(i).at("time").as_double() + startDelay, noteType,
+							laneX[slideNoteIndexStart], laneX[slideNoteIndexEnd + 1],laneWidth, arrowWidthBetween, laneIndex, directionRightOrLeft, slideNoteIndexStart, slideNoteIndexEnd, nextNoteFunc,p_score));
+				}
+				else {//右の左向き
+					slideNoteVec.at(laneIndex)
+						.push_back(std::make_unique<Make_Play_SlideNote>(
+							noteDataArray.at(i).at("time").as_double() + startDelay, noteType,
+							laneX[slideNoteIndexStart + 1], laneX[slideNoteIndexEnd],laneWidth, arrowWidthBetween, laneIndex, directionRightOrLeft, slideNoteIndexStart, slideNoteIndexEnd, nextNoteFunc,p_score));
+				}
+			}
+			else {//左の右向き
+				if (directionRightOrLeft == 0) {
+					slideNoteVec.at(laneIndex)
+						.push_back(std::make_unique<Make_Play_SlideNote>(
+							noteDataArray.at(i).at("time").as_double() + startDelay, noteType,
+							laneX[slideNoteIndexStart], laneX[slideNoteIndexEnd + 1], laneWidth, arrowWidthBetween ,laneIndex, directionRightOrLeft, slideNoteIndexStart, slideNoteIndexEnd, nextNoteFunc,p_score));
+				}
+				else {//左の左向き
+					slideNoteVec.at(laneIndex)
+						.push_back(std::make_unique<Make_Play_SlideNote>(
+							noteDataArray.at(i).at("time").as_double() + startDelay, noteType,
+							laneX[slideNoteIndexStart + 1], laneX[slideNoteIndexEnd], laneWidth, arrowWidthBetween, laneIndex, directionRightOrLeft, slideNoteIndexStart, slideNoteIndexEnd, nextNoteFunc,p_score));
+				}
+			}
 		}
+	}
+
+	for (int i = 0; i < laneAmount; ++i) {
+		if (normalNoteVec.at(i).size() != NULL) {
+			normalNote.at(i) = normalNoteVec.at(i).at(0).get();
+			normalNote.at(i)->setTurn(true);
+		}
+		if (longNoteVec.at(i).size() != NULL) {
+			longNote.at(i) = longNoteVec.at(i).at(0).get();
+			longNote.at(i)->setTurn(true);
+		}
+	}
+	if (slideNoteVec.at(0).size() != NULL) {
+		slideNote.at(0) = slideNoteVec.at(0).at(0).get();
+		slideNote.at(0)->setTurn(true);
+	}
+	if (slideNoteVec.at(1).size() != NULL) {
+		slideNote.at(1) = slideNoteVec.at(1).at(0).get();
+		slideNote.at(1)->setTurn(true);
 	}
 }
 
@@ -124,6 +235,7 @@ void Make::Play::Make_Play_TestPlayManager::nextNote(const std::uint8_t noteType
 		++normalCount.at(laneIndex);
 		if (normalCount.at(laneIndex) < normalNoteVec.at(laneIndex).size()) {
 			normalNote.at(laneIndex) = normalNoteVec.at(laneIndex).at(normalCount.at(laneIndex)).get();
+			normalNote.at(laneIndex)->setTurn(true);
 		}
 		else {
 			normalNote.at(laneIndex) = nullptr;
@@ -133,6 +245,7 @@ void Make::Play::Make_Play_TestPlayManager::nextNote(const std::uint8_t noteType
 		++longCount.at(laneIndex);
 		if (longCount.at(laneIndex) < longNoteVec.at(laneIndex).size()) {
 			longNote.at(laneIndex) = longNoteVec.at(laneIndex).at(longCount.at(laneIndex)).get();
+			longNote.at(laneIndex)->setTurn(true);
 		}
 		else {
 			longNote.at(laneIndex) = nullptr;
@@ -142,6 +255,7 @@ void Make::Play::Make_Play_TestPlayManager::nextNote(const std::uint8_t noteType
 		++slideCount.at(laneIndex);
 		if (slideCount.at(laneIndex) < slideNoteVec.at(laneIndex).size()) {
 			slideNote.at(laneIndex) = slideNoteVec.at(laneIndex).at(slideCount.at(laneIndex)).get();
+			slideNote.at(laneIndex)->setTurn(true);
 		}
 		else {
 			slideNote.at(laneIndex) = nullptr;
