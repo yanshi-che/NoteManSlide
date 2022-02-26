@@ -14,10 +14,11 @@ Make::Play::Make_Play_SlideNote::Make_Play_SlideNote(const double time, const st
 
 void Make::Play::Make_Play_SlideNote::check(double nowTime) {
 	if (turn) {
-		if(1 <= p_keyHitCheck->getHitKeyForNote(key))
-		if (time - Global::GREAT< nowTime + Global::g_judgeCorrection && nowTime + Global::g_judgeCorrection < time + Global::GREAT) {
-			setDone(true);
-			p_score->plusPerfect();
+		if (1 <= p_keyHitCheck->getHitKeyForNote(key)) {
+			if (time - Global::GREAT < nowTime + Global::g_judgeCorrection && nowTime + Global::g_judgeCorrection < time + Global::GREAT) {
+				setDone(true);
+				p_score->plusPerfect();
+			}
 		}
 	}
 }

@@ -45,10 +45,10 @@ void Make::Play::Make_Play_Lane::drawKeyHitLane() {
 	if (0 < p_keyHitCheck->getHitKeyForNote(Global::g_lane5)) {
 		DrawBoxAA(static_cast<float>(laneX[5] + keyHitLineWidth), 0, static_cast<float>(laneX[Global::LANE_AMOUNT] - keyHitLineWidth), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
 	}
-	if (0 < p_keyHitCheck->getHitKeyForNote(Global::g_laneRR)) {
+	if (0 < p_keyHitCheck->getHitKeyForNote(Global::g_laneRL)) {
 		DrawBoxAA(static_cast<float>(laneX[Global::LANE_AMOUNT] + keyHitLineWidth), 0, static_cast<float>(laneX[Global::LANE_AMOUNT] - keyHitLineWidth + laneWidth * 0.5), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
 	}
-	if ( 0 < p_keyHitCheck->getHitKeyForNote(Global::g_laneRL)) {
+	if ( 0 < p_keyHitCheck->getHitKeyForNote(Global::g_laneRR)) {
 		DrawBoxAA(static_cast<float>(laneX[Global::LANE_AMOUNT] + keyHitLineWidth + laneWidth * 0.5), 0, static_cast<float>(laneX[Global::LANE_AMOUNT] - keyHitLineWidth + laneWidth), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
 	}
 	if (0 < p_keyHitCheck->getHitKeyForNote(Global::g_laneLR)) {

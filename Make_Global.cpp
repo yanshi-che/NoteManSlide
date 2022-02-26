@@ -9,8 +9,8 @@
  std::uint16_t Make::Global::g_lane3 = KEY_INPUT_H;
  std::uint16_t Make::Global::g_lane4 = KEY_INPUT_J;
  std::uint16_t Make::Global::g_lane5 = KEY_INPUT_K;
- std::uint16_t Make::Global::g_laneRR = KEY_INPUT_U;
- std::uint16_t Make::Global::g_laneRL = KEY_INPUT_I;
+ std::uint16_t Make::Global::g_laneRR = KEY_INPUT_I;
+ std::uint16_t Make::Global::g_laneRL = KEY_INPUT_U;
  std::uint16_t Make::Global::g_laneLR = KEY_INPUT_T;
  std::uint16_t Make::Global::g_laneLL = KEY_INPUT_R;
 //ƒ{ƒ‹ƒeƒRƒ“
