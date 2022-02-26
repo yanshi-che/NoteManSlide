@@ -15,7 +15,7 @@ Make::Play::Make_Play_SlideNote::Make_Play_SlideNote(const double time, const st
 void Make::Play::Make_Play_SlideNote::check(double nowTime) {
 	if (turn) {
 		if(1 <= p_keyHitCheck->getHitKeyForNote(key))
-		if (time - Global::GREAT< nowTime && nowTime < time + Global::GREAT) {
+		if (time - Global::GREAT< nowTime + Global::g_judgeCorrection && nowTime + Global::g_judgeCorrection < time + Global::GREAT) {
 			setDone(true);
 			p_score->plusPerfect();
 		}
@@ -34,7 +34,7 @@ void Make::Play::Make_Play_SlideNote::setDone(bool d) {
 
 void Make::Play::Make_Play_SlideNote::update(double nowTime) {
 	y = Global::JUDGELINE_Y - ((time - nowTime) * Global::JUDGELINE_Y * Global::g_hiSpeed);
-	if (turn && time + Global::MISS < nowTime) {
+	if (turn && time + Global::MISS < nowTime + Global::g_judgeCorrection) {
 		setDone(true);
 		p_score->plusMiss();
 	}

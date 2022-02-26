@@ -2,6 +2,7 @@
 
 //ユーザー定義
  double Make::Global::g_hiSpeed = 0.3;
+ double Make::Global::g_judgeCorrection = 0.0;
  std::uint16_t Make::Global::g_lane0 = KEY_INPUT_D;
  std::uint16_t Make::Global::g_lane1 = KEY_INPUT_F;
  std::uint16_t Make::Global::g_lane2 = KEY_INPUT_G;

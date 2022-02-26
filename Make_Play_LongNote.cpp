@@ -25,7 +25,7 @@ void Make::Play::Make_Play_LongNote::check(double nowTime) {
 	if (turn) {
 		if (judgeTimeCount != 0 && 1 <= p_keyHitCheck->getHitKeyForNote(key) && isHit) {
 			if (judgeTimeCount < judgeTime.size() &&
-				nowJudgeTime - Global::GREAT < nowTime && nowTime < nowJudgeTime + Global::GREAT) {
+				nowJudgeTime - Global::GREAT < nowTime + Global::g_judgeCorrection && nowTime + Global::g_judgeCorrection < nowJudgeTime + Global::GREAT) {
 				p_score->plusPerfect();
 				nowJudgeTime = judgeTime.at(judgeTimeCount);
 				++judgeTimeCount;
@@ -34,7 +34,7 @@ void Make::Play::Make_Play_LongNote::check(double nowTime) {
 		}
 		else if (p_keyHitCheck->getHitKeyForNote(key) == 1) {
 			if (judgeTimeCount < judgeTime.size() &&
-				nowJudgeTime - Global::GREAT < nowTime && nowTime < nowJudgeTime + Global::GREAT) {
+				nowJudgeTime - Global::GREAT < nowTime + Global::g_judgeCorrection && nowTime + Global::g_judgeCorrection < nowJudgeTime + Global::GREAT) {
 				p_score->plusPerfect();
 				nowJudgeTime = judgeTime.at(judgeTimeCount);
 				++judgeTimeCount;
@@ -66,10 +66,10 @@ void Make::Play::Make_Play_LongNote::update(double nowTime) {
 	y = Global::JUDGELINE_Y - ((startTime - nowTime) * Global::JUDGELINE_Y * Global::g_hiSpeed);
 	longNoteHeight = y - (Global::JUDGELINE_Y - ((endTime - nowTime) * Global::JUDGELINE_Y * Global::g_hiSpeed));
 	if (turn) {
-		if (endTime + Global::MISS < nowTime) {
+		if (endTime + Global::MISS < nowTime + Global::g_judgeCorrection) {
 			setDone(true);
 		}
-		if (judgeTimeCount < judgeTime.size() && nowJudgeTime + Global::GREAT < nowTime) {
+		if (judgeTimeCount < judgeTime.size() && nowJudgeTime + Global::GREAT < nowTime + Global::g_judgeCorrection) {
 			p_score->plusMiss();
 			nowJudgeTime = judgeTime.at(judgeTimeCount);
 			isHit = false;
