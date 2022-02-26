@@ -17,6 +17,11 @@
 ### 起動用exeファイルのURL
 https://drive.google.com/file/d/1v0bAv89_j6ZZxMdS-jsfZfoZTpFmayzi/view?usp=sharing
   
+### 簡易的なファイル間の関係
+<p>
+ <img src="https://github.com/yanshi-che/imageContainer/blob/main/noteSlide.png" width=400px height=400px />
+</p>
+  
 ### 使用技術・ライブラリ
 - C++
 - boosC++ version 1.77
