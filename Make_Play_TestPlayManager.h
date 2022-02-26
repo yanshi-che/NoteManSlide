@@ -58,6 +58,7 @@ namespace Make {
 			Make_Play_TestPlayManager();
 			void finalize();
 			void initialize(const json::value& val,const std::shared_ptr<Make_Play_MusicPlayer>& p_musicPlayer,const std::shared_ptr<File::Make_File_MusicData>& p_musicData);
+			void updateKey();
 			const std::function<void()> getDrawFunc();
 		};
 	}

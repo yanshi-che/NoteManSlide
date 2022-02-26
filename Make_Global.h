@@ -42,19 +42,32 @@ namespace Make {
 		constexpr const double MISS{ 0.06999 };
 
 		//ユーザー定義
-		static double hiSpeed = 0.3;
-		static std::uint16_t lane0 = KEY_INPUT_D;
-		static std::uint16_t lane1 = KEY_INPUT_F;
-		static std::uint16_t lane2 = KEY_INPUT_G;
-		static std::uint16_t lane3 = KEY_INPUT_H;
-		static std::uint16_t lane4 = KEY_INPUT_J;
-		static std::uint16_t lane5 = KEY_INPUT_K;
-		static std::uint16_t laneRR = KEY_INPUT_U;
-		static std::uint16_t laneRL = KEY_INPUT_I;
-		static std::uint16_t laneLR = KEY_INPUT_T;
-		static std::uint16_t laneLL = KEY_INPUT_R;
+		extern double g_hiSpeed;
+		extern std::uint16_t g_lane0;
+		extern std::uint16_t g_lane1;
+		extern std::uint16_t g_lane2;
+		extern std::uint16_t g_lane3;
+		extern std::uint16_t g_lane4;
+		extern std::uint16_t g_lane5;
+		extern std::uint16_t g_laneRR;
+		extern std::uint16_t g_laneRL;
+		extern std::uint16_t g_laneLR;
+		extern std::uint16_t g_laneLL;
+		//ボルテコン
+		extern std::uint16_t g_PAD_ID;
+		extern std::uint16_t g_BT_A;
+		extern std::uint16_t g_BT_B;
+		extern std::uint16_t g_BT_C;
+		extern std::uint16_t g_BT_D;
+		extern std::uint16_t g_FX_L;
+		extern std::uint16_t g_FX_R;
+		extern std::uint16_t g_VOL_R1;
+		extern std::uint16_t g_VOL_R2;
+		extern std::uint16_t g_VOL_L1;
+		extern std::uint16_t g_VOL_L2;
+		extern std::uint16_t g_B_START;
 		//
-		static bool saveFlag = true;//セーブしたかどうかのフラグ
-		static std::uint8_t clickWidth = 8;//拍線に対するマウスクリックの許容幅
+		extern bool g_saveFlag;//セーブしたかどうかのフラグ
+		extern std::uint8_t g_clickWidth;//拍線に対するマウスクリックの許容幅
 	}
 }

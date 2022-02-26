@@ -155,7 +155,7 @@ void Make::Note::Make_Note_NoteManager::setLongNote(const std::uint16_t barID,co
 		if (0 < *p_yBefore - *y) { //”ü‚Ì‡”Ô‚É‰ˆ‚Á‚Äƒƒ“ƒOƒm[ƒc‚ğL‚Î‚µ‚½
 			for (int i = startBarID,iSize = static_cast<int>(longNote.size()); i < iSize; ++i) {//”ÍˆÍ“à‚Ì”ü‚ÌŒŸõ
 				for (int k = 0,kSize = static_cast<int>(longNote.at(i).size()); k < kSize; ++k) {
-					if (longNote.at(i).at(k)->getY() < *p_yBefore && *y - Global::clickWidth < longNote.at(i).at(k)->getY()) {
+					if (longNote.at(i).at(k)->getY() < *p_yBefore && *y - Global::g_clickWidth < longNote.at(i).at(k)->getY()) {
 						stackNormal.push(normalNote.at(i).at(k).get());
 						stackLong.push(longNote.at(i).at(k).get());
 						++count;
@@ -203,7 +203,7 @@ void Make::Note::Make_Note_NoteManager::setLongNote(const std::uint16_t barID,co
 		else {//”ü‚Ì‡”Ô‚Æ‹tŒü‚«‚Éƒƒ“ƒOƒm[ƒc‚ğL‚Î‚µ‚½
 			for (int i = startBarID; 0 <= i; --i) {//”ÍˆÍ“à‚Ì”ü‚ÌŒŸõ
 				for (int k = static_cast<int>(longNote.at(i).size()) -1; 0 <= k; --k) {
-					if (*p_yBefore < longNote.at(i).at(k)->getY() && longNote.at(i).at(k)->getY() < *y + Global::clickWidth) {
+					if (*p_yBefore < longNote.at(i).at(k)->getY() && longNote.at(i).at(k)->getY() < *y + Global::g_clickWidth) {
 						stackNormal.push(normalNote.at(i).at(k).get());
 						stackLong.push(longNote.at(i).at(k).get());
 						++count;

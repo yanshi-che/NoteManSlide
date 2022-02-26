@@ -33,6 +33,7 @@ namespace Make {
 			void setTurn(bool t);
 			void setDone(bool d);
 			void update(double nowTime);
+			void updateKey();
 			void draw();
 		};
 	}

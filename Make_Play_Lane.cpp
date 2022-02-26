@@ -18,6 +18,7 @@ void Make::Play::Make_Play_Lane::draw() {
 	drawKeyHitLane();
 	drawJudgeLine();
 	drawLane();
+	drawKeyInfo();
 }
 
 void Make::Play::Make_Play_Lane::drawBack() {
@@ -26,29 +27,35 @@ void Make::Play::Make_Play_Lane::drawBack() {
 
 void Make::Play::Make_Play_Lane::drawKeyHitLane() {
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 20);
-	if (0 < p_keyHitCheck->getHitKeyForNote(Global::lane0)) {
+	if (0 < p_keyHitCheck->getHitKeyForNote(Global::g_lane0)) {
 		DrawBoxAA(static_cast<float>(laneX[0] + keyHitLineWidth), 0, static_cast<float>(laneX[1] - keyHitLineWidth), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
 	}
-	if (0 < p_keyHitCheck->getHitKeyForNote(Global::lane1)) {
+	if (0 < p_keyHitCheck->getHitKeyForNote(Global::g_lane1)) {
 		DrawBoxAA(static_cast<float>(laneX[1] + keyHitLineWidth), 0, static_cast<float>(laneX[2] - keyHitLineWidth), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
 	}
-	if (0 < p_keyHitCheck->getHitKeyForNote(Global::lane2)) {
+	if (0 < p_keyHitCheck->getHitKeyForNote(Global::g_lane2)) {
 		DrawBoxAA(static_cast<float>(laneX[2] + keyHitLineWidth), 0, static_cast<float>(laneX[3] - keyHitLineWidth), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
 	}
-	if (0 < p_keyHitCheck->getHitKeyForNote(Global::lane3)) {
+	if (0 < p_keyHitCheck->getHitKeyForNote(Global::g_lane3)) {
 		DrawBoxAA(static_cast<float>(laneX[3] + keyHitLineWidth), 0, static_cast<float>(laneX[4] - keyHitLineWidth), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
 	}
-	if (0 < p_keyHitCheck->getHitKeyForNote(Global::lane4)) {
+	if (0 < p_keyHitCheck->getHitKeyForNote(Global::g_lane4)) {
 		DrawBoxAA(static_cast<float>(laneX[4] + keyHitLineWidth), 0, static_cast<float>(laneX[5] - keyHitLineWidth), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
 	}
-	if (0 < p_keyHitCheck->getHitKeyForNote(Global::lane5)) {
+	if (0 < p_keyHitCheck->getHitKeyForNote(Global::g_lane5)) {
 		DrawBoxAA(static_cast<float>(laneX[5] + keyHitLineWidth), 0, static_cast<float>(laneX[Global::LANE_AMOUNT] - keyHitLineWidth), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
 	}
-	if (0 < p_keyHitCheck->getHitKeyForNote(Global::laneRR) || 0 < p_keyHitCheck->getHitKeyForNote(Global::laneRL)) {
-		DrawBoxAA(static_cast<float>(laneX[Global::LANE_AMOUNT] + keyHitLineWidth), 0, static_cast<float>(laneX[Global::LANE_AMOUNT] - keyHitLineWidth + laneWidth * 0.3), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
+	if (0 < p_keyHitCheck->getHitKeyForNote(Global::g_laneRR)) {
+		DrawBoxAA(static_cast<float>(laneX[Global::LANE_AMOUNT] + keyHitLineWidth), 0, static_cast<float>(laneX[Global::LANE_AMOUNT] - keyHitLineWidth + laneWidth * 0.5), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
 	}
-	if (0 < p_keyHitCheck->getHitKeyForNote(Global::laneLR) || 0 < p_keyHitCheck->getHitKeyForNote(Global::laneLL)) {
-		DrawBoxAA(static_cast<float>(laneX[0] + keyHitLineWidth - laneWidth * 0.3), 0, static_cast<float>(laneX[0] - keyHitLineWidth), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
+	if ( 0 < p_keyHitCheck->getHitKeyForNote(Global::g_laneRL)) {
+		DrawBoxAA(static_cast<float>(laneX[Global::LANE_AMOUNT] + keyHitLineWidth + laneWidth * 0.5), 0, static_cast<float>(laneX[Global::LANE_AMOUNT] - keyHitLineWidth + laneWidth), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
+	}
+	if (0 < p_keyHitCheck->getHitKeyForNote(Global::g_laneLR)) {
+		DrawBoxAA(static_cast<float>(laneX[0] + keyHitLineWidth - laneWidth * 0.5), 0, static_cast<float>(laneX[0] - keyHitLineWidth), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
+	}
+	if (0 < p_keyHitCheck->getHitKeyForNote(Global::g_laneLL)) {
+		DrawBoxAA(static_cast<float>(laneX[0] + keyHitLineWidth - laneWidth), 0, static_cast<float>(laneX[0] - keyHitLineWidth - laneWidth * 0.5), static_cast<float>(Global::WINDOW_HEIGHT), keyHitColor, true);
 	}
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 }
@@ -68,4 +75,19 @@ void Make::Play::Make_Play_Lane::drawLane() {
 
 void Make::Play::Make_Play_Lane::drawJudgeLine() {
 	DrawLineAA(static_cast<float>(laneX[0]), static_cast<float>(Global::JUDGELINE_Y), static_cast<float>(laneX[Global::LANE_AMOUNT]), static_cast<float>(Global::JUDGELINE_Y), judgeLineColor,5);
+}
+
+void Make::Play::Make_Play_Lane::drawKeyInfo() {
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
+	DrawStringF(static_cast<float>(laneX[0] +laneWidth * 0.333), static_cast<float>(Global::JUDGELINE_Y - 40.0),"D",laneColor);
+	DrawStringF(static_cast<float>(laneX[1] + laneWidth * 0.333), static_cast<float>(Global::JUDGELINE_Y - 40.0), "F", laneColor);
+	DrawStringF(static_cast<float>(laneX[2] + laneWidth * 0.333), static_cast<float>(Global::JUDGELINE_Y - 40.0), "G", laneColor);
+	DrawStringF(static_cast<float>(laneX[3] + laneWidth * 0.333), static_cast<float>(Global::JUDGELINE_Y - 40.0), "H", laneColor);
+	DrawStringF(static_cast<float>(laneX[4] + laneWidth * 0.333), static_cast<float>(Global::JUDGELINE_Y - 40.0), "J", laneColor);
+	DrawStringF(static_cast<float>(laneX[5] + laneWidth * 0.333), static_cast<float>(Global::JUDGELINE_Y - 40.0), "K", laneColor);
+	DrawStringF(static_cast<float>(laneX[0] - laneWidth * 0.8), static_cast<float>(Global::JUDGELINE_Y - 40.0), "R\nÅ©", laneColor);
+	DrawStringF(static_cast<float>(laneX[0] - laneWidth * 0.333), static_cast<float>(Global::JUDGELINE_Y - 40.0), "T\nÅ®", laneColor);
+	DrawStringF(static_cast<float>(laneX[6] + laneWidth * 0.666), static_cast<float>(Global::JUDGELINE_Y - 40.0), "I\nÅ®", laneColor);
+	DrawStringF(static_cast<float>(laneX[6] + laneWidth * 0.2), static_cast<float>(Global::JUDGELINE_Y - 40.0), "U\nÅ©", laneColor);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 }

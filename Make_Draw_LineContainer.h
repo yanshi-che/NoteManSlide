@@ -34,6 +34,7 @@ namespace Make {
 			const std::uint8_t beatID;//その小節の何番目の線か
 			const double time;//曲の開始から何秒か
 			const std::uint8_t laneAmount; //レーンの数
+			const std::uint8_t quontize;
 			double yMax;//座標の最大値
 			double yMin;//座標の最小値
 			std::uint32_t color;//拍線の色
@@ -51,7 +52,7 @@ namespace Make {
 			void drawLine() ;
 			void drawBarID() ;
 		public:
-			Make_Draw_LineContainer(const std::uint16_t barID,const double time,const std::uint8_t beatID,const double y,const double yMax,const std::shared_ptr<Note::Make_Note_NoteManager>& p_noteManager);
+			Make_Draw_LineContainer(const std::uint16_t barID,const double time,const std::uint8_t beatID, const std::uint8_t quontize,const double y,const double yMax,const std::shared_ptr<Note::Make_Note_NoteManager>& p_noteManager);
 			static void setNoteType(const std::uint8_t type) ;
 			static std::uint16_t getbarIDForChangeQuontize();
 

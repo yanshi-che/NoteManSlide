@@ -25,7 +25,7 @@ namespace Make {
 			void drawBack();
 			void drawJudgeLine();
 			void drawKeyHitLane();
-			void drawDown();
+			void drawKeyInfo();
 		public:
 			Make_Play_Lane();
 			void draw();

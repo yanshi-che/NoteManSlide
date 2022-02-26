@@ -63,7 +63,7 @@ void Make::Draw::Make_Draw_BeatLineManager::initBarVec(std::uint8_t initialQuont
 		barVec.at(i).resize(initialQuontize);
 		for (int k = 0; k < initialQuontize; k++) {
 			yMax = initY + (yWidth * p_musicData->getBarLength() * initialQuontize) - Global::WINDOW_HEIGHT *0.5;
-			barVec.at(i).at(k)=std::make_shared<Draw::Make_Draw_LineContainer>(i, timeSum, k, initY,yMax,p_noteManager);
+			barVec.at(i).at(k)=std::make_shared<Draw::Make_Draw_LineContainer>(i, timeSum, k,initialQuontize, initY,yMax,p_noteManager);
 			timeSum += timePerBeat;
 			initY -= yWidth;
 			totalScoreWidth += yWidth;
@@ -127,7 +127,7 @@ void Make::Draw::Make_Draw_BeatLineManager::initializeBySavaData(const std::shar
 
 		for (int k = 0; k < quo; k++) {
 			yMax = initY + (yWidth * p_musicData->getBarLength() * quo) - Global::WINDOW_HEIGHT * 0.5;
-			barVec.at(i).at(k) = std::make_shared<Draw::Make_Draw_LineContainer>(i,timeSum, k, initY, yMax,p_noteManager);
+			barVec.at(i).at(k) = std::make_shared<Draw::Make_Draw_LineContainer>(i,timeSum, k,quo, initY, yMax,p_noteManager);
 			timeSum += timePerBeat;
 			initY -= yWidth;
 			totalScoreWidth += yWidth;
@@ -245,7 +245,7 @@ void Make::Draw::Make_Draw_BeatLineManager::initOneBarLineByQuontizeChange() {
 		yMax -= yWidth;
 		yMin -= yWidth;
 		yChange -= yWidth;
-		barVec.at(id).at(i) = std::make_unique<Draw::Make_Draw_LineContainer>(id,timeSum, i, initY, yMax,p_noteManager);
+		barVec.at(id).at(i) = std::make_unique<Draw::Make_Draw_LineContainer>(id,timeSum, i,quontize, initY, yMax,p_noteManager);
 		barVec.at(id).at(i)->setYMin(yMin);
 	}
 

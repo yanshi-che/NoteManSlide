@@ -7,24 +7,8 @@ time(time),noteType(noteType),laneIndex(laneIndex),laneXRight(laneXRight),laneXL
 	done = false;
 	turn = false;
 	noteColor = GetColor(255, 255, 255);
-	if (laneIndex == 0) {
-		key = Global::lane0;
-	}
-	else if (laneIndex == 1) {
-		key = Global::lane1;
-	}
-	else if (laneIndex == 2) {
-		key = Global::lane2;
-	}
-	else if (laneIndex == 3) {
-		key = Global::lane3;
-	}
-	else if (laneIndex == 4) {
-		key = Global::lane4;
-	}
-	else if (laneIndex == 5) {
-		key = Global::lane5;
-	}
+	key = 0;
+	updateKey();
 }
 
 void Make::Play::Make_Play_NormalNote::check(double nowTime) {
@@ -57,10 +41,31 @@ void Make::Play::Make_Play_NormalNote::setDone(bool d) {
 }
 
 void Make::Play::Make_Play_NormalNote::update(double nowTime) {
-	y = Global::JUDGELINE_Y - ((time - nowTime) * Global::JUDGELINE_Y * Global::hiSpeed);
+	y = Global::JUDGELINE_Y - ((time - nowTime) * Global::JUDGELINE_Y * Global::g_hiSpeed);
 	if (turn && time + Global::MISS < nowTime) {
 		setDone(true);
 		p_score->plusMiss();
+	}
+}
+
+void Make::Play::Make_Play_NormalNote::updateKey() {
+	if (laneIndex == 0) {
+		key = Global::g_lane0;
+	}
+	else if (laneIndex == 1) {
+		key = Global::g_lane1;
+	}
+	else if (laneIndex == 2) {
+		key = Global::g_lane2;
+	}
+	else if (laneIndex == 3) {
+		key = Global::g_lane3;
+	}
+	else if (laneIndex == 4) {
+		key = Global::g_lane4;
+	}
+	else if (laneIndex == 5) {
+		key = Global::g_lane5;
 	}
 }
 
@@ -70,3 +75,4 @@ void Make::Play::Make_Play_NormalNote::draw() {
 			static_cast<float>(laneXLeft - Global::LENGTH_FROM_LANE), static_cast<float>(y + Global::NOTE_HEIGHT ), GetColor(255, 255, 255), true);
 	}
 }
+

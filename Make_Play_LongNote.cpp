@@ -17,29 +17,13 @@ Make::Play::Make_Play_LongNote::Make_Play_LongNote(const double startTime, const
 		judgeTime.push_back(t);
 		t += sixteenthTime;
 	}
-	if (laneIndex == 0) {
-		key = Global::lane0;
-	}
-	else if (laneIndex == 1) {
-		key = Global::lane1;
-	}
-	else if (laneIndex == 2) {
-		key = Global::lane2;
-	}
-	else if (laneIndex == 3) {
-		key = Global::lane3;
-	}
-	else if (laneIndex == 4) {
-		key = Global::lane4;
-	}
-	else if (laneIndex == 5) {
-		key = Global::lane5;
-	}
+	key = 0;
+	updateKey();
 }
 
 void Make::Play::Make_Play_LongNote::check(double nowTime) {
 	if (turn) {
-		if (judgeTimeCount != 0 && 1 <= p_keyHitCheck->getHitKeyForNote(key)) {
+		if (judgeTimeCount != 0 && 1 <= p_keyHitCheck->getHitKeyForNote(key) && isHit) {
 			if (judgeTimeCount < judgeTime.size() &&
 				nowJudgeTime - Global::GREAT < nowTime && nowTime < nowJudgeTime + Global::GREAT) {
 				p_score->plusPerfect();
@@ -57,11 +41,7 @@ void Make::Play::Make_Play_LongNote::check(double nowTime) {
 				isHit = true;
 			}
 		}
-		else if(judgeTimeCount < judgeTime.size() &&
-			nowJudgeTime - Global::GREAT < nowTime && nowTime < nowJudgeTime + Global::GREAT){
-			isHit = false;
-		}
-		if (judgeTimeCount != 0 && startTime < nowTime && nowTime < endTime) {
+		if (startTime < nowTime && nowTime < endTime) {
 			if (isHit) {
 				alpha = 252;
 			}
@@ -83,8 +63,8 @@ void Make::Play::Make_Play_LongNote::setDone(bool d) {
 }
 
 void Make::Play::Make_Play_LongNote::update(double nowTime) {
-	y = Global::JUDGELINE_Y - ((startTime - nowTime) * Global::JUDGELINE_Y * Global::hiSpeed);
-	longNoteHeight = y - (Global::JUDGELINE_Y - ((endTime - nowTime) * Global::JUDGELINE_Y * Global::hiSpeed));
+	y = Global::JUDGELINE_Y - ((startTime - nowTime) * Global::JUDGELINE_Y * Global::g_hiSpeed);
+	longNoteHeight = y - (Global::JUDGELINE_Y - ((endTime - nowTime) * Global::JUDGELINE_Y * Global::g_hiSpeed));
 	if (turn) {
 		if (endTime + Global::MISS < nowTime) {
 			setDone(true);
@@ -92,8 +72,30 @@ void Make::Play::Make_Play_LongNote::update(double nowTime) {
 		if (judgeTimeCount < judgeTime.size() && nowJudgeTime + Global::GREAT < nowTime) {
 			p_score->plusMiss();
 			nowJudgeTime = judgeTime.at(judgeTimeCount);
+			isHit = false;
 			++judgeTimeCount;
 		}
+	}
+}
+
+void Make::Play::Make_Play_LongNote::updateKey() {
+	if (laneIndex == 0) {
+		key = Global::g_lane0;
+	}
+	else if (laneIndex == 1) {
+		key = Global::g_lane1;
+	}
+	else if (laneIndex == 2) {
+		key = Global::g_lane2;
+	}
+	else if (laneIndex == 3) {
+		key = Global::g_lane3;
+	}
+	else if (laneIndex == 4) {
+		key = Global::g_lane4;
+	}
+	else if (laneIndex == 5) {
+		key = Global::g_lane5;
 	}
 }
 

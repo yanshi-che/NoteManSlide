@@ -26,74 +26,74 @@ void Make::Singleton::Make_Singleton_KeyHitCheck::destroyInstance() {
 void Make::Singleton::Make_Singleton_KeyHitCheck::checkHitKey() {
 	GetHitKeyStateAll(buf);//一度に通常のハードでは6個までしか入力を受け付けない
 
-	if (buf[Global::lane0] == 1) {
-		++key[Global::lane0];
+	if (buf[Global::g_lane0] == 1) {
+		++key[Global::g_lane0];
 	}
 	else {
-		key[Global::lane0] = 0;
+		key[Global::g_lane0] = 0;
 	}
 
-	if (buf[Global::lane1] == 1) {
-		++key[Global::lane1];
+	if (buf[Global::g_lane1] == 1) {
+		++key[Global::g_lane1];
 	}
 	else {
-		key[Global::lane1] = 0;
+		key[Global::g_lane1] = 0;
 	}
 
-	if (buf[Global::lane2] == 1) {
-		++key[Global::lane2];
+	if (buf[Global::g_lane2] == 1) {
+		++key[Global::g_lane2];
 	}
 	else {
-		key[Global::lane2] = 0;
+		key[Global::g_lane2] = 0;
 	}
 
-	if (buf[Global::lane3] == 1) {
-		++key[Global::lane3];
+	if (buf[Global::g_lane3] == 1) {
+		++key[Global::g_lane3];
 	}
 	else {
-		key[Global::lane3] = 0;
+		key[Global::g_lane3] = 0;
 	}
 
-	if (buf[Global::lane4] == 1) {
-		++key[Global::lane4];
+	if (buf[Global::g_lane4] == 1) {
+		++key[Global::g_lane4];
 	}
 	else {
-		key[Global::lane4] = 0;
+		key[Global::g_lane4] = 0;
 	}
 
-	if (buf[Global::lane5] == 1) {
-		++key[Global::lane5];
+	if (buf[Global::g_lane5] == 1) {
+		++key[Global::g_lane5];
 	}
 	else {
-		key[Global::lane5] = 0;
+		key[Global::g_lane5] = 0;
 	}
 
-	if (buf[Global::laneLL] == 1) {
-		++key[Global::laneLL];
+	if (buf[Global::g_laneLL] == 1) {
+		++key[Global::g_laneLL];
 	}
 	else {
-		key[Global::laneLL] = 0;
+		key[Global::g_laneLL] = 0;
 	}
 
-	if (buf[Global::laneLR] == 1) {
-		++key[Global::laneLR];
+	if (buf[Global::g_laneLR] == 1) {
+		++key[Global::g_laneLR];
 	}
 	else {
-		key[Global::laneLR] = 0;
+		key[Global::g_laneLR] = 0;
 	}
 
-	if (buf[Global::laneRR] == 1) {
-		++key[Global::laneRR];
+	if (buf[Global::g_laneRR] == 1) {
+		++key[Global::g_laneRR];
 	}
 	else {
-		key[Global::laneRR] = 0;
+		key[Global::g_laneRR] = 0;
 	}
 
-	if (buf[Global::laneRL] == 1) {
-		++key[Global::laneRL];
+	if (buf[Global::g_laneRL] == 1) {
+		++key[Global::g_laneRL];
 	}
 	else {
-		key[Global::laneRL] = 0;
+		key[Global::g_laneRL] = 0;
 	}
 }
 

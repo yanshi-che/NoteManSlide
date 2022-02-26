@@ -18,8 +18,8 @@ void Make::Play::Make_Play_TestPlayManager::draw() {
 	p_lane->draw();
 	p_score->draw();
 	if (!isStart) {
-		DrawString(300, 330, "Press Y to Start", GetColor(255, 255, 255));
-		if (p_keyHitCheck->getHitKeyUsual(KEY_INPUT_Y)) {
+		DrawString(280, 330, "Press Space to Start", GetColor(255, 255, 255));
+		if (p_keyHitCheck->getHitKeyUsual(KEY_INPUT_SPACE)) {
 			this->startClock = GetNowHiPerformanceCount();
 			isStart = true;
 		}
@@ -51,15 +51,13 @@ void Make::Play::Make_Play_TestPlayManager::draw() {
 				longNote.at(i)->check(nowTime);
 			}
 		}
-		for (int i = 0, iSize = static_cast<int>(slideNoteVec.size()); i < iSize; ++i) {
-			if (slideNoteVec.at(0).size() != NULL) {
-				slideNoteVec.at(0).at(i)->update(nowTime);
-				slideNoteVec.at(0).at(i)->draw();
-			}
-			if (slideNoteVec.at(1).size() != NULL) {
-				slideNoteVec.at(1).at(i)->update(nowTime);
-				slideNoteVec.at(1).at(i)->draw();
-			}
+		for (int i = 0, iSize = static_cast<int>(slideNoteVec.at(0).size()); i < iSize; ++i) {
+			slideNoteVec.at(0).at(i)->update(nowTime);
+			slideNoteVec.at(0).at(i)->draw();
+		}
+		for (int i = 0, iSize = static_cast<int>(slideNoteVec.at(1).size()); i < iSize; ++i) {
+			slideNoteVec.at(1).at(i)->update(nowTime);
+			slideNoteVec.at(1).at(i)->draw();
 		}
 		if (slideNote.at(0) != nullptr) {
 			slideNote.at(0)->check(nowTime);
@@ -68,8 +66,9 @@ void Make::Play::Make_Play_TestPlayManager::draw() {
 			slideNote.at(1)->check(nowTime);
 		}
 	}
-	
+
 	drawDown();
+	Global::g_hiSpeed = 0.5;
 }
 
 void Make::Play::Make_Play_TestPlayManager::drawDown() {
@@ -261,6 +260,24 @@ void Make::Play::Make_Play_TestPlayManager::nextNote(const std::uint8_t noteType
 			slideNote.at(laneIndex) = nullptr;
 		}
 	}
+}
+
+void Make::Play::Make_Play_TestPlayManager::updateKey() {
+	for (int i = 0, iSize = Global::LANE_AMOUNT; i < iSize; ++i) {
+		for (int k = 0, kSize = static_cast<int>(normalNoteVec.at(i).size()); k < kSize; ++k) {
+			normalNoteVec.at(i).at(k)->updateKey();
+		}
+		for (int k = 0, kSize = static_cast<int>(longNoteVec.at(i).size()); k < kSize; ++k) {
+			longNoteVec.at(i).at(k)->updateKey();
+		}
+	}
+	for (int i = 0, iSize = static_cast<int>(slideNoteVec.at(0).size()); i < iSize; ++i) {
+		slideNoteVec.at(0).at(i)->updateKey();
+	}
+	for (int i = 0, iSize = static_cast<int>(slideNoteVec.at(1).size()); i < iSize; ++i) {
+		slideNoteVec.at(1).at(i)->updateKey();
+	}
+
 }
 
 const std::function<void()> Make::Play::Make_Play_TestPlayManager::getDrawFunc() {
