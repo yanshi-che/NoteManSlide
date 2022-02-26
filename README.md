@@ -1,18 +1,28 @@
 # NoteManSlide ポートフォリオ
 ### 概要
-このプログラムは音ゲーの譜面をGUIベースで作成できるものです。テストプレイ機能もあります。  
+このプログラムは自作音ゲーの譜面をGUIベースで作成できるものです。テストプレイ機能もあります。  
 肝心の本体はまだ未開発ですので、現状の用途は自分で好きな譜面を作ってそれをテストプレイ機能で遊ぶことになります。  
 出力する譜面データはJSONファイルです。テストプレイでは実際に出力されるJSONデータから譜面を作っています。  
 対応するノーツは3種類で、普通のノーツとロングノーツとスライドノーツです。
-レーン数は6レーンとなっています。
+レーン数は6レーンとなっています。  
 
+<p>
+ <img src="https://github.com/yanshi-che/imageContainer/blob/main/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB1.PNG" width=400px height=400px />
+<img src="https://github.com/yanshi-che/imageContainer/blob/main/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB2.PNG" width=400px height=400px />
+</p>
+  
+### ポイント
+ポイントは何といっても譜面が視覚的に簡単に作れるところです。音ゲーに曲と譜面は必要不可欠です。中にはCSVファイルに手書きで書いているケースもあったりしますが、それだと時間がかかりますし、何より見た目が分かりにくいです。これを作ったことで譜面の供給効率が劇的に改善します。
+  
 ### 起動用exeファイルのURL
-
-
-### 使い方
-
-
-
+https://drive.google.com/file/d/1v0bAv89_j6ZZxMdS-jsfZfoZTpFmayzi/view?usp=sharing
+  
+### 使用技術・ライブラリ
+- C++
+- boosC++ version 1.77
+- winAPI
+- Dxlib windows版 ForVisualStudio version 3.22
+  
 ### 使用しているライブラリのライセンス表記
 - Boost Library Licence
   
