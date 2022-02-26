@@ -69,17 +69,8 @@ void Make::Play::Make_Play_TestPlayManager::draw() {
 	}
 
 	drawDown();
-	if (p_keyHitCheck->getHitKeyForNote(KEY_INPUT_UP) == 1 || 60 < p_keyHitCheck->getHitKeyForNote(KEY_INPUT_UP)) {
-		if (Global::g_hiSpeed < 1.5) {
-			Global::g_hiSpeed += 0.01;
-		}
-	}
-	else if (p_keyHitCheck->getHitKeyForNote(KEY_INPUT_DOWN) == 1 || 60 < p_keyHitCheck->getHitKeyForNote(KEY_INPUT_DOWN)) {
-		if ( 0.02 < Global::g_hiSpeed) {
-			Global::g_hiSpeed -= 0.01;
-		}
-	}
 	drawHiSpeed();
+	drawJudgeCorrection();
 }
 
 void Make::Play::Make_Play_TestPlayManager::drawDown() {
@@ -89,8 +80,33 @@ void Make::Play::Make_Play_TestPlayManager::drawDown() {
 }
 
 void Make::Play::Make_Play_TestPlayManager::drawHiSpeed() {
+	if (p_keyHitCheck->getHitKeyForNote(KEY_INPUT_UP) == 1 || 60 < p_keyHitCheck->getHitKeyForNote(KEY_INPUT_UP)) {
+		if (Global::g_hiSpeed < 1.5) {
+			Global::g_hiSpeed += 0.01;
+		}
+	}
+	else if (p_keyHitCheck->getHitKeyForNote(KEY_INPUT_DOWN) == 1 || 60 < p_keyHitCheck->getHitKeyForNote(KEY_INPUT_DOWN)) {
+		if (0.02 < Global::g_hiSpeed) {
+			Global::g_hiSpeed -= 0.01;
+		}
+	}
 	DrawStringF(10, 200,"HiSpeed :", strColor);
-	DrawFormatStringF(100,200,strColor,"%.1f",Global::g_hiSpeed * 10);
+	DrawFormatStringF(100,200,strColor,"%.1f",Global::g_hiSpeed * 10.0);
+}
+
+void Make::Play::Make_Play_TestPlayManager::drawJudgeCorrection() {
+	if (p_keyHitCheck->getHitKeyForNote(KEY_INPUT_RIGHT) == 1 || 60 < p_keyHitCheck->getHitKeyForNote(KEY_INPUT_RIGHT)) {
+		if (Global::g_judgeCorrection < 0.05) {
+			Global::g_judgeCorrection += 0.01;
+		}
+	}
+	else if (p_keyHitCheck->getHitKeyForNote(KEY_INPUT_LEFT) == 1 || 60 < p_keyHitCheck->getHitKeyForNote(KEY_INPUT_LEFT)) {
+		if (-0.05 < Global::g_judgeCorrection) {
+			Global::g_judgeCorrection -= 0.01;
+		}
+	}
+	DrawStringF(10, 230, "”»’è’²® :", strColor);
+	DrawFormatStringF(100, 230, strColor, "%.1f", Global::g_judgeCorrection * 100.0);
 }
 
 void Make::Play::Make_Play_TestPlayManager::finalize() {
