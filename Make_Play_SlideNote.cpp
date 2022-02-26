@@ -8,18 +8,8 @@ Make::Play::Make_Play_SlideNote::Make_Play_SlideNote(const double time, const st
 	y = 0;
 	done = false;
 	turn = false;
-	if (rightOrLeft == 0 && directionRightOrLeft == 0) {
-		key = Global::laneRR;
-	}
-	else if (rightOrLeft == 0 && directionRightOrLeft == 1) {
-		key = Global::laneRL;
-	}
-	else if (rightOrLeft == 1 && directionRightOrLeft == 0) {
-		key = Global::laneLR;
-	}
-	else if (rightOrLeft == 1 && directionRightOrLeft == 1) {
-		key = Global::laneLL;
-	}
+	key = 0;
+	updateKey();
 }
 
 void Make::Play::Make_Play_SlideNote::check(double nowTime) {
@@ -43,10 +33,25 @@ void Make::Play::Make_Play_SlideNote::setDone(bool d) {
 }
 
 void Make::Play::Make_Play_SlideNote::update(double nowTime) {
-	y = Global::JUDGELINE_Y - ((time - nowTime) * Global::JUDGELINE_Y * Global::hiSpeed);
+	y = Global::JUDGELINE_Y - ((time - nowTime) * Global::JUDGELINE_Y * Global::g_hiSpeed);
 	if (turn && time + Global::MISS < nowTime) {
 		setDone(true);
 		p_score->plusMiss();
+	}
+}
+
+void Make::Play::Make_Play_SlideNote::updateKey() {
+	if (rightOrLeft == 0 && directionRightOrLeft == 0) {
+		key = Global::g_laneRR;
+	}
+	else if (rightOrLeft == 0 && directionRightOrLeft == 1) {
+		key = Global::g_laneRL;
+	}
+	else if (rightOrLeft == 1 && directionRightOrLeft == 0) {
+		key = Global::g_laneLR;
+	}
+	else if (rightOrLeft == 1 && directionRightOrLeft == 1) {
+		key = Global::g_laneLL;
 	}
 }
 

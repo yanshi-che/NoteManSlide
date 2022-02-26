@@ -14,8 +14,8 @@ std::uint16_t Make::Draw::Make_Draw_LineContainer::getbarIDForChangeQuontize() {
 	return barIDForChangeQuontize;
 }
 
-Make::Draw::Make_Draw_LineContainer::Make_Draw_LineContainer(const std::uint16_t barID,const double time,const std::uint8_t beatID,const double y,const double yMax, const std::shared_ptr<Note::Make_Note_NoteManager>& p_noteManager) :
-	barID(barID),laneAmount(Global::LANE_AMOUNT),time(time), beatID(beatID),p_noteManager(p_noteManager){
+Make::Draw::Make_Draw_LineContainer::Make_Draw_LineContainer(const std::uint16_t barID,const double time,const std::uint8_t beatID, const std::uint8_t quontize,const double y,const double yMax, const std::shared_ptr<Note::Make_Note_NoteManager>& p_noteManager) :
+	barID(barID),laneAmount(Global::LANE_AMOUNT),time(time), beatID(beatID),quontize(quontize),p_noteManager(p_noteManager){
 	this->y = y;
 	this->yMax = yMax;
 	yMin = y;
@@ -44,11 +44,40 @@ Make::Draw::Make_Draw_LineContainer::Make_Draw_LineContainer(const std::uint16_t
 		brend = 128;
 	}
 	else {
-		if (beatID % 4 == 0) {
-			color = GetColor(108, 244, 98);
-		}
-		else {
+		if (quontize == Global::QUARTER) {
 			color = GetColor(255, 128, 0);
+		}
+		else if(quontize == Global::EIGHTH){
+			if (beatID % 2 == 0) {
+				color = GetColor(108, 244, 98);
+			}
+			else {
+				color = GetColor(255, 128, 0);
+			}
+		}
+		else if (quontize == Global::SIXTEENTH) {
+			if (beatID % 4 == 0) {
+				color = GetColor(108, 244, 98);
+			}
+			else {
+				color = GetColor(255, 128, 0);
+			}
+		}
+		else if (quontize == Global::THIRTYSECOND) {
+			if (beatID % 8 == 0) {
+				color = GetColor(108, 244, 98);
+			}
+			else {
+				color = GetColor(255, 128, 0);
+			}
+		}
+		else if (quontize == Global::TRIPLET) {
+			if (beatID % 3 == 0) {
+				color = GetColor(108, 244, 98);
+			}
+			else {
+				color = GetColor(255, 128, 0);
+			}
 		}
 		brend = 96;
 		lineThickness = 5;
@@ -204,7 +233,7 @@ void Make::Draw::Make_Draw_LineContainer::updateByInitOneBar(const double yWidth
 }
 
 bool Make::Draw::Make_Draw_LineContainer::checkClickBorder() {
-	if (std::abs(mouseY - y) <= Global::clickWidth) {
+	if (std::abs(mouseY - y) <= Global::g_clickWidth) {
 		return true;
 	}
 	return false;
