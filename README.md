@@ -34,6 +34,7 @@ https://drive.google.com/file/d/1v0bAv89_j6ZZxMdS-jsfZfoZTpFmayzi/view?usp=shari
 - 4/4拍子を前提としているため、それ以外の拍子の対応
 - 使用しているJSONパースでは日本語が対応していないためその対応
 - 直前の操作のやり直し機能の追加
+- テストプレイ機能での、曲の巻き戻し機能など
   
 ### 使用しているライブラリのライセンス表記
 - Boost Library Licence
