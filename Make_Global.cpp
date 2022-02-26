@@ -2,14 +2,15 @@
 
 //ユーザー定義
  double Make::Global::g_hiSpeed = 0.3;
+ double Make::Global::g_judgeCorrection = 0.0;
  std::uint16_t Make::Global::g_lane0 = KEY_INPUT_D;
  std::uint16_t Make::Global::g_lane1 = KEY_INPUT_F;
  std::uint16_t Make::Global::g_lane2 = KEY_INPUT_G;
  std::uint16_t Make::Global::g_lane3 = KEY_INPUT_H;
  std::uint16_t Make::Global::g_lane4 = KEY_INPUT_J;
  std::uint16_t Make::Global::g_lane5 = KEY_INPUT_K;
- std::uint16_t Make::Global::g_laneRR = KEY_INPUT_U;
- std::uint16_t Make::Global::g_laneRL = KEY_INPUT_I;
+ std::uint16_t Make::Global::g_laneRR = KEY_INPUT_I;
+ std::uint16_t Make::Global::g_laneRL = KEY_INPUT_U;
  std::uint16_t Make::Global::g_laneLR = KEY_INPUT_T;
  std::uint16_t Make::Global::g_laneLL = KEY_INPUT_R;
 //ボルテコン

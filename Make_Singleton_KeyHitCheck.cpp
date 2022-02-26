@@ -109,6 +109,20 @@ void Make::Singleton::Make_Singleton_KeyHitCheck::checkHitKey() {
 	else {
 		key[KEY_INPUT_DOWN] = 0;
 	}
+
+	if (buf[KEY_INPUT_LEFT] == 1) {
+		++key[KEY_INPUT_LEFT];
+	}
+	else {
+		key[KEY_INPUT_LEFT] = 0;
+	}
+
+	if (buf[KEY_INPUT_RIGHT] == 1) {
+		++key[KEY_INPUT_RIGHT];
+	}
+	else {
+		key[KEY_INPUT_RIGHT] = 0;
+	}
 }
 
 std::uint16_t Make::Singleton::Make_Singleton_KeyHitCheck::getHitKeyForNote(std::uint16_t keyNum) {

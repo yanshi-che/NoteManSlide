@@ -43,6 +43,7 @@ namespace Make {
 
 		//ユーザー定義
 		extern double g_hiSpeed;
+		extern double g_judgeCorrection;
 		extern std::uint16_t g_lane0;
 		extern std::uint16_t g_lane1;
 		extern std::uint16_t g_lane2;

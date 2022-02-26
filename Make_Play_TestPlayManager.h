@@ -56,6 +56,7 @@ namespace Make {
 			void draw();
 			void drawDown();
 			void drawHiSpeed();
+			void drawJudgeCorrection();
 		public:
 			Make_Play_TestPlayManager();
 			void finalize();

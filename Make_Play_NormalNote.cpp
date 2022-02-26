@@ -14,15 +14,15 @@ time(time),noteType(noteType),laneIndex(laneIndex),laneXRight(laneXRight),laneXL
 void Make::Play::Make_Play_NormalNote::check(double nowTime) {
 	if (turn) {
 		if (p_keyHitCheck->getHitKeyForNote(key) == 1) {
-			if (time - Global::PERFECT < nowTime && nowTime < time + Global::PERFECT) {
+			if (time - Global::PERFECT < nowTime + Global::g_judgeCorrection && nowTime + Global::g_judgeCorrection < time + Global::PERFECT) {
 				setDone(true);
 				p_score->plusPerfect();
 			}
-			else if (time - Global::GREAT < nowTime && nowTime < time + Global::GREAT) {
+			else if (time - Global::GREAT < nowTime + Global::g_judgeCorrection && nowTime + Global::g_judgeCorrection < time + Global::GREAT) {
 				setDone(true);
 				p_score->plusGreat();
 			}
-			else if (time - Global::MISS < nowTime && nowTime < time + Global::MISS) {
+			else if (time - Global::MISS < nowTime + Global::g_judgeCorrection && nowTime + Global::g_judgeCorrection < time + Global::MISS) {
 				setDone(true);
 				p_score->plusMiss();
 			}
@@ -41,8 +41,8 @@ void Make::Play::Make_Play_NormalNote::setDone(bool d) {
 }
 
 void Make::Play::Make_Play_NormalNote::update(double nowTime) {
-	y = Global::JUDGELINE_Y - ((time - nowTime) * Global::JUDGELINE_Y * Global::g_hiSpeed);
-	if (turn && time + Global::MISS < nowTime) {
+	y = Global::JUDGELINE_Y - ((time - nowTime ) * Global::JUDGELINE_Y * Global::g_hiSpeed);
+	if (turn && time + Global::MISS + Global::g_judgeCorrection < nowTime + Global::g_judgeCorrection) {
 		setDone(true);
 		p_score->plusMiss();
 	}
