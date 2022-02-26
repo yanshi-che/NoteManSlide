@@ -16,7 +16,14 @@ namespace Make {
 			std::string p;
 			std::string g;
 			std::string m;
+			std::string judge;
+			std::uint16_t blend;
 			std::int32_t color;
+			std::int32_t judgeColor;
+			std::uint8_t initFontSize;
+			std::uint8_t judgeFontSize;
+			void drawJudge();
+			void drawScore();
 		public:
 			Make_Play_Score();
 			void draw();

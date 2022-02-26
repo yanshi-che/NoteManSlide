@@ -11,6 +11,7 @@ Make::Play::Make_Play_TestPlayManager::Make_Play_TestPlayManager() {
 	nowTime = 0;
 	startDelay = 5.0;
 	downColor = GetColor(0, 0, 0);
+	strColor = GetColor(255, 255, 255);
 	p_keyHitCheck = Singleton::Make_Singleton_KeyHitCheck::getInstance();
 }
 
@@ -18,7 +19,7 @@ void Make::Play::Make_Play_TestPlayManager::draw() {
 	p_lane->draw();
 	p_score->draw();
 	if (!isStart) {
-		DrawString(280, 330, "Press Space to Start", GetColor(255, 255, 255));
+		DrawString(280, 330, "Press Space to Start", strColor);
 		if (p_keyHitCheck->getHitKeyUsual(KEY_INPUT_SPACE)) {
 			this->startClock = GetNowHiPerformanceCount();
 			isStart = true;
@@ -68,13 +69,28 @@ void Make::Play::Make_Play_TestPlayManager::draw() {
 	}
 
 	drawDown();
-	Global::g_hiSpeed = 0.5;
+	if (p_keyHitCheck->getHitKeyForNote(KEY_INPUT_UP) == 1 || 60 < p_keyHitCheck->getHitKeyForNote(KEY_INPUT_UP)) {
+		if (Global::g_hiSpeed < 1.5) {
+			Global::g_hiSpeed += 0.01;
+		}
+	}
+	else if (p_keyHitCheck->getHitKeyForNote(KEY_INPUT_DOWN) == 1 || 60 < p_keyHitCheck->getHitKeyForNote(KEY_INPUT_DOWN)) {
+		if ( 0.02 < Global::g_hiSpeed) {
+			Global::g_hiSpeed -= 0.01;
+		}
+	}
+	drawHiSpeed();
 }
 
 void Make::Play::Make_Play_TestPlayManager::drawDown() {
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200);
 	DrawBoxAA(static_cast<float>(Global::PLAY_LANE_X_MIN + 1), static_cast<float>(Global::JUDGELINE_Y + 1.0), static_cast<float>(Global::PLAY_LANE_X_MAX - 1), static_cast<float>(Global::WINDOW_HEIGHT), downColor, true);
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+}
+
+void Make::Play::Make_Play_TestPlayManager::drawHiSpeed() {
+	DrawStringF(10, 200,"HiSpeed :", strColor);
+	DrawFormatStringF(100,200,strColor,"%.1f",Global::g_hiSpeed * 10);
 }
 
 void Make::Play::Make_Play_TestPlayManager::finalize() {

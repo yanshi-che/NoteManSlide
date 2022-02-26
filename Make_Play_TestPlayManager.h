@@ -49,11 +49,13 @@ namespace Make {
 			bool isMusicStart;
 
 			double startDelay;
+			std::int32_t strColor;
 			std::int32_t downColor;
 
 			void nextNote(const std::uint8_t noteType, const std::uint8_t laneIndex);//”»’è‚ğ“¯‚¶ƒŒ[ƒ“‚ÌŸ‚Ìƒm[ƒc‚ÉˆÚ‚·
 			void draw();
 			void drawDown();
+			void drawHiSpeed();
 		public:
 			Make_Play_TestPlayManager();
 			void finalize();
