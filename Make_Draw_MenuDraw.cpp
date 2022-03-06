@@ -12,15 +12,22 @@ Make::Draw::Make_Draw_MenuDraw::Make_Draw_MenuDraw(){
 	p_beatLine = std::make_shared<Draw::Make_Draw_BeatLineManager>();
 	drawFunc =p_beatLine->getDrawFunc();
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, MENUITEM_IDTOP, FALSE, "ファイル(&F)", File);
-	AddMenuItem(MENUITEM_ADD_CHILD, NULL, File, FALSE, "新規作成(&N)", NewFile);
-	AddMenuItem(MENUITEM_ADD_CHILD, NULL, File, FALSE, "開く(&O)", Open);
-	AddMenuItem(MENUITEM_ADD_CHILD, NULL, File, FALSE, "保存(&S)", Save);
-	AddMenuItem(MENUITEM_ADD_CHILD, NULL, File, FALSE, "エクスポート(&E)", Export);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, File, FALSE, "新規作成(&Ctrl+N)", NewFile);
+	AddKeyAccel_ID(NewFile,KEY_INPUT_N,1,0,0);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, File, FALSE, "開く(&Ctrl+O)", Open);
+	AddKeyAccel_ID(Open, KEY_INPUT_O, 1, 0, 0);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, File, FALSE, "保存(&Ctrl+S)", Save);
+	AddKeyAccel_ID(Save, KEY_INPUT_S, 1, 0, 0);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, File, FALSE, "エクスポート(&Ctrl+Shift+E)", Export);
+	AddKeyAccel_ID(Export, KEY_INPUT_E, 1, 0, 1);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, File, TRUE, NULL, 0);
-	AddMenuItem(MENUITEM_ADD_CHILD, NULL, File, FALSE, "終了(&X)", Exit);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, File, FALSE, "終了(&Ctrl+Shift+X)", Exit);
+	AddKeyAccel_ID(Exit, KEY_INPUT_X, 1, 0,1);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, MENUITEM_IDTOP, FALSE, "テスト(&T)", Test);
-	AddMenuItem(MENUITEM_ADD_CHILD, NULL, Test, FALSE, "テストプレイ開始(&P)", Play);
-	AddMenuItem(MENUITEM_ADD_CHILD, NULL, Test, FALSE, "テストプレイ終了(&S)", Stop);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, Test, FALSE, "テストプレイ開始(&Ctrl+P)", Play);
+	AddKeyAccel_ID(Play, KEY_INPUT_P, 1, 0, 0);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, Test, FALSE, "テストプレイ終了(&Ctrl+E)", Stop);
+	AddKeyAccel_ID(Stop, KEY_INPUT_E, 1, 0, 0);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, MENUITEM_IDTOP, FALSE, "クオンタイズ(全体)", WholeQUONTIZE);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, WholeQUONTIZE, FALSE, "4分音符", WholeQUARTER);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, WholeQUONTIZE, FALSE, "8分音符", WholeEIGHTH);
@@ -34,10 +41,14 @@ Make::Draw::Make_Draw_MenuDraw::Make_Draw_MenuDraw(){
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, PartQUONTIZE, FALSE, "32分音符", PartTHIRTYSECOND);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, PartQUONTIZE, FALSE, "3連符", PartTRIPLET);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, MENUITEM_IDTOP, FALSE, "ノーツの種類", NoteType);
-	AddMenuItem(MENUITEM_ADD_CHILD, NULL, NoteType, FALSE, "通常", Normal);
-	AddMenuItem(MENUITEM_ADD_CHILD, NULL, NoteType, FALSE, "ロング", Long);
-	AddMenuItem(MENUITEM_ADD_CHILD, NULL, NoteType, FALSE, "スライドR", SlideR);
-	AddMenuItem(MENUITEM_ADD_CHILD, NULL, NoteType, FALSE, "スライドL", SlideL);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, NoteType, FALSE, "通常(&Ctrl+F1)", Normal);
+	AddKeyAccel_ID(Normal, KEY_INPUT_F1, 1, 0, 0);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, NoteType, FALSE, "ロング(&Ctrl+F2)", Long);
+	AddKeyAccel_ID(Long, KEY_INPUT_F2, 1, 0, 0);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, NoteType, FALSE, "スライドR(&Ctrl+F3)", SlideR);
+	AddKeyAccel_ID(SlideR, KEY_INPUT_F3, 1, 0, 0);
+	AddMenuItem(MENUITEM_ADD_CHILD, NULL, NoteType, FALSE, "スライドL(&Ctrl+F4)", SlideL);
+	AddKeyAccel_ID(SlideL, KEY_INPUT_F4, 1, 0, 0);
 	SetMenuItemSelectCallBackFunction(MenuItemSelectCallBack);
 }
 
