@@ -2,6 +2,9 @@
 
 #include <functional>
 #include <memory>
+
+#include "Task.h"
+#include "SceneChanger.h"
 #include "Make_Draw_MenuDraw.h"
 #include "Make_Singleton_MouseOperationCheck.h"
 #include "Make_Singleton_KeyHitCheck.h"
@@ -9,7 +12,7 @@
 
 namespace Make {
 
-    class Make_DrawManager
+    class Make_DrawManager : public Task
     {
     private:
         std::unique_ptr<Draw::Make_Draw_MenuDraw> p_menu;
@@ -17,11 +20,11 @@ namespace Make {
         Singleton::Make_Singleton_KeyHitCheck* p_keyCheck;
         std::function<void()> drawFunc;
     public:
-        Make_DrawManager();
-        void initialize();
-        void finalize();
-        void update();
-        void draw();
+        Make_DrawManager(std::shared_ptr<SceneChanger>& sceneChanger);
+        void initialize() override;
+        void finalize() override;
+        void update() override;
+        void draw() override;
 
     };
 

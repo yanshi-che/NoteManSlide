@@ -1,5 +1,6 @@
 #include "Make_Draw_MenuDraw.h"
 
+std::shared_ptr<SceneChanger> Make::Draw::Make_Draw_MenuDraw::sceneChanger = nullptr;
 std::shared_ptr<Make::File::Make_File_MusicData> Make::Draw::Make_Draw_MenuDraw::p_musicData = nullptr;
 std::shared_ptr<Make::Play::Make_Play_MusicPlayer> Make::Draw::Make_Draw_MenuDraw::p_musicPlayer = nullptr;
 std::shared_ptr<Make::Draw::Make_Draw_BeatLineManager> Make::Draw::Make_Draw_MenuDraw::p_beatLine = nullptr;
@@ -8,7 +9,8 @@ std::function<void()> Make::Draw::Make_Draw_MenuDraw::drawFunc = nullptr;
 bool Make::Draw::Make_Draw_MenuDraw::isPlaying = false;
 bool Make::Draw::Make_Draw_MenuDraw::isFileOpen = false;
 
-Make::Draw::Make_Draw_MenuDraw::Make_Draw_MenuDraw(){
+Make::Draw::Make_Draw_MenuDraw::Make_Draw_MenuDraw(std::shared_ptr<SceneChanger>& sceneChanger){
+	this->sceneChanger = sceneChanger;
 	p_beatLine = std::make_shared<Draw::Make_Draw_BeatLineManager>();
 	drawFunc =p_beatLine->getDrawFunc();
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, MENUITEM_IDTOP, FALSE, "ƒtƒ@ƒCƒ‹(&F)", File);
@@ -129,15 +131,7 @@ void Make::Draw::Make_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemNam
 		}
 		break;
 	case Exit:
-		p_beatLine->finalize();
-		p_beatLine.reset();
-		if (p_testPlay != nullptr) {
-			p_testPlay->finalize();
-			p_testPlay.reset();
-		}
-		p_musicData.reset();
-		p_musicPlayer.reset();
-		SendMessage(GetMainWindowHandle(), WM_CLOSE, NULL, NULL);
+		sceneChanger->changeScene(Home);
 		break;
 	case Play:
 		if (p_musicData != nullptr && !isPlaying){
@@ -153,10 +147,6 @@ void Make::Draw::Make_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemNam
 	case Stop:
 		if (p_musicData != nullptr && isPlaying) {
 			drawFunc = p_beatLine->getDrawFunc();
-			p_testPlay->finalize();
-			p_testPlay.reset();
-			p_musicPlayer->stopMusic();
-			isPlaying = false;
 		}
 		break;
 	case WholeQUARTER:
@@ -225,8 +215,25 @@ void Make::Draw::Make_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemNam
 
 }
 
-void  Make::Draw::Make_Draw_MenuDraw::resetDrawFunc() {
+void Make::Draw::Make_Draw_MenuDraw::finalize() {
+	p_beatLine->finalize();
+	p_beatLine.reset();
+	if (p_testPlay != nullptr) {
+		p_testPlay->finalize();
+		p_testPlay.reset();
+	}
+	p_musicData.reset();
+	p_musicPlayer.reset();
+}
+
+void Make::Draw::Make_Draw_MenuDraw::resetDrawFunc() {
 	drawFunc = nullptr;
+	if (isPlaying) {
+		p_testPlay->finalize();
+		p_testPlay.reset();
+		p_musicPlayer->stopMusic();
+		isPlaying = false;
+	}
 }
 
 std::function<void()> Make::Draw::Make_Draw_MenuDraw::getDrawFunc() {
