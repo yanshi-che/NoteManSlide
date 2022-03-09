@@ -7,6 +7,7 @@
 
 #include "dxlib/DxLib.h"
 #include "boost/json.hpp"
+#include "SceneChanger.h"
 #include "Make_Global.h"
 #include "Make_File_MusicData.h"
 #include "Make_File_MusicFileIO.h"
@@ -52,6 +53,7 @@ namespace Make {
 				SlideR,
 				SlideL
 			};
+			static std::shared_ptr<SceneChanger> sceneChanger;
 			static std::shared_ptr<File::Make_File_MusicData> p_musicData;
 			static std::shared_ptr<Play::Make_Play_MusicPlayer> p_musicPlayer;
 			static std::shared_ptr<Play::Make_Play_TestPlayManager> p_testPlay;
@@ -64,7 +66,8 @@ namespace Make {
 			static void setMusicDataFromNewFile(const std::shared_ptr<File::Make_File_MusicData> md);
 			static void setMusicDataFromSaveFile(std::unique_ptr<File::Make_File_MusicData> md, const json::value val);
 		public:
-			Make_Draw_MenuDraw();
+			Make_Draw_MenuDraw(std::shared_ptr<SceneChanger>& sceneChanger);
+			void finalize();
 			void resetDrawFunc();
 			std::function<void()> getDrawFunc();
 		};
