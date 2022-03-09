@@ -15,7 +15,7 @@ std::uint16_t Make::Draw::Make_Draw_LineContainer::getbarIDForChangeQuontize() {
 }
 
 Make::Draw::Make_Draw_LineContainer::Make_Draw_LineContainer(const std::uint16_t barID,const double time,const std::uint8_t beatID, const std::uint8_t quontize,const double y,const double yMax, const std::shared_ptr<Note::Make_Note_NoteManager>& p_noteManager) :
-	barID(barID),laneAmount(Global::LANE_AMOUNT),time(time), beatID(beatID),quontize(quontize),p_noteManager(p_noteManager){
+	barID(barID),laneAmount(Global::LANE_AMOUNT),time(time), beatID(beatID),p_noteManager(p_noteManager){
 	this->y = y;
 	this->yMax = yMax;
 	yMin = y;
@@ -119,86 +119,102 @@ void Make::Draw::Make_Draw_LineContainer::drawLine()  {
 
 void Make::Draw::Make_Draw_LineContainer::drawNote()  {
 	if (noteType == Global::NOTETYPE_NORMAL) {
-		if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(mouseX,mouseY) && checkClickBorder()) {
-			for (int i = 0,iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
-				if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
-					p_noteManager->setNormalNote(barID, beatID, i);
-					clickObserver = true;
-					barIDForChangeQuontize = barID;
-					barIDColor = GetColor(36, 216, 236);
-					break;
-				}
-			}
-		}
-		if (clickObserver && p_mouseCheck->isMouseClickLeftUp(mouseX, mouseY)) {
-			clickObserver = false;
-		}
+		setNoteNormal();
 	}
 	else if (noteType == Global::NOTETYPE_LONG) {
-		if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(mouseX, mouseY) && checkClickBorder()) {
-			for (int i = 0, iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
-				if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
-					laneIDForLongNote = i;
-					p_noteManager->setLongNote(barID, beatID, i,&y,true);
-					clickObserver = true;
-					barIDForChangeQuontize = barID;
-					barIDColor = GetColor(36, 216, 236);
-					break;
-				}
-			}
-		}
-		if (clickObserver && p_mouseCheck->isMouseClickLeftUp(mouseX, mouseY)) {
-			double tempMouseY = static_cast<double>(mouseY);
-			p_noteManager->setLongNote(NULL, NULL, laneIDForLongNote, &tempMouseY , false);
-			clickObserver = false;
-		}
+		setNoteLong();
 	}
 	else if (noteType == Global::NOTETYPE_SLIDER) {
-		if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(mouseX, mouseY) && checkClickBorder()) {
-			for (int i = 0, iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
-				if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
-					p_noteManager->setSlideNote(barID, beatID, i,static_cast<double>(mouseX),true,true);
-					clickObserver = true;
-					barIDForChangeQuontize = barID;
-					barIDColor = GetColor(36, 216, 236);
-					break;
-				}
-			}
-		}
-		if (clickObserver && p_mouseCheck->isMouseClickLeftUp(mouseX, mouseY)) {
-			for (int i = 0, iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
-				if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
-					p_noteManager->setSlideNote(NULL, NULL, i,static_cast<double>(mouseX),false,true);
-					clickObserver = false;
-					break;
-				}
-			}
-		}
+		setNoteSlideR();
 	}
 	else if (noteType == Global::NOTETYPE_SLIDEL) {
-		if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(mouseX, mouseY) && checkClickBorder()) {
-			for (int i = 0, iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
-				if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
-					p_noteManager->setSlideNote(barID, beatID, i, static_cast<double>(mouseX), true,false);
-					clickObserver = true;
-					barIDForChangeQuontize = barID;
-					barIDColor = GetColor(36, 216, 236);
-					break;
-				}
-			}
-		}
-		if (clickObserver && p_mouseCheck->isMouseClickLeftUp(mouseX, mouseY)) {
-			for (int i = 0, iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
-				if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
-					p_noteManager->setSlideNote(NULL, NULL, i, static_cast<double>(mouseX), false,false);
-					clickObserver = false;
-					break;
-				}
-			}
-		}
+		setNoteSlideL();
 	}
 
 	p_noteManager->draw(barID,beatID);
+}
+
+void Make::Draw::Make_Draw_LineContainer::setNoteNormal() {
+	if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(mouseX, mouseY) && checkClickBorder()) {
+		for (int i = 0, iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
+			if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
+				p_noteManager->setNormalNote(barID, beatID, i);
+				clickObserver = true;
+				barIDForChangeQuontize = barID;
+				barIDColor = GetColor(36, 216, 236);
+				break;
+			}
+		}
+	}
+	if (clickObserver && p_mouseCheck->isMouseClickLeftUp(mouseX, mouseY)) {
+		clickObserver = false;
+	}
+}
+
+void Make::Draw::Make_Draw_LineContainer::setNoteLong() {
+	if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(mouseX, mouseY) && checkClickBorder()) {
+		for (int i = 0, iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
+			if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
+				laneIDForLongNote = i;
+				p_noteManager->setLongNote(barID, beatID, i, &y, true);
+				clickObserver = true;
+				barIDForChangeQuontize = barID;
+				barIDColor = GetColor(36, 216, 236);
+				break;
+			}
+		}
+	}
+	if (clickObserver && p_mouseCheck->isMouseClickLeftUp(mouseX, mouseY)) {
+		double tempMouseY = static_cast<double>(mouseY);
+		p_noteManager->setLongNote(NULL, NULL, laneIDForLongNote, &tempMouseY, false);
+		clickObserver = false;
+	}
+}
+
+void Make::Draw::Make_Draw_LineContainer::setNoteSlideR() {
+	if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(mouseX, mouseY) && checkClickBorder()) {
+		for (int i = 0, iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
+			if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
+				p_noteManager->setSlideNote(barID, beatID, i, static_cast<double>(mouseX), true, true);
+				clickObserver = true;
+				barIDForChangeQuontize = barID;
+				barIDColor = GetColor(36, 216, 236);
+				break;
+			}
+		}
+	}
+	if (clickObserver && p_mouseCheck->isMouseClickLeftUp(mouseX, mouseY)) {
+		for (int i = 0, iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
+			if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
+				p_noteManager->setSlideNote(NULL, NULL, i, static_cast<double>(mouseX), false, true);
+				clickObserver = false;
+				break;
+			}
+		}
+	}
+}
+
+void Make::Draw::Make_Draw_LineContainer::setNoteSlideL() {
+	if (!clickObserver && p_mouseCheck->isMouseClickLeftDown(mouseX, mouseY) && checkClickBorder()) {
+		for (int i = 0, iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
+			if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
+				p_noteManager->setSlideNote(barID, beatID, i, static_cast<double>(mouseX), true, false);
+				clickObserver = true;
+				barIDForChangeQuontize = barID;
+				barIDColor = GetColor(36, 216, 236);
+				break;
+			}
+		}
+	}
+	if (clickObserver && p_mouseCheck->isMouseClickLeftUp(mouseX, mouseY)) {
+		for (int i = 0, iSize = static_cast<int>(laneX.size()) - 1; i < iSize; ++i) {
+			if (laneX.at(i) < mouseX && mouseX < laneX.at(i + 1)) {
+				p_noteManager->setSlideNote(NULL, NULL, i, static_cast<double>(mouseX), false, false);
+				clickObserver = false;
+				break;
+			}
+		}
+	}
 }
 
 void Make::Draw::Make_Draw_LineContainer::setNoteType(std::uint8_t type)  {
