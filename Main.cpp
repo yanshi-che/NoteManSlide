@@ -57,7 +57,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return -1;			// エラーが起きたら直ちに終了
 	}
 	SetDrawScreen(DX_SCREEN_BACK);//裏画面で画面生成
-	SetBackgroundColor(20,20,20);
+	SetBackgroundColor(30,30,30);
 	Make::Make_DrawManager dm;
 	Fps fps;
 
