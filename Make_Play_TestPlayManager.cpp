@@ -5,8 +5,9 @@ Make::Play::Make_Play_TestPlayManager::Make_Play_TestPlayManager() {
 	p_musicPlayer = nullptr;
 	p_lane = nullptr;
 	p_score = nullptr;
+	drawNoteFunc = [&] {return drawBeforeStart(); };
 	startClock = 0;
-	isStart = false;
+	//isStart = false;
 	isMusicStart = false;
 	nowTime = 0;
 	startDelay = 5.0;
@@ -18,59 +19,18 @@ Make::Play::Make_Play_TestPlayManager::Make_Play_TestPlayManager() {
 void Make::Play::Make_Play_TestPlayManager::draw() {
 	p_lane->draw();
 	p_score->draw();
-	if (!isStart) {
-		DrawString(280, 330, "Press Space to Start", strColor);
-		if (p_keyHitCheck->getHitKeyUsual(KEY_INPUT_SPACE)) {
-			this->startClock = GetNowHiPerformanceCount();
-			isStart = true;
-		}
-	}
-	else {
-		nowTime = (double)((GetNowHiPerformanceCount() - startClock)) / 1000000.0;
-		if (!isMusicStart && startDelay <= nowTime) {
-			p_musicPlayer->startMusicFromHead();
-			isMusicStart = true;
-		}
-		for (int i = 0, iSize = static_cast<int>(barLineVec.size()); i < iSize; ++i) {
-			barLineVec.at(i)->update(nowTime);
-			barLineVec.at(i)->draw();
-		}
-		//座標更新
-		for (int i = 0, iSize = Global::LANE_AMOUNT; i < iSize; ++i) {
-			for (int k = 0, kSize = static_cast<int>(normalNoteVec.at(i).size()); k < kSize; ++k) {
-				normalNoteVec.at(i).at(k)->update(nowTime);
-				normalNoteVec.at(i).at(k)->draw();
-			}
-			for (int k = 0, kSize = static_cast<int>(longNoteVec.at(i).size()); k < kSize; ++k) {
-				longNoteVec.at(i).at(k)->update(nowTime);
-				longNoteVec.at(i).at(k)->draw();
-			}
-			if (normalNote.at(i) != nullptr) {
-				normalNote.at(i)->check(nowTime);
-			}
-			if (longNote.at(i) != nullptr) {
-				longNote.at(i)->check(nowTime);
-			}
-		}
-		for (int i = 0, iSize = static_cast<int>(slideNoteVec.at(0).size()); i < iSize; ++i) {
-			slideNoteVec.at(0).at(i)->update(nowTime);
-			slideNoteVec.at(0).at(i)->draw();
-		}
-		for (int i = 0, iSize = static_cast<int>(slideNoteVec.at(1).size()); i < iSize; ++i) {
-			slideNoteVec.at(1).at(i)->update(nowTime);
-			slideNoteVec.at(1).at(i)->draw();
-		}
-		if (slideNote.at(0) != nullptr) {
-			slideNote.at(0)->check(nowTime);
-		}
-		if (slideNote.at(1) != nullptr) {
-			slideNote.at(1)->check(nowTime);
-		}
-	}
-
+	drawNoteFunc();
 	drawDown();
 	drawHiSpeed();
 	drawJudgeCorrection();
+}
+
+void Make::Play::Make_Play_TestPlayManager::drawBeforeStart() {
+	DrawString(280, 330, "Press Space to Start", strColor);
+	if (p_keyHitCheck->getHitKeyUsual(KEY_INPUT_SPACE)) {
+		this->startClock = GetNowHiPerformanceCount();
+		drawNoteFunc = [&] {return drawNote(); };
+	}
 }
 
 void Make::Play::Make_Play_TestPlayManager::drawDown() {
@@ -107,6 +67,49 @@ void Make::Play::Make_Play_TestPlayManager::drawJudgeCorrection() {
 	}
 	DrawStringF(10, 230, "判定調整 :", strColor);
 	DrawFormatStringF(100, 230, strColor, "%.1f", Global::g_judgeCorrection * 100.0);
+}
+
+void Make::Play::Make_Play_TestPlayManager::drawNote() {
+	nowTime = (double)((GetNowHiPerformanceCount() - startClock)) / 1000000.0;
+	if (!isMusicStart && startDelay <= nowTime) {
+		p_musicPlayer->startMusicFromHead();
+		isMusicStart = true;
+	}
+	for (int i = 0, iSize = static_cast<int>(barLineVec.size()); i < iSize; ++i) {
+		barLineVec.at(i)->update(nowTime);
+		barLineVec.at(i)->draw();
+	}
+	//座標更新
+	for (int i = 0, iSize = Global::LANE_AMOUNT; i < iSize; ++i) {
+		for (int k = 0, kSize = static_cast<int>(normalNoteVec.at(i).size()); k < kSize; ++k) {
+			normalNoteVec.at(i).at(k)->update(nowTime);
+			normalNoteVec.at(i).at(k)->draw();
+		}
+		for (int k = 0, kSize = static_cast<int>(longNoteVec.at(i).size()); k < kSize; ++k) {
+			longNoteVec.at(i).at(k)->update(nowTime);
+			longNoteVec.at(i).at(k)->draw();
+		}
+		if (normalNote.at(i) != nullptr) {
+			normalNote.at(i)->check(nowTime);
+		}
+		if (longNote.at(i) != nullptr) {
+			longNote.at(i)->check(nowTime);
+		}
+	}
+	for (int i = 0, iSize = static_cast<int>(slideNoteVec.at(0).size()); i < iSize; ++i) {
+		slideNoteVec.at(0).at(i)->update(nowTime);
+		slideNoteVec.at(0).at(i)->draw();
+	}
+	for (int i = 0, iSize = static_cast<int>(slideNoteVec.at(1).size()); i < iSize; ++i) {
+		slideNoteVec.at(1).at(i)->update(nowTime);
+		slideNoteVec.at(1).at(i)->draw();
+	}
+	if (slideNote.at(0) != nullptr) {
+		slideNote.at(0)->check(nowTime);
+	}
+	if (slideNote.at(1) != nullptr) {
+		slideNote.at(1)->check(nowTime);
+	}
 }
 
 void Make::Play::Make_Play_TestPlayManager::finalize() {

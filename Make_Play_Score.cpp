@@ -32,12 +32,12 @@ void Make::Play::Make_Play_Score::drawJudge() {
 }
 
 void Make::Play::Make_Play_Score::drawScore() {
-	DrawStringF(580, 400, p.c_str(), color);
-	DrawStringF(580, 420, g.c_str(), color);
-	DrawStringF(580, 440, m.c_str(), color);
-	DrawFormatStringF(670, 400, color, "%d", perfect);
-	DrawFormatStringF(670, 420, color, "%d", great);
-	DrawFormatStringF(670, 440, color, "%d", miss);
+	DrawStringF(10, 400, p.c_str(), color);
+	DrawStringF(10, 420, g.c_str(), color);
+	DrawStringF(10, 440, m.c_str(), color);
+	DrawFormatStringF(100, 400, color, "%d", perfect);
+	DrawFormatStringF(100, 420, color, "%d", great);
+	DrawFormatStringF(100, 440, color, "%d", miss);
 }
 
 void Make::Play::Make_Play_Score::plusPerfect() {
