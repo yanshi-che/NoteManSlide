@@ -6,16 +6,17 @@
 #include <vector>
 
 #include "dxlib/DxLib.h"
-#include "Make_Global.h"
+#include "Global.h"
+#include "Config_Config.h"
 #include "Make_Play_Score.h"
-#include "Make_Singleton_KeyHitCheck.h"
+#include "Singleton_KeyHitCheck.h"
 
 namespace Make {
 	namespace Play {
 		class Make_Play_LongNote
 		{
 		private:
-			Singleton::Make_Singleton_KeyHitCheck* p_keyHitCheck;
+			::Singleton::Singleton_KeyHitCheck* p_keyHitCheck;
 			const double startTime;//ロングノーツの始点の時間
 			const double endTime;//ロングノーツの終点の時間
 			const double laneXRight;

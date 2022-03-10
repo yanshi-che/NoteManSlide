@@ -19,7 +19,7 @@ Make::Note::Make_Note_SlideNoteContainer::Make_Note_SlideNoteContainer(const std
 }
 
 void Make::Note::Make_Note_SlideNoteContainer::drawArrow() {
-	if (r_y < Make::Global::WINDOW_HEIGHT && r_y>0) {
+	if (r_y < Global::WINDOW_HEIGHT && r_y>0) {
 		if (noteFlag.first) {
 			if (noteDirectionRightOrLeft.first) {
 				for (int i = noteStartAndEndLane.first.second + 1; noteStartAndEndLane.first.first < i; --i) {
@@ -68,7 +68,7 @@ void Make::Note::Make_Note_SlideNoteContainer::drawArrow() {
 }
 
 void Make::Note::Make_Note_SlideNoteContainer::drawSlideNote() {
-	if (r_y < Make::Global::WINDOW_HEIGHT && r_y>0) {
+	if (r_y < Global::WINDOW_HEIGHT && r_y>0) {
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
 		if (noteFlag.first) {
 			if (noteDirectionRightOrLeft.first) {

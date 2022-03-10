@@ -7,7 +7,7 @@ time(time){
 }
 
 void Make::Play::Make_Play_BarLine::update(double nowTime) {
-	y = Global::JUDGELINE_Y - ((time - nowTime) * Global::JUDGELINE_Y * Global::g_hiSpeed);
+	y = Global::JUDGELINE_Y - ((time - nowTime) * Global::JUDGELINE_Y * Config::g_hiSpeed);
 }
 
 void Make::Play::Make_Play_BarLine::draw() {

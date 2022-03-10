@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "dxlib/DxLib.h"
-#include "Make_Global.h"
+#include "Global.h"
 
 namespace Make {
 	namespace Note {

@@ -4,7 +4,7 @@
 #include <regex>
 #include <Windows.h>
 
-#include "Make_Global.h"
+#include "Global.h"
 #include "Make_File_BaseFile.h"
 #include "resource.h"
 

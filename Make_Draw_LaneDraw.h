@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Make_Global.h"
+#include "Global.h"
 #include "dxlib/DxLib.h"
 
 namespace Make {

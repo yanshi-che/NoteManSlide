@@ -1,7 +1,8 @@
 #pragma once
 
 #include "dxlib/DxLib.h"
-#include "Make_Global.h"
+#include "Global.h"
+#include "Config_Config.h"
 
 namespace Make {
 	namespace Play {

@@ -2,7 +2,7 @@
 
 Make::Play::Make_Play_NormalNote::Make_Play_NormalNote(const double time, const std::uint8_t noteType, const std::uint8_t laneIndex, const double laneXRight, const double laneXLeft,const std::function<void(std::uint8_t, std::uint8_t)> nextNote, std::shared_ptr<Make_Play_Score>& p_score) :
 time(time),noteType(noteType),laneIndex(laneIndex),laneXRight(laneXRight),laneXLeft(laneXLeft),nextNote(nextNote),p_score(p_score){
-	p_keyHitCheck = Singleton::Make_Singleton_KeyHitCheck::getInstance();
+	p_keyHitCheck = ::Singleton::Singleton_KeyHitCheck::getInstance();
 	y = 0;
 	done = false;
 	turn = false;
@@ -13,16 +13,16 @@ time(time),noteType(noteType),laneIndex(laneIndex),laneXRight(laneXRight),laneXL
 
 void Make::Play::Make_Play_NormalNote::check(double nowTime) {
 	if (turn) {
-		if (p_keyHitCheck->getHitKeyForNote(key) == 1) {
-			if (time - Global::PERFECT < nowTime + Global::g_judgeCorrection && nowTime + Global::g_judgeCorrection < time + Global::PERFECT) {
+		if (p_keyHitCheck->getHitKeyLong(key) == 1) {
+			if (time - Global::PERFECT < nowTime + Config::g_judgeCorrection && nowTime + Config::g_judgeCorrection < time + Global::PERFECT) {
 				setDone(true);
 				p_score->plusPerfect();
 			}
-			else if (time - Global::GREAT < nowTime + Global::g_judgeCorrection && nowTime + Global::g_judgeCorrection < time + Global::GREAT) {
+			else if (time - Global::GREAT < nowTime + Config::g_judgeCorrection && nowTime + Config::g_judgeCorrection < time + Global::GREAT) {
 				setDone(true);
 				p_score->plusGreat();
 			}
-			else if (time - Global::MISS < nowTime + Global::g_judgeCorrection && nowTime + Global::g_judgeCorrection < time + Global::MISS) {
+			else if (time - Global::MISS < nowTime + Config::g_judgeCorrection && nowTime + Config::g_judgeCorrection < time + Global::MISS) {
 				setDone(true);
 				p_score->plusMiss();
 			}
@@ -41,8 +41,8 @@ void Make::Play::Make_Play_NormalNote::setDone(bool d) {
 }
 
 void Make::Play::Make_Play_NormalNote::update(double nowTime) {
-	y = Global::JUDGELINE_Y - ((time - nowTime ) * Global::JUDGELINE_Y * Global::g_hiSpeed);
-	if (turn && time + Global::MISS + Global::g_judgeCorrection < nowTime + Global::g_judgeCorrection) {
+	y = Global::JUDGELINE_Y - ((time - nowTime ) * Global::JUDGELINE_Y * Config::g_hiSpeed);
+	if (turn && time + Global::MISS + Config::g_judgeCorrection < nowTime + Config::g_judgeCorrection) {
 		setDone(true);
 		p_score->plusMiss();
 	}
@@ -50,22 +50,22 @@ void Make::Play::Make_Play_NormalNote::update(double nowTime) {
 
 void Make::Play::Make_Play_NormalNote::updateKey() {
 	if (laneIndex == 0) {
-		key = Global::g_lane0;
+		key = ::Config::g_lane0;
 	}
 	else if (laneIndex == 1) {
-		key = Global::g_lane1;
+		key = ::Config::g_lane1;
 	}
 	else if (laneIndex == 2) {
-		key = Global::g_lane2;
+		key = ::Config::g_lane2;
 	}
 	else if (laneIndex == 3) {
-		key = Global::g_lane3;
+		key = ::Config::g_lane3;
 	}
 	else if (laneIndex == 4) {
-		key = Global::g_lane4;
+		key = ::Config::g_lane4;
 	}
 	else if (laneIndex == 5) {
-		key = Global::g_lane5;
+		key = ::Config::g_lane5;
 	}
 }
 

@@ -2,7 +2,7 @@
 
 Make::Play::Make_Play_SlideNote::Make_Play_SlideNote(const double time, const std::uint8_t noteType, const double laneXStart, const double laneXEnd, const double laneWidth, const double arrowWidthBetween, const std::uint8_t rightOrLeft, const std::uint8_t directionRightOrLeft, const std::uint8_t slideLaneIndexStart, const std::uint8_t slideLaneIndexEnd, const std::function<void(std::uint8_t, std::uint8_t)> nextNote, const std::shared_ptr<Make_Play_Score>& p_score) :
 	time(time), noteType(noteType), laneXStart(laneXStart), laneXEnd(laneXEnd),laneWidth(laneWidth), arrowWidthBetween(arrowWidthBetween), rightOrLeft(rightOrLeft), directionRightOrLeft(directionRightOrLeft), slideLaneIndexStart(slideLaneIndexStart), slideLaneIndexEnd(slideLaneIndexEnd), nextNote(nextNote), p_score(p_score) {
-	p_keyHitCheck = Singleton::Make_Singleton_KeyHitCheck::getInstance();
+	p_keyHitCheck = ::Singleton::Singleton_KeyHitCheck::getInstance();
 	colorR = GetColor(228, 75, 198);
 	colorL = GetColor(62, 253, 249);
 	y = 0;
@@ -14,8 +14,8 @@ Make::Play::Make_Play_SlideNote::Make_Play_SlideNote(const double time, const st
 
 void Make::Play::Make_Play_SlideNote::check(double nowTime) {
 	if (turn) {
-		if (1 <= p_keyHitCheck->getHitKeyForNote(key)) {
-			if (time - Global::GREAT < nowTime + Global::g_judgeCorrection && nowTime + Global::g_judgeCorrection < time + Global::GREAT) {
+		if (1 <= p_keyHitCheck->getHitKeyLong(key)) {
+			if (time - Global::GREAT < nowTime + Config::g_judgeCorrection && nowTime + Config::g_judgeCorrection < time + Global::GREAT) {
 				setDone(true);
 				p_score->plusPerfect();
 			}
@@ -34,8 +34,8 @@ void Make::Play::Make_Play_SlideNote::setDone(bool d) {
 }
 
 void Make::Play::Make_Play_SlideNote::update(double nowTime) {
-	y = Global::JUDGELINE_Y - ((time - nowTime) * Global::JUDGELINE_Y * Global::g_hiSpeed);
-	if (turn && time + Global::MISS < nowTime + Global::g_judgeCorrection) {
+	y = Global::JUDGELINE_Y - ((time - nowTime) * Global::JUDGELINE_Y * Config::g_hiSpeed);
+	if (turn && time + Global::MISS < nowTime + Config::g_judgeCorrection) {
 		setDone(true);
 		p_score->plusMiss();
 	}
@@ -43,16 +43,16 @@ void Make::Play::Make_Play_SlideNote::update(double nowTime) {
 
 void Make::Play::Make_Play_SlideNote::updateKey() {
 	if (rightOrLeft == 0 && directionRightOrLeft == 0) {
-		key = Global::g_laneRR;
+		key = ::Config::g_laneRR;
 	}
 	else if (rightOrLeft == 0 && directionRightOrLeft == 1) {
-		key = Global::g_laneRL;
+		key = ::Config::g_laneRL;
 	}
 	else if (rightOrLeft == 1 && directionRightOrLeft == 0) {
-		key = Global::g_laneLR;
+		key = ::Config::g_laneLR;
 	}
 	else if (rightOrLeft == 1 && directionRightOrLeft == 1) {
-		key = Global::g_laneLL;
+		key = ::Config::g_laneLL;
 	}
 }
 
