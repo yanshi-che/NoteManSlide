@@ -3,8 +3,9 @@
 #include <cstdint>
 
 #include "dxlib/DxLib.h"
-#include "Make_Global.h"
-#include "Make_Singleton_KeyHitCheck.h"
+#include "Global.h"
+#include "Config_Config.h"
+#include "Singleton_KeyHitCheck.h"
 
 namespace Make {
 	namespace Play {
@@ -19,7 +20,7 @@ namespace Make {
 			std::int32_t judgeLineColor;
 			std::int32_t keyHitColor;
 
-			Singleton::Make_Singleton_KeyHitCheck* p_keyHitCheck;
+			::Singleton::Singleton_KeyHitCheck* p_keyHitCheck;
 
 			void drawLane();
 			void drawBack();

@@ -7,13 +7,13 @@
 class Task
 {
 protected:
-	std::shared_ptr<SceneChanger> sceneChanger;
+	std::shared_ptr<SceneChanger> p_sceneChanger;
 public:
-	Task(std::shared_ptr<SceneChanger>& sceneChanger);
+	Task(std::shared_ptr<SceneChanger>& p_sceneChanger);
 	virtual ~Task() {};
 	virtual void initialize() {};
 	virtual void finalize() {};
-	virtual void draw() = 0;
-	virtual void update() = 0;
+	virtual void draw() {};
+	virtual void update() {};
 };
 

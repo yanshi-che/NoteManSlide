@@ -8,7 +8,7 @@
 #include "dxlib/DxLib.h"
 #include "boost/json.hpp"
 #include "SceneChanger.h"
-#include "Make_Global.h"
+#include "Global.h"
 #include "Make_File_MusicData.h"
 #include "Make_File_MusicFileIO.h"
 #include "Make_File_JsonIO.h"

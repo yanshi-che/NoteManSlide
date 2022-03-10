@@ -5,16 +5,17 @@
 #include <memory>
 
 #include "dxlib/DxLib.h"
-#include "Make_Global.h"
+#include "Global.h"
+#include "Config_Config.h"
 #include "Make_Play_Score.h"
-#include "Make_Singleton_KeyHitCheck.h"
+#include "Singleton_KeyHitCheck.h"
 
 namespace Make {
 	namespace Play {
 		class Make_Play_SlideNote
 		{
 		private:
-			Singleton::Make_Singleton_KeyHitCheck* p_keyHitCheck;
+			::Singleton::Singleton_KeyHitCheck* p_keyHitCheck;
 			const double time;//ÉmÅ[ÉcÇÃéûä‘
 			double y;
 			const double laneXStart;

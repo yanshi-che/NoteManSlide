@@ -13,7 +13,7 @@
 #include "Make_File_MusicData.h"
 #include "Make_File_FileStructData.h"
 #include "Make_Note_NoteManager.h"
-#include "Make_Global.h"
+#include "Global.h"
 
 using namespace boost;
 

@@ -131,7 +131,7 @@ void Make::Draw::Make_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemNam
 		}
 		break;
 	case Exit:
-		sceneChanger->changeScene(Home);
+		sceneChanger->changeScene(Scene::Home);
 		break;
 	case Play:
 		if (p_musicData != nullptr && !isPlaying){

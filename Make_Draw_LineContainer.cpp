@@ -1,6 +1,6 @@
 #include "Make_Draw_LineContainer.h"
 
-std::uint8_t Make::Draw::Make_Draw_LineContainer::noteType = Make::Global::NOTETYPE_NORMAL;
+std::uint8_t Make::Draw::Make_Draw_LineContainer::noteType = Global::NOTETYPE_NORMAL;
 
 bool Make::Draw::Make_Draw_LineContainer::clickObserver = false;
 
@@ -92,7 +92,7 @@ void Make::Draw::Make_Draw_LineContainer::draw() {
 }
 
 void Make::Draw::Make_Draw_LineContainer::drawBarID()  {
-	if (beatID == 0 && y < Make::Global::WINDOW_HEIGHT && y>0) {
+	if (beatID == 0 && y < Global::WINDOW_HEIGHT && y>0) {
 		if (!clickObserver &&
 			p_mouseCheck->isMouseClickLeftDown(mouseX,mouseY) &&
 			0 < mouseX &&
@@ -110,7 +110,7 @@ void Make::Draw::Make_Draw_LineContainer::drawBarID()  {
 }
 
 void Make::Draw::Make_Draw_LineContainer::drawLine()  {
-	if (y < Make::Global::WINDOW_HEIGHT && y>0) {
+	if (y < Global::WINDOW_HEIGHT && y>0) {
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, brend);
 		DrawLineAA(static_cast<float>(Global::DRAW_X_MIN), static_cast<float>(y), static_cast<float>(Global::DRAW_X_MAX), static_cast<float>(y) , color, lineThickness);
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);

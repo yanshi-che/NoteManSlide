@@ -1,13 +1,15 @@
 #pragma once
 
-enum Scene {
+
+enum class Scene {
 	None = 0,
 	Home,
 	GameMenu,
 	GamePlay,
 	GameResult,
-	Make,
+	NoteEdit,
 	Config,
+	Exit
 };
 
 class SceneChanger
@@ -17,6 +19,6 @@ private:
 public:
 	SceneChanger();
 	void changeScene(Scene next);
-	Scene nextScene();
+	Scene getNextScene();
 };
 

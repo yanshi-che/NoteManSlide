@@ -22,7 +22,7 @@ Make::Note::Make_Note_LongNoteContainer::Make_Note_LongNoteContainer(const std::
 }
 
 void Make::Note::Make_Note_LongNoteContainer::drawLongNote() {
-	if (r_y < Make::Global::WINDOW_HEIGHT && r_y>0) {
+	if (r_y < Global::WINDOW_HEIGHT && r_y>0) {
 		for (int i = 0, iSize = static_cast<int>(noteFlag.size()); i < iSize; ++i) {
 			if (noteFlag.at(i).first && noteFlag.at(i).second) {
 				DrawBoxAA(static_cast<float>(noteX.at(i) - notePointX), static_cast<float>(r_y - notePointY - noteHeight1.at(i)),

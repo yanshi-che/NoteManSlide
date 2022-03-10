@@ -18,7 +18,7 @@ Make::Note::Make_Note_NormalNoteContainer::Make_Note_NormalNoteContainer(const s
 }
 
 void Make::Note::Make_Note_NormalNoteContainer::drawNote() {
-	if (r_y < Make::Global::WINDOW_HEIGHT && r_y>0) {
+	if (r_y < Global::WINDOW_HEIGHT && r_y>0) {
 		for (int i = 0, iSize = static_cast<int>(noteFlag.size()); i < iSize; ++i) {
 			if (noteFlag.at(i)) {
 				DrawBoxAA(static_cast<float>(noteX.at(i) - notePointX), static_cast<float>(r_y - notePointY),

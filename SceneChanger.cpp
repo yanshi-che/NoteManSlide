@@ -1,11 +1,11 @@
 #include "SceneChanger.h"
 
-SceneChanger::SceneChanger(): next(None){}
+SceneChanger::SceneChanger() { next = Scene::None; }
 
 void SceneChanger::changeScene(Scene next) {
 	this->next = next;
 }
 
-Scene SceneChanger::nextScene() {
+Scene SceneChanger::getNextScene() {
 	return next;
 }

@@ -1,6 +1,6 @@
 #include <iostream>
-#include "Make_DrawManager.h"
-#include "Make_Global.h"
+#include "MainSceneManager.h"
+#include "Global.h"
 
 class Fps {
 	int mStartTime;         //測定開始時刻
@@ -49,7 +49,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 {
 	SetOutApplicationLogValidFlag(FALSE);
 	ChangeWindowMode(true);
-	SetGraphMode(Make::Global::WINDOW_WIDTH,Make::Global::WINDOW_HEIGHT,Make::Global::WINDOW_COLORBIT); //スクリーンの大きさの設定
+	SetGraphMode(Global::WINDOW_WIDTH,Global::WINDOW_HEIGHT,Global::WINDOW_COLORBIT); //スクリーンの大きさの設定
 	SetMainWindowText("noteman");
 
 	if (DxLib_Init() == -1)		// ＤＸライブラリ初期化処理
@@ -57,22 +57,27 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return -1;			// エラーが起きたら直ちに終了
 	}
 	SetDrawScreen(DX_SCREEN_BACK);//裏画面で画面生成
+	int backImgHandle = LoadGraph(".\\image\\backGround\\pipo-battlebg020a.jpg");
+
 	SetBackgroundColor(30,30,30);
-	Make::Make_DrawManager dm;
+	MainSceneManager mng;
 	Fps fps;
 
-	dm.initialize();
+	mng.initialize();
 	// while(裏画面を表画面に反映, メッセージ処理, 画面クリア)
 	while (ProcessMessage() == 0 && ClearDrawScreen() == 0) {
+		DrawGraph(0,0,backImgHandle,false);
 		fps.Update();
 		fps.Draw();
-		dm.update();
-		dm.draw();
+		mng.update();
+		mng.draw();
 		ScreenFlip();
 		fps.Wait();
 	}
 
-	dm.finalize();
+	mng.finalize();
+
+	DeleteGraph(backImgHandle);
 
 	DxLib_End();				// ＤＸライブラリ使用の終了処理
 

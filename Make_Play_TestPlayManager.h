@@ -7,6 +7,8 @@
 
 #include "dxlib/DxLib.h"
 #include "boost/json.hpp"
+#include "Global.h"
+#include "Config_Config.h"
 #include "Make_File_MusicData.h"
 #include "Make_Play_MusicPlayer.h"
 #include "Make_Play_Lane.h"
@@ -15,7 +17,7 @@
 #include "Make_Play_LongNote.h"
 #include "Make_Play_SlideNote.h"
 #include "Make_Play_Score.h"
-#include "Make_Singleton_KeyHitCheck.h"
+#include "Singleton_KeyHitCheck.h"
 
 using namespace boost;
 
@@ -41,7 +43,7 @@ namespace Make {
 			std::vector<std::uint16_t> longCount;
 			std::vector<std::uint16_t> slideCount;
 
-			Singleton::Make_Singleton_KeyHitCheck* p_keyHitCheck;
+			::Singleton::Singleton_KeyHitCheck* p_keyHitCheck;
 
 			LONGLONG startClock;
 			double nowTime;
