@@ -1,6 +1,7 @@
 #include "Game_Menu_MenuManager.h"
 
-Game::Menu::Game_Menu_MenuManager::Game_Menu_MenuManager(std::shared_ptr<SceneChanger>& p_sceneChanger, std::shared_ptr<Game_MusicDataShareBetweenMenuAndPlay>& p_musicDataShare) :Task(p_sceneChanger){
+Game::Menu::Game_Menu_MenuManager::Game_Menu_MenuManager(std::shared_ptr<SceneChanger>& p_sceneChanger, std::shared_ptr<Game_MusicDataShareBetweenMenuAndPlay>& p_musicDataShare) :Task(p_sceneChanger),p_musicDataShare(p_musicDataShare){
+	p_keyHitCheck = Singleton::Singleton_KeyHitCheck::getInstance();
 	//フォントデータのハンドル
 	focusedMusicListFontHandle = 0;
 	notFocusedMusicListFontHandle = 0;
@@ -16,10 +17,9 @@ Game::Menu::Game_Menu_MenuManager::Game_Menu_MenuManager(std::shared_ptr<SceneCh
 	easyNum = "";
 	normalNum = "";
 	hardNum = "";
-	p_keyHitCheck = Singleton::Singleton_KeyHitCheck::getInstance();
-	this->p_musicDataShare = p_musicDataShare;
 	p_fileOp = nullptr;
 	p_focusedMusicData = nullptr;
+	isFail = false;
 }
 
 void Game::Menu::Game_Menu_MenuManager::initialize() {
@@ -34,6 +34,7 @@ void Game::Menu::Game_Menu_MenuManager::initialize() {
 		DrawString(80, 420, "5秒後にホームに戻ります", fontColor, edgeColor);
 		ScreenFlip();
 		Sleep(5000);
+		isFail = true;
 		p_sceneChanger->changeScene(Scene::Home);
 		return;
 	}
@@ -75,7 +76,7 @@ void Game::Menu::Game_Menu_MenuManager::update() {
 		p_sceneChanger->changeScene(Scene::Home);
 	}
 
-	if (p_keyHitCheck->getHitKeyUsual(KEY_INPUT_RETURN)) {
+	if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_RETURN) == 1) {
 		p_musicDataShare->setMusicData(p_focusedMusicData->at(difficultyCount));
 		p_sceneChanger->changeScene(Scene::GamePlay);
 	}
@@ -87,9 +88,11 @@ void Game::Menu::Game_Menu_MenuManager::update() {
 }
 
 void Game::Menu::Game_Menu_MenuManager::draw() {
-	drawKeyConf();
-	drawFocusedMusicData();
-	drawMusicList();
+	if (!isFail) {
+		drawKeyConf();
+		drawFocusedMusicData();
+		drawMusicList();
+	}
 }
 
 void Game::Menu::Game_Menu_MenuManager::drawMusicList() {

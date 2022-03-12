@@ -1,7 +1,7 @@
 #include "Game_Play_SlideNote.h"
 
-Game::Play::Game_Play_SlideNote::Game_Play_SlideNote(const double time, const std::uint16_t noteType, const double laneXStart, const double laneXEnd, const double laneWidth, const double arrowWidthBetween, const std::uint16_t rightOrLeft, const std::uint16_t directionRightOrLeft, const std::uint16_t slideLaneIndexStart, const std::uint16_t slideLaneIndexEnd, const std::function<void(std::uint16_t, std::uint16_t)> nextNote, const std::shared_ptr<Game_Play_Score>& p_score) :
-	time(time), noteType(noteType), laneXStart(laneXStart), laneXEnd(laneXEnd), laneWidth(laneWidth), arrowWidthBetween(arrowWidthBetween), rightOrLeft(rightOrLeft), directionRightOrLeft(directionRightOrLeft), slideLaneIndexStart(slideLaneIndexStart), slideLaneIndexEnd(slideLaneIndexEnd), nextNote(nextNote), p_score(p_score) {
+Game::Play::Game_Play_SlideNote::Game_Play_SlideNote(const double time, const std::uint16_t noteType, const double laneXStart, const double laneXEnd, const double laneWidth, const double arrowWidthBetween, const std::uint16_t rightOrLeft, const std::uint16_t directionRightOrLeft, const std::uint16_t slideLaneIndexStart, const std::uint16_t slideLaneIndexEnd, const std::function<void(std::uint16_t, std::uint16_t)> nextNote, const std::shared_ptr<Game_Play_Score>& p_score, const std::shared_ptr<Game_Play_Effect>& p_effect) :
+	time(time), noteType(noteType), laneXStart(laneXStart), laneXEnd(laneXEnd), laneWidth(laneWidth), arrowWidthBetween(arrowWidthBetween), rightOrLeft(rightOrLeft), directionRightOrLeft(directionRightOrLeft), slideLaneIndexStart(slideLaneIndexStart), slideLaneIndexEnd(slideLaneIndexEnd), nextNote(nextNote), p_score(p_score),p_effect(p_effect) {
 	p_keyHitCheck = ::Singleton::Singleton_KeyHitCheck::getInstance();
 	colorR = GetColor(228, 75, 198);
 	colorL = GetColor(62, 253, 249);
@@ -18,6 +18,16 @@ void Game::Play::Game_Play_SlideNote::check(double nowTime) {
 			if (time - Global::GREAT < nowTime + Config::g_judgeCorrection && nowTime + Config::g_judgeCorrection < time + Global::GREAT) {
 				setDone(true);
 				p_score->plusPerfect();
+				if (directionRightOrLeft == 0) {
+					for (int i = slideLaneIndexStart; i <= slideLaneIndexEnd; ++i) {
+						p_effect->setPerfect(i);
+					}
+				}
+				else {
+					for (int i = slideLaneIndexEnd; i <= slideLaneIndexStart; ++i) {
+						p_effect->setPerfect(i);
+					}
+				}
 			}
 		}
 	}
@@ -38,6 +48,16 @@ void Game::Play::Game_Play_SlideNote::update(double nowTime) {
 	if (turn && time + Global::MISS < nowTime + Config::g_judgeCorrection) {
 		setDone(true);
 		p_score->plusMiss();
+		if (directionRightOrLeft == 0) {
+			for (int i = slideLaneIndexStart; i <= slideLaneIndexEnd; ++i) {
+				p_effect->setMiss(i);
+			}
+		}
+		else {
+			for (int i = slideLaneIndexEnd; i <= slideLaneIndexStart; ++i) {
+				p_effect->setMiss(i);
+			}
+		}
 	}
 }
 

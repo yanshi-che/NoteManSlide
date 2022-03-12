@@ -1,8 +1,7 @@
 #include "Game_Play_PlayManager.h"
 
 
-Game::Play::Game_Play_PlayManager::Game_Play_PlayManager(std::shared_ptr<SceneChanger>& p_sceneChanger, std::shared_ptr<Game_MusicDataShareBetweenMenuAndPlay>& p_musicDataShare): Task(p_sceneChanger) {
-	this->p_musicDataShare = p_musicDataShare;
+Game::Play::Game_Play_PlayManager::Game_Play_PlayManager(std::shared_ptr<SceneChanger>& p_sceneChanger, std::shared_ptr<Game_MusicDataShareBetweenMenuAndPlay>& p_musicDataShare, std::shared_ptr<Game::Game_PlayResultShare>& p_playResultShare): Task(p_sceneChanger),p_musicDataShare(p_musicDataShare),p_playResultShare(p_playResultShare) {
 	p_lane = nullptr;
 	p_score = nullptr;
 	drawNoteFunc = [&] {return drawBeforeStart(); };
@@ -82,11 +81,24 @@ void Game::Play::Game_Play_PlayManager::initialize() {
 		return;
 	}
 
+	//エフェクト
+	p_effect = std::make_shared<Game_Play_Effect>();
+	if (!p_effect->loadEffect()) {
+		DrawBox(30, 200, 710, 500, GetColor(0, 0, 0), true);
+		DrawString(80, 300, "エフェクトデータの読み込みに失敗しました。\nディレクトリ構成、またはファイルに問題がある可能性があります。", fontColor, edgeColor);
+		DrawString(80, 420, "5秒後にメニューに戻ります", fontColor, edgeColor);
+		ScreenFlip();
+		Sleep(5000);
+		isLoadFail = true;
+		p_sceneChanger->changeScene(Scene::GameMenu);
+		return;
+	}
 	//レーン周りの描画
 	p_lane = std::make_unique<Game_Play_Lane>();
 	//スコアの描画
-	p_score = std::make_unique<Game_Play_Score>(configFont);
+	p_score = std::make_shared<Game_Play_Score>(configFont);
 
+	//初期判定配置
 	for (int i = 0; i < laneAmount; ++i) {
 		if (normalNoteVec.at(i).size() != NULL) {
 			normalNote.at(i) = normalNoteVec.at(i).at(0).get();
@@ -112,7 +124,8 @@ void Game::Play::Game_Play_PlayManager::finalize() {
 	DeleteSoundMem(musicHandle);
 	p_lane.reset();
 	p_score.reset();
-	p_musicDataShare.reset();
+	p_effect->finalize();
+	p_effect.reset();
 }
 
 void Game::Play::Game_Play_PlayManager::update() {
@@ -136,6 +149,12 @@ void Game::Play::Game_Play_PlayManager::update() {
 			Config::g_judgeCorrection -= 0.01;
 		}
 	}
+	if (isMusicStart && CheckSoundMem(musicHandle) != 1 || p_keyHitCheck->getHitKeyUsual(KEY_INPUT_ESCAPE)) {
+		p_playResultShare->setPerfect(p_score->getPerfect());
+		p_playResultShare->setGreat(p_score->getGreat());
+		p_playResultShare->setMiss(p_score->getMiss());
+		p_sceneChanger->changeScene(Scene::GameResult);
+	}
 }
 
 void Game::Play::Game_Play_PlayManager::draw() {
@@ -144,6 +163,7 @@ void Game::Play::Game_Play_PlayManager::draw() {
 		p_score->draw();
 		drawNoteFunc();
 		drawDown();
+		p_effect->draw();
 		drawHiSpeed();
 		drawJudgeCorrection();
 	}
@@ -317,7 +337,7 @@ bool Game::Play::Game_Play_PlayManager::initializeNote(const std::uint16_t laneA
 				normalNoteVec.at(laneIndex)
 					.push_back(std::make_unique<Game_Play_NormalNote>(
 						noteDataArray.at(i).at("time").as_double() + startDelay, noteType,
-						laneIndex, laneX[laneIndex], laneX[laneIndex + 1], nextNoteFunc, p_score));
+						laneIndex, laneX[laneIndex], laneX[laneIndex + 1], nextNoteFunc, p_score,p_effect));
 			}
 			else if (noteType == Global::NOTETYPE_LONG) {
 				if (isFirst.at(laneIndex)) {
@@ -328,7 +348,7 @@ bool Game::Play::Game_Play_PlayManager::initializeNote(const std::uint16_t laneA
 					longNoteVec.at(laneIndex)
 						.push_back(std::make_unique<Game_Play_LongNote>(
 							startTime.at(laneIndex), noteDataArray.at(i).at("time").as_double() + startDelay, sixteenthTime, noteType,
-							laneIndex, laneX[laneIndex], laneX[laneIndex + 1], nextNoteFunc, p_score));
+							laneIndex, laneX[laneIndex], laneX[laneIndex + 1], nextNoteFunc, p_score, p_effect));
 					isFirst.at(laneIndex) = true;
 				}
 			}
@@ -352,13 +372,13 @@ bool Game::Play::Game_Play_PlayManager::initializeNote(const std::uint16_t laneA
 						slideNoteVec.at(laneIndex)
 							.push_back(std::make_unique<Game_Play_SlideNote>(
 								noteDataArray.at(i).at("time").as_double() + startDelay, noteType,
-								laneX[slideNoteIndexStart], laneX[slideNoteIndexEnd + 1], laneWidth, arrowWidthBetween, laneIndex, directionRightOrLeft, slideNoteIndexStart, slideNoteIndexEnd, nextNoteFunc, p_score));
+								laneX[slideNoteIndexStart], laneX[slideNoteIndexEnd + 1], laneWidth, arrowWidthBetween, laneIndex, directionRightOrLeft, slideNoteIndexStart, slideNoteIndexEnd, nextNoteFunc, p_score, p_effect));
 					}
 					else {//右の左向き
 						slideNoteVec.at(laneIndex)
 							.push_back(std::make_unique<Game_Play_SlideNote>(
 								noteDataArray.at(i).at("time").as_double() + startDelay, noteType,
-								laneX[slideNoteIndexStart + 1], laneX[slideNoteIndexEnd], laneWidth, arrowWidthBetween, laneIndex, directionRightOrLeft, slideNoteIndexStart, slideNoteIndexEnd, nextNoteFunc, p_score));
+								laneX[slideNoteIndexStart + 1], laneX[slideNoteIndexEnd], laneWidth, arrowWidthBetween, laneIndex, directionRightOrLeft, slideNoteIndexStart, slideNoteIndexEnd, nextNoteFunc, p_score, p_effect));
 					}
 				}
 				else {//左の右向き
@@ -366,13 +386,13 @@ bool Game::Play::Game_Play_PlayManager::initializeNote(const std::uint16_t laneA
 						slideNoteVec.at(laneIndex)
 							.push_back(std::make_unique<Game_Play_SlideNote>(
 								noteDataArray.at(i).at("time").as_double() + startDelay, noteType,
-								laneX[slideNoteIndexStart], laneX[slideNoteIndexEnd + 1], laneWidth, arrowWidthBetween, laneIndex, directionRightOrLeft, slideNoteIndexStart, slideNoteIndexEnd, nextNoteFunc, p_score));
+								laneX[slideNoteIndexStart], laneX[slideNoteIndexEnd + 1], laneWidth, arrowWidthBetween, laneIndex, directionRightOrLeft, slideNoteIndexStart, slideNoteIndexEnd, nextNoteFunc, p_score, p_effect));
 					}
 					else {//左の左向き
 						slideNoteVec.at(laneIndex)
 							.push_back(std::make_unique<Game_Play_SlideNote>(
 								noteDataArray.at(i).at("time").as_double() + startDelay, noteType,
-								laneX[slideNoteIndexStart + 1], laneX[slideNoteIndexEnd], laneWidth, arrowWidthBetween, laneIndex, directionRightOrLeft, slideNoteIndexStart, slideNoteIndexEnd, nextNoteFunc, p_score));
+								laneX[slideNoteIndexStart + 1], laneX[slideNoteIndexEnd], laneWidth, arrowWidthBetween, laneIndex, directionRightOrLeft, slideNoteIndexStart, slideNoteIndexEnd, nextNoteFunc, p_score, p_effect));
 					}
 				}
 			}

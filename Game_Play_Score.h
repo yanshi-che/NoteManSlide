@@ -33,6 +33,10 @@ namespace Game {
 			void plusPerfect();
 			void plusGreat();
 			void plusMiss();
+
+			std::uint16_t getPerfect();
+			std::uint16_t getGreat();
+			std::uint16_t getMiss();
 		};
 	}
 }

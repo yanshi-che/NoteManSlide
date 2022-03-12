@@ -1,7 +1,7 @@
 #include "Game_Play_LongNote.h"
 
-Game::Play::Game_Play_LongNote::Game_Play_LongNote(const double startTime, const double endTime, const double sixteenthTime, const std::uint16_t noteType, const std::uint16_t laneIndex, const double laneXRight, const double laneXLeft, const std::function<void(std::uint16_t, std::uint16_t)> nextNote, const std::shared_ptr<Game_Play_Score>& p_score) :
-	startTime(startTime), endTime(endTime), noteType(noteType), laneIndex(laneIndex), laneXRight(laneXRight), laneXLeft(laneXLeft), nextNote(nextNote), p_score(p_score) {
+Game::Play::Game_Play_LongNote::Game_Play_LongNote(const double startTime, const double endTime, const double sixteenthTime, const std::uint16_t noteType, const std::uint16_t laneIndex, const double laneXRight, const double laneXLeft, const std::function<void(std::uint16_t, std::uint16_t)> nextNote, const std::shared_ptr<Game_Play_Score>& p_score, const std::shared_ptr<Game_Play_Effect>& p_effect) :
+	startTime(startTime), endTime(endTime), noteType(noteType), laneIndex(laneIndex), laneXRight(laneXRight), laneXLeft(laneXLeft), nextNote(nextNote), p_score(p_score),p_effect(p_effect) {
 	p_keyHitCheck = ::Singleton::Singleton_KeyHitCheck::getInstance();
 	y = 0;
 	longNoteHeight = 0;
@@ -27,6 +27,7 @@ void Game::Play::Game_Play_LongNote::check(double nowTime) {
 			if (judgeTimeCount < judgeTime.size() &&
 				nowJudgeTime - Global::GREAT < nowTime + Config::g_judgeCorrection && nowTime + Config::g_judgeCorrection < nowJudgeTime + Global::GREAT) {
 				p_score->plusPerfect();
+				p_effect->setPerfect(laneIndex);
 				nowJudgeTime = judgeTime.at(judgeTimeCount);
 				++judgeTimeCount;
 				isHit = true;
@@ -36,6 +37,7 @@ void Game::Play::Game_Play_LongNote::check(double nowTime) {
 			if (judgeTimeCount < judgeTime.size() &&
 				nowJudgeTime - Global::GREAT < nowTime + Config::g_judgeCorrection && nowTime + Config::g_judgeCorrection < nowJudgeTime + Global::GREAT) {
 				p_score->plusPerfect();
+				p_effect->setPerfect(laneIndex);
 				nowJudgeTime = judgeTime.at(judgeTimeCount);
 				++judgeTimeCount;
 				isHit = true;
@@ -71,6 +73,7 @@ void Game::Play::Game_Play_LongNote::update(double nowTime) {
 		}
 		if (judgeTimeCount < judgeTime.size() && nowJudgeTime + Global::GREAT < nowTime + Config::g_judgeCorrection) {
 			p_score->plusMiss();
+			p_effect->setMiss(laneIndex);
 			nowJudgeTime = judgeTime.at(judgeTimeCount);
 			isHit = false;
 			++judgeTimeCount;

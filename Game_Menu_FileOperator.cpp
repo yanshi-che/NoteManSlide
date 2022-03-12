@@ -57,7 +57,7 @@ bool Game::Menu::Game_Menu_FileOperator::getMusicData(std::vector<std::vector<st
 				}
 				val = json::parse(s, sp);
 				obj = val.at("MusicData").as_object();
-				musicData.at(i).push_back(std::make_unique<Game_Menu_MusicData>(Game_Menu_MusicData(musicPath, scorePath, std::string(obj.at("name").as_string().c_str()),
+				musicData.at(i).push_back(std::make_shared<Game_Menu_MusicData>(Game_Menu_MusicData(musicPath, scorePath, std::string(obj.at("name").as_string().c_str()),
 					std::string(obj.at("artist").as_string().c_str()), static_cast<std::uint16_t>(obj.at("level").as_int64()), obj.at("bpm").as_double(),
 					static_cast<std::uint16_t>(obj.at("barLength").as_int64()), obj.at("totalMinute").as_double(), obj.at("beginDelay").as_double())));
 				line = "";
