@@ -85,7 +85,7 @@ INT_PTR CALLBACK Make::Dialog::Make_Dialog_MusicInfo::MusicInfoDialogProc(HWND h
 	return 0;
 }
 
-void Make::Dialog::Make_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MAX_PATH], char(&name)[MAX_PATH], char(&artist)[MAX_PATH], std::uint8_t& level, double& bpm, double& totalMinutes, double& beginDelay) {
+void Make::Dialog::Make_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MAX_PATH], char(&name)[MAX_PATH], char(&artist)[MAX_PATH], std::uint16_t& level, double& bpm, double& totalMinutes, double& beginDelay) {
 	HWND hMainWnd = nullptr;
 	HWND hDialogWnd = nullptr;
 	HINSTANCE hInstance = nullptr;

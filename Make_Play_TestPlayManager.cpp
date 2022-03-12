@@ -7,7 +7,6 @@ Make::Play::Make_Play_TestPlayManager::Make_Play_TestPlayManager() {
 	p_score = nullptr;
 	drawNoteFunc = [&] {return drawBeforeStart(); };
 	startClock = 0;
-	//isStart = false;
 	isMusicStart = false;
 	nowTime = 0;
 	startDelay = 5.0;
@@ -113,6 +112,7 @@ void Make::Play::Make_Play_TestPlayManager::drawNote() {
 }
 
 void Make::Play::Make_Play_TestPlayManager::finalize() {
+	p_musicPlayer->stopMusic();
 	p_musicPlayer.reset();
 	p_lane.reset();
 	p_score.reset();
@@ -120,7 +120,7 @@ void Make::Play::Make_Play_TestPlayManager::finalize() {
 
 void Make::Play::Make_Play_TestPlayManager::initialize(const json::value& val, const std::shared_ptr<Make_Play_MusicPlayer>& p_musicPlayer, const std::shared_ptr<File::Make_File_MusicData>& p_musicData) {
 	this->p_musicPlayer = p_musicPlayer;
-	const std::uint8_t laneAmount = Global::LANE_AMOUNT;
+	const std::uint16_t laneAmount = Global::LANE_AMOUNT;
 
 	normalNoteVec.resize(laneAmount);
 	longNoteVec.resize(laneAmount);
@@ -170,15 +170,15 @@ void Make::Play::Make_Play_TestPlayManager::initialize(const json::value& val, c
 	const json::array noteDataArray = val.as_object().at("NoteData").as_array();
 	const double sixteenthTime = timePerBeat / Global::SIXTEENTH;
 	const double arrowWidthBetween = laneWidth / Global::ARROW_NUM_LANE;
-	std::uint8_t noteType;
-	std::uint8_t laneIndex;
-	std::uint8_t directionRightOrLeft;
-	std::uint8_t slideNoteIndexStart;
-	std::uint8_t slideNoteIndexEnd;
-	std::function<void(std::uint8_t, std::uint8_t)> nextNoteFunc = [&](std::uint8_t n, std::uint8_t l) {return nextNote(n,l); };
+	std::uint16_t noteType;
+	std::uint16_t laneIndex;
+	std::uint16_t directionRightOrLeft;
+	std::uint16_t slideNoteIndexStart;
+	std::uint16_t slideNoteIndexEnd;
+	std::function<void(std::uint16_t, std::uint16_t)> nextNoteFunc = [&](std::uint16_t n, std::uint16_t l) {return nextNote(n,l); };
 	for (int i = 0, iSize = static_cast<int>(noteDataArray.size()); i< iSize; ++i) {
-		noteType = static_cast<std::uint8_t>(noteDataArray.at(i).at("noteType").as_uint64());
-		laneIndex = static_cast<std::uint8_t>(noteDataArray.at(i).at("laneIndex").as_uint64());
+		noteType = static_cast<std::uint16_t>(noteDataArray.at(i).at("noteType").as_uint64());
+		laneIndex = static_cast<std::uint16_t>(noteDataArray.at(i).at("laneIndex").as_uint64());
 		if (noteType == Global::NOTETYPE_NORMAL) {
 			normalNoteVec.at(laneIndex)
 				.push_back(std::make_unique<Make_Play_NormalNote>(
@@ -211,8 +211,8 @@ void Make::Play::Make_Play_TestPlayManager::initialize(const json::value& val, c
 			else {
 				directionRightOrLeft = 1;
 			}
-			slideNoteIndexStart = static_cast<std::uint8_t>(noteDataArray.at(i).at("slideLaneIndexStart").as_uint64());
-			slideNoteIndexEnd = static_cast<std::uint8_t>(noteDataArray.at(i).at("slideLaneIndexEnd").as_uint64());
+			slideNoteIndexStart = static_cast<std::uint16_t>(noteDataArray.at(i).at("slideLaneIndexStart").as_uint64());
+			slideNoteIndexEnd = static_cast<std::uint16_t>(noteDataArray.at(i).at("slideLaneIndexEnd").as_uint64());
 			if (laneIndex == 0) {
 				if (directionRightOrLeft == 0) {//‰E‚Ì‰EŒü‚«
 					slideNoteVec.at(laneIndex)
@@ -264,7 +264,7 @@ void Make::Play::Make_Play_TestPlayManager::initialize(const json::value& val, c
 	}
 }
 
-void Make::Play::Make_Play_TestPlayManager::nextNote(const std::uint8_t noteType, const std::uint8_t laneIndex) {
+void Make::Play::Make_Play_TestPlayManager::nextNote(const std::uint16_t noteType, const std::uint16_t laneIndex) {
 	if (noteType == Global::NOTETYPE_NORMAL) {
 		++normalCount.at(laneIndex);
 		if (normalCount.at(laneIndex) < normalNoteVec.at(laneIndex).size()) {

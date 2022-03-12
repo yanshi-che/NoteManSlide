@@ -32,7 +32,7 @@ namespace Make {
 			double yMagnificationByMouseWheel;//マウスホイール入力による移動量の倍率
 			double totalScoreWidth;//スクロールバー用のスコア全体の大きさ
 			std::function<void()> initBarLineFunction;//描画処理がすべて終わった後に初期化処理をするための格納変数
-			std::uint8_t quontize;
+			std::uint16_t quontize;
 			std::uint16_t barIDForInitOneVector;
 
 			void draw();
@@ -43,16 +43,16 @@ namespace Make {
 			void resetBarVec(bool isAll);
 			void resetScrollBar();
 
-			double checkSeparate(const std::uint8_t quontize);
+			double checkSeparate(const std::uint16_t quontize);
 
 		public:
 			Make_Draw_BeatLineManager();
 
 			void finalize();
 			void initialize(const std::shared_ptr<File::Make_File_MusicData>& data);
-			void initBarVec(std::uint8_t initialQuontize,double separateBarWidth);
+			void initBarVec(std::uint16_t initialQuontize,double separateBarWidth);
 			void initializeBySavaData(const std::shared_ptr<File::Make_File_MusicData>& data,const json::value& val);
-			void setInitBarLineFunc(const std::uint8_t quon,const std::uint16_t barIDForInitOneVector,const bool isAll);
+			void setInitBarLineFunc(const std::uint16_t quon,const std::uint16_t barIDForInitOneVector,const bool isAll);
 
 			const std::function<void()> getDrawFunc();
 			const std::vector<std::vector<std::shared_ptr<Draw::Make_Draw_LineContainer>>>& getBarVec();

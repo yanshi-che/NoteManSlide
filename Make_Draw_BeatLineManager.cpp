@@ -50,7 +50,7 @@ void Make::Draw::Make_Draw_BeatLineManager::initialize(const std::shared_ptr<Fil
 	initBarVec(Global::QUARTER, checkSeparate(Global::QUARTER));
 }
 
-void Make::Draw::Make_Draw_BeatLineManager::initBarVec(std::uint8_t initialQuontize,double separateBarWidth) {
+void Make::Draw::Make_Draw_BeatLineManager::initBarVec(std::uint16_t initialQuontize,double separateBarWidth) {
 	double timeSum = p_musicData->getBeginDelay();
 	const double timePerBeat = (Global::MINUTE / p_musicData->getBpm() / (initialQuontize / Global::QUARTER));
 	double initY = initialY;
@@ -100,11 +100,11 @@ void Make::Draw::Make_Draw_BeatLineManager::initializeBySavaData(const std::shar
 	barVec.resize(p_musicData->getBarLength());
 
 	json::array barLineDataArray = val.as_object().at("BarLineData").as_array();
-	std::uint8_t quo = 0;
+	std::uint16_t quo = 0;
 
 	//拍線の設置
 	for (int i = 0, iSize = p_musicData->getBarLength(); i < iSize; i++) {
-		quo = static_cast<std::uint8_t>(barLineDataArray.at(i).at("quontize").as_int64());
+		quo = static_cast<std::uint16_t>(barLineDataArray.at(i).at("quontize").as_int64());
 		p_noteManager->resizeOneVector(i, quo);
 		barVec.at(i).resize(quo);
 		if (quo == Global::QUARTER) {
@@ -136,31 +136,31 @@ void Make::Draw::Make_Draw_BeatLineManager::initializeBySavaData(const std::shar
 
 	//ノーツの設置
 	json::array noteDataArray = val.as_object().at("NoteData").as_array();
-	std::uint8_t noteType = 0;
+	std::uint16_t noteType = 0;
 	bool isRight = true;
 	bool isDirectionRight = true;
 	bool isFirst = true;
 	struct longDrawPoint {//終点が読み込まれるまでlongDrawの始点情報を保管するためのもの
 		std::uint16_t barID;
-		std::uint8_t beatID;
+		std::uint16_t beatID;
 		std::uint16_t longDrawGroupIndex;
-		longDrawPoint(std::uint16_t barID, std::uint8_t beatID, std::uint16_t longDrawGroupIndex) { this->barID = barID; this->beatID = beatID; this->longDrawGroupIndex = longDrawGroupIndex; }
+		longDrawPoint(std::uint16_t barID, std::uint16_t beatID, std::uint16_t longDrawGroupIndex) { this->barID = barID; this->beatID = beatID; this->longDrawGroupIndex = longDrawGroupIndex; }
 	};
 	std::deque<longDrawPoint> longDrawPointDeq;//終点が読み込まれるまでlongDrawの始点情報を保管
 	for (int i = 0, iSize = static_cast<int>(noteDataArray.size()); i < iSize; ++i) {
-		noteType = static_cast<std::uint8_t>(noteDataArray.at(i).at("noteType").as_int64());
+		noteType = static_cast<std::uint16_t>(noteDataArray.at(i).at("noteType").as_int64());
 		if (noteType == Global::NOTETYPE_NORMAL) {
 			p_noteManager->setNormalNote(static_cast<std::uint16_t>(noteDataArray.at(i).at("barID").as_int64()),
-				static_cast<std::uint8_t>(noteDataArray.at(i).at("beatID").as_int64()),
-				static_cast<std::uint8_t>(noteDataArray.at(i).at("laneIndex").as_int64()));
+				static_cast<std::uint16_t>(noteDataArray.at(i).at("beatID").as_int64()),
+				static_cast<std::uint16_t>(noteDataArray.at(i).at("laneIndex").as_int64()));
 		}
 		else if (noteType == Global::NOTETYPE_LONG) {
 			for (int k = 0, kSize = static_cast<int>(longDrawPointDeq.size()); k < kSize; ++k) {
 				if (longDrawPointDeq.at(k).longDrawGroupIndex == noteDataArray.at(i).at("longNoteGroupIndex").as_int64()) {
 					p_noteManager->setLongNoteBySavaData(longDrawPointDeq.at(k).barID,longDrawPointDeq.at(k).beatID,
 						static_cast<std::uint16_t>(noteDataArray.at(i).at("barID").as_int64()),
-						static_cast<std::uint8_t>(noteDataArray.at(i).at("beatID").as_int64()),
-						static_cast<std::uint8_t>(noteDataArray.at(i).at("laneIndex").as_int64()));
+						static_cast<std::uint16_t>(noteDataArray.at(i).at("beatID").as_int64()),
+						static_cast<std::uint16_t>(noteDataArray.at(i).at("laneIndex").as_int64()));
 					longDrawPointDeq.erase(longDrawPointDeq.begin() + k);
 					isFirst = false;
 					break;
@@ -168,7 +168,7 @@ void Make::Draw::Make_Draw_BeatLineManager::initializeBySavaData(const std::shar
 			}
 			if (isFirst) {
 				longDrawPointDeq.push_back(longDrawPoint(static_cast<std::uint16_t>(noteDataArray.at(i).at("barID").as_int64()),
-					static_cast<std::uint8_t>(noteDataArray.at(i).at("beatID").as_int64()),
+					static_cast<std::uint16_t>(noteDataArray.at(i).at("beatID").as_int64()),
 					static_cast<std::uint16_t>(noteDataArray.at(i).at("longNoteGroupIndex").as_int64())));
 			}
 			isFirst = true;
@@ -187,9 +187,9 @@ void Make::Draw::Make_Draw_BeatLineManager::initializeBySavaData(const std::shar
 				isDirectionRight = false;
 			}
 			p_noteManager->setSlideNoteBySavaData(static_cast<std::uint16_t>(noteDataArray.at(i).at("barID").as_int64()),
-				static_cast<std::uint8_t>(noteDataArray.at(i).at("beatID").as_int64()),
-				static_cast<std::uint8_t>(noteDataArray.at(i).at("slideLaneIndexStart").as_int64()),
-				static_cast<std::uint8_t>(noteDataArray.at(i).at("slideLaneIndexEnd").as_int64()),isRight,isDirectionRight);
+				static_cast<std::uint16_t>(noteDataArray.at(i).at("beatID").as_int64()),
+				static_cast<std::uint16_t>(noteDataArray.at(i).at("slideLaneIndexStart").as_int64()),
+				static_cast<std::uint16_t>(noteDataArray.at(i).at("slideLaneIndexEnd").as_int64()),isRight,isDirectionRight);
 		}
 	}
 	totalScoreWidth += Global::WINDOW_HEIGHT * 0.5;
@@ -271,7 +271,7 @@ void Make::Draw::Make_Draw_BeatLineManager::initOneBarLineByQuontizeChange() {
 	scrBar->updateBarY(barVec.at(0).at(0)->getY() - initialY);
 }
 
-double Make::Draw::Make_Draw_BeatLineManager::checkSeparate(const std::uint8_t quontize) {
+double Make::Draw::Make_Draw_BeatLineManager::checkSeparate(const std::uint16_t quontize) {
 	if (quontize == Global::QUARTER) {
 		return(1.0);
 	}
@@ -310,7 +310,7 @@ void Make::Draw::Make_Draw_BeatLineManager::resetScrollBar() {
 	scrBar.reset();
 }
 
-void Make::Draw::Make_Draw_BeatLineManager::setInitBarLineFunc(const std::uint8_t quon,const std::uint16_t barIDForInitOneVector,const bool isAll) {
+void Make::Draw::Make_Draw_BeatLineManager::setInitBarLineFunc(const std::uint16_t quon,const std::uint16_t barIDForInitOneVector,const bool isAll) {
 	this->quontize = quon;
 	this->barIDForInitOneVector = barIDForInitOneVector;
 	if (isAll) {

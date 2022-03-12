@@ -20,13 +20,14 @@ namespace Game {
 			std::int32_t fontColor;
 			std::int32_t edgeColor;
 
-			std::uint8_t boxWidth;
-			std::int8_t boxCount;
+			std::uint16_t boxWidth;
+			std::int16_t boxCount;
 			std::uint16_t blend;
-			std::int8_t blendDiff;
+			std::int16_t blendDiff;
 
 			void drawOption();
 			void drawTitle();
+			void drawKeyConf();
 		public:
 			Game_Home_Home(std::shared_ptr<SceneChanger>& p_sceneChanger);
 			void initialize() override;

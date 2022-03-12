@@ -5,7 +5,7 @@ std::pair < std::unique_ptr < Make::File::Make_File_MusicData > , std::unique_pt
 	char tempName[MAX_PATH] = "";//曲名
 	char tempArtist[MAX_PATH] = "";//アーティスト名
 
-	std::uint8_t level = 1;//譜面の難易度
+	std::uint16_t level = 1;//譜面の難易度
 	double bpm = 0;//曲のbpm
 	double totalMinutes = 0;//音楽ファイルの総再生時間
 	double beginDelay = 0;//音声ファイルを再生してから曲が流れ始めるまでの時間

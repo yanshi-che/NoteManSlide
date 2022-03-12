@@ -20,8 +20,8 @@ namespace Make {
 			std::uint16_t blend;
 			std::int32_t color;
 			std::int32_t judgeColor;
-			std::uint8_t initFontSize;
-			std::uint8_t judgeFontSize;
+			std::uint16_t initFontSize;
+			std::uint16_t judgeFontSize;
 			void drawJudge();
 			void drawScore();
 		public:

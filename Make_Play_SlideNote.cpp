@@ -1,6 +1,6 @@
 #include "Make_Play_SlideNote.h"
 
-Make::Play::Make_Play_SlideNote::Make_Play_SlideNote(const double time, const std::uint8_t noteType, const double laneXStart, const double laneXEnd, const double laneWidth, const double arrowWidthBetween, const std::uint8_t rightOrLeft, const std::uint8_t directionRightOrLeft, const std::uint8_t slideLaneIndexStart, const std::uint8_t slideLaneIndexEnd, const std::function<void(std::uint8_t, std::uint8_t)> nextNote, const std::shared_ptr<Make_Play_Score>& p_score) :
+Make::Play::Make_Play_SlideNote::Make_Play_SlideNote(const double time, const std::uint16_t noteType, const double laneXStart, const double laneXEnd, const double laneWidth, const double arrowWidthBetween, const std::uint16_t rightOrLeft, const std::uint16_t directionRightOrLeft, const std::uint16_t slideLaneIndexStart, const std::uint16_t slideLaneIndexEnd, const std::function<void(std::uint16_t, std::uint16_t)> nextNote, const std::shared_ptr<Make_Play_Score>& p_score) :
 	time(time), noteType(noteType), laneXStart(laneXStart), laneXEnd(laneXEnd),laneWidth(laneWidth), arrowWidthBetween(arrowWidthBetween), rightOrLeft(rightOrLeft), directionRightOrLeft(directionRightOrLeft), slideLaneIndexStart(slideLaneIndexStart), slideLaneIndexEnd(slideLaneIndexEnd), nextNote(nextNote), p_score(p_score) {
 	p_keyHitCheck = ::Singleton::Singleton_KeyHitCheck::getInstance();
 	colorR = GetColor(228, 75, 198);

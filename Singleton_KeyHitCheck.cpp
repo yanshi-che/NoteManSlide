@@ -123,6 +123,17 @@ void Singleton::Singleton_KeyHitCheck::checkHitKey() {
 	else {
 		key[KEY_INPUT_RIGHT] = 0;
 	}
+
+	if (buf[KEY_INPUT_RETURN] == 1) {
+		++key[KEY_INPUT_RETURN];
+	}
+	else {
+		key[KEY_INPUT_RETURN] = 0;
+	}
+}
+
+void Singleton::Singleton_KeyHitCheck::resetKeyHit(std::uint16_t keyNum) {
+	key[keyNum] = 0;
 }
 
 std::uint16_t Singleton::Singleton_KeyHitCheck::getHitKeyLong(std::uint16_t keyNum) {
