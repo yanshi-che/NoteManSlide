@@ -15,10 +15,8 @@ namespace Game {
 	namespace Menu {
 		class Game_Menu_FileOperator
 		{
-		private:
-			void getJsonVal(json::value& val);
 		public:
-			bool getMusicData(std::vector<std::vector<std::unique_ptr<Game_Menu_MusicData>>>& musicData);
+			bool getMusicData(std::vector<std::vector<std::shared_ptr<Game_Menu_MusicData>>>& musicData);
 		};
 	}
 }

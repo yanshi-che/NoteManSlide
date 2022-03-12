@@ -11,6 +11,7 @@
 #include "SceneChanger.h"
 #include "Game_Menu_MusicData.h"
 #include "Game_Menu_FileOperator.h"
+#include "Game_MusicDataShareBetweenMenuAndPlay.h"
 #include "Singleton_KeyHitCheck.h"
 
 using namespace boost;
@@ -23,10 +24,11 @@ namespace Game {
 		{
 		private:
 			Singleton::Singleton_KeyHitCheck* p_keyHitCheck;
+			std::shared_ptr<Game_MusicDataShareBetweenMenuAndPlay> p_musicDataShare;
 			std::unique_ptr<Game_Menu_FileOperator> p_fileOp;
-			std::vector<std::vector<std::unique_ptr<Game_Menu_MusicData>>> musicDataVec;
+			std::vector<std::vector<std::shared_ptr<Game_Menu_MusicData>>> musicDataVec;
 			std::deque<std::uint16_t> musicDataVecElementDeq;
-			std::vector<std::unique_ptr<Game_Menu_MusicData>>* p_focusedMusicData;
+			std::vector<std::shared_ptr<Game_Menu_MusicData>>* p_focusedMusicData;
 			//フォントデータのハンドル
 			int focusedMusicListFontHandle;
 			int notFocusedMusicListFontHandle;
@@ -52,7 +54,7 @@ namespace Game {
 			void setNextFocusedMusicData();
 			void setPrevFocusedMusicData();
 		public:
-			Game_Menu_MenuManager(std::shared_ptr<SceneChanger>& p_sceneChanger);
+			Game_Menu_MenuManager(std::shared_ptr<SceneChanger>& p_sceneChanger, std::shared_ptr<Game_MusicDataShareBetweenMenuAndPlay>& p_musicDataShare);
 			void initialize() override;
 			void finalize() override;
 			void update() override;

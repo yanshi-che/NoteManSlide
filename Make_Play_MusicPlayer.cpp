@@ -10,7 +10,6 @@ Make::Play::Make_Play_MusicPlayer::~Make_Play_MusicPlayer() {
 }
 
 void Make::Play::Make_Play_MusicPlayer::startMusicFromHead() {
-
 	PlaySoundMem(musicHandle, DX_PLAYTYPE_BACK,true);
 }
 

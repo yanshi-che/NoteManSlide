@@ -1,6 +1,6 @@
 #include "Game_Menu_MenuManager.h"
 
-Game::Menu::Game_Menu_MenuManager::Game_Menu_MenuManager(std::shared_ptr<SceneChanger>& p_sceneChanger) :Task(p_sceneChanger){
+Game::Menu::Game_Menu_MenuManager::Game_Menu_MenuManager(std::shared_ptr<SceneChanger>& p_sceneChanger, std::shared_ptr<Game_MusicDataShareBetweenMenuAndPlay>& p_musicDataShare) :Task(p_sceneChanger){
 	//フォントデータのハンドル
 	focusedMusicListFontHandle = 0;
 	notFocusedMusicListFontHandle = 0;
@@ -17,13 +17,12 @@ Game::Menu::Game_Menu_MenuManager::Game_Menu_MenuManager(std::shared_ptr<SceneCh
 	normalNum = "";
 	hardNum = "";
 	p_keyHitCheck = Singleton::Singleton_KeyHitCheck::getInstance();
+	this->p_musicDataShare = p_musicDataShare;
 	p_fileOp = nullptr;
 	p_focusedMusicData = nullptr;
 }
 
 void Game::Menu::Game_Menu_MenuManager::initialize() {
-	int loadingFontHandle = CreateFontToHandle("Pristina", 100, 4, DX_FONTTYPE_ANTIALIASING_EDGE);
-	DrawStringToHandle(80, 300, "Now Loading....", fontColor,loadingFontHandle, edgeColor);
 	focusedMusicListFontHandle = CreateFontToHandle("Pristina", 20, 3, DX_FONTTYPE_ANTIALIASING_EDGE);
 	notFocusedMusicListFontHandle = CreateFontToHandle("Pristina", 20, 2, DX_FONTTYPE_ANTIALIASING_EDGE);
 	focusedMusicFontHandle = CreateFontToHandle("Pristina", 20, 3, DX_FONTTYPE_ANTIALIASING_EDGE);
@@ -35,7 +34,6 @@ void Game::Menu::Game_Menu_MenuManager::initialize() {
 		DrawString(80, 420, "5秒後にホームに戻ります", fontColor, edgeColor);
 		ScreenFlip();
 		Sleep(5000);
-		DeleteFontToHandle(loadingFontHandle);
 		p_sceneChanger->changeScene(Scene::Home);
 		return;
 	}
@@ -44,7 +42,6 @@ void Game::Menu::Game_Menu_MenuManager::initialize() {
 	}
 	p_focusedMusicData = &musicDataVec.at(0);
 	setDifficultyAndBpmStr();
-	DeleteFontToHandle(loadingFontHandle);
 }
 
 void Game::Menu::Game_Menu_MenuManager::finalize() {
@@ -76,6 +73,11 @@ void Game::Menu::Game_Menu_MenuManager::update() {
 
 	if (p_keyHitCheck->getHitKeyUsual(KEY_INPUT_ESCAPE)) {
 		p_sceneChanger->changeScene(Scene::Home);
+	}
+
+	if (p_keyHitCheck->getHitKeyUsual(KEY_INPUT_RETURN)) {
+		p_musicDataShare->setMusicData(p_focusedMusicData->at(difficultyCount));
+		p_sceneChanger->changeScene(Scene::GamePlay);
 	}
 
 	blend += blendDiff;

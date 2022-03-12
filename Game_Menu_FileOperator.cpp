@@ -1,6 +1,6 @@
 #include "Game_Menu_FileOperator.h"
 
-bool Game::Menu::Game_Menu_FileOperator::getMusicData(std::vector<std::vector<std::unique_ptr<Game_Menu_MusicData>>>& musicData) {
+bool Game::Menu::Game_Menu_FileOperator::getMusicData(std::vector<std::vector<std::shared_ptr<Game_Menu_MusicData>>>& musicData) {
 	try {
 		//登録されている譜面が入ったディレクトリの読み込み
 		std::string firstPath = ".\\musicData";
