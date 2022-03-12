@@ -9,7 +9,7 @@ namespace Make {
 		class Make_File_MusicAnalyse
 		{
 		private:
-			const std::uint8_t COUNTOFBEAT;
+			const std::uint16_t COUNTOFBEAT;
 			double analyseBarLengthPerMinutes(double bpm) const noexcept;
 			void analyseBarLength(double bpm,double totalMinutes, std::uint16_t& barLength) const noexcept;
 		public:

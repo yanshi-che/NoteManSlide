@@ -1,6 +1,6 @@
 #include "Make_Play_LongNote.h"
 
-Make::Play::Make_Play_LongNote::Make_Play_LongNote(const double startTime, const double endTime, const double sixteenthTime, const std::uint8_t noteType, const std::uint8_t laneIndex, const double laneXRight, const double laneXLeft, const std::function<void(std::uint8_t, std::uint8_t)> nextNote, const std::shared_ptr<Make_Play_Score>& p_score) :
+Make::Play::Make_Play_LongNote::Make_Play_LongNote(const double startTime, const double endTime, const double sixteenthTime, const std::uint16_t noteType, const std::uint16_t laneIndex, const double laneXRight, const double laneXLeft, const std::function<void(std::uint16_t, std::uint16_t)> nextNote, const std::shared_ptr<Make_Play_Score>& p_score) :
 	startTime(startTime), endTime(endTime), noteType(noteType), laneIndex(laneIndex), laneXRight(laneXRight), laneXLeft(laneXLeft), nextNote(nextNote), p_score(p_score) {
 	p_keyHitCheck = ::Singleton::Singleton_KeyHitCheck::getInstance();
 	y = 0;

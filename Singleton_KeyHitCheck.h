@@ -20,6 +20,7 @@ namespace Singleton {
 		static void destroyInstance();
 
 		void checkHitKey();
+		void resetKeyHit(std::uint16_t keyNum);
 		std::uint16_t getHitKeyLong(std::uint16_t keyNum);
 		bool getHitKeyUsual(std::uint16_t keyNum);
 	};

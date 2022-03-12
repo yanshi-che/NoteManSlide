@@ -16,7 +16,6 @@ void Make::Make_DrawManager::finalize() {
 	p_menu->finalize();
 	p_menu.reset();
 	Singleton::Make_Singleton_MouseOperationCheck::destroyInstance();
-	::Singleton::Singleton_KeyHitCheck::destroyInstance();
 }
 
 void Make::Make_DrawManager::update() {

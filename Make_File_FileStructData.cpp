@@ -1,6 +1,6 @@
 #include "Make_File_FileStructData.h"
 
-Make::File::MusicData::MusicData(std::string name, std::string artist, std::uint8_t level, double bpm, std::uint16_t barLength, double totalMinutes, double beginDelay) {
+Make::File::MusicData::MusicData(std::string name, std::string artist, std::uint16_t level, double bpm, std::uint16_t barLength, double totalMinutes, double beginDelay) {
 	this->name = name;
 	this->artist = artist;
 	this->level = level;
@@ -24,13 +24,13 @@ void Make::File::tag_invoke(const json::value_from_tag&, json::value& jv, const 
 
 Make::File::MusicData Make::File::tag_invoke(const json::value_to_tag<MusicData>&, const json::value& jv) {
 	const json::value& val = jv.as_object().at("MusicData");
-	return MusicData(json::serialize(val.at("name").as_string()),json::serialize(val.at("artist").as_string()),
-		static_cast<std::uint8_t>(val.at("level").as_int64()), val.at("bpm").as_double(),
+	return MusicData(std::string(val.at("name").as_string().c_str()),std::string(val.at("artist").as_string().c_str()),
+		static_cast<std::uint16_t>(val.at("level").as_int64()), val.at("bpm").as_double(),
 		static_cast<std::uint16_t>(val.at("barLength").as_int64()),val.at("totalMinute").as_double(),
 		val.at("beginDelay").as_double());
 }
 
-Make::File::BarLineData::BarLineData(std::uint16_t barID,std::uint8_t quontize) {
+Make::File::BarLineData::BarLineData(std::uint16_t barID,std::uint16_t quontize) {
 	this->barID = barID;
 	this->quontize = quontize;
 }
@@ -46,12 +46,12 @@ std::vector<Make::File::BarLineData> Make::File::tag_invoke(const json::value_to
 	std::vector<BarLineData> b;
 	const json::array array = jv.as_object().at("BarLineData").as_array();
 	for (int i = 0, iSize = static_cast<int>(array.size()); i < iSize; ++i) {
-		b.push_back(BarLineData(static_cast<std::uint16_t>(array[i].at("barID").as_int64()),static_cast<std::uint8_t>(array[i].at("quontize").as_int64())));
+		b.push_back(BarLineData(static_cast<std::uint16_t>(array[i].at("barID").as_int64()),static_cast<std::uint16_t>(array[i].at("quontize").as_int64())));
 	}
 	return b;
 }
 
-Make::File::NoteDataForJson::NoteDataForJson(double time, std::uint8_t noteType, std::uint8_t laneIndex, std::uint16_t longNoteGroupIndex, std::uint16_t noteIndex, std::uint8_t rightOrLeft, std::uint8_t directionRightOrLeft, std::uint8_t slideLaneIndexStart, std::uint8_t slideLaneIndexEnd) {
+Make::File::NoteDataForJson::NoteDataForJson(double time, std::uint16_t noteType, std::uint16_t laneIndex, std::uint16_t longNoteGroupIndex, std::uint16_t noteIndex, std::uint16_t rightOrLeft, std::uint16_t directionRightOrLeft, std::uint16_t slideLaneIndexStart, std::uint16_t slideLaneIndexEnd) {
 	this->time = time;
 	this->noteType = noteType;
 	this->laneIndex = laneIndex;
@@ -77,7 +77,7 @@ void Make::File::tag_invoke(const json::value_from_tag&, json::value& jv, const 
 	};
 }
 
-Make::File::NoteDataForSave::NoteDataForSave(std::uint16_t barID, std::uint8_t beatID, std::uint8_t noteType, std::uint8_t laneIndex, std::uint16_t longNoteGroupIndex, std::uint8_t rightOrLeft, std::uint8_t directionRightOrLeft, std::uint8_t slideLaneIndexStart, std::uint8_t slideLaneIndexEnd) {
+Make::File::NoteDataForSave::NoteDataForSave(std::uint16_t barID, std::uint16_t beatID, std::uint16_t noteType, std::uint16_t laneIndex, std::uint16_t longNoteGroupIndex, std::uint16_t rightOrLeft, std::uint16_t directionRightOrLeft, std::uint16_t slideLaneIndexStart, std::uint16_t slideLaneIndexEnd) {
 	this->barID = barID;
 	this->beatID = beatID;
 	this->noteType = noteType;
@@ -109,14 +109,14 @@ std::vector<Make::File::NoteDataForSave> Make::File::tag_invoke(const json::valu
 	for (int i = 0,iSize = static_cast<int>(array.size()); i < iSize; ++i) {
 		n.push_back(NoteDataForSave(
 			static_cast<std::uint16_t>(array.at(i).at("barID").as_int64()),
-			static_cast<std::uint8_t>(array.at(i).at("beatID").as_int64()),
-			static_cast<std::uint8_t>(array.at(i).at("noteType").as_int64()),
-			static_cast<std::uint8_t>(array.at(i).at("laneIndex").as_int64()),
+			static_cast<std::uint16_t>(array.at(i).at("beatID").as_int64()),
+			static_cast<std::uint16_t>(array.at(i).at("noteType").as_int64()),
+			static_cast<std::uint16_t>(array.at(i).at("laneIndex").as_int64()),
 			static_cast<std::uint16_t>(array.at(i).at("longNoteGroupIndex").as_int64()),
-			static_cast<std::uint8_t>(array.at(i).at("rightOrLeft").as_int64()),
-			static_cast<std::uint8_t>(array.at(i).at("directionRightOrLeft").as_int64()),
-			static_cast<std::uint8_t>(array.at(i).at("slideLaneIndexStart").as_int64()),
-			static_cast<std::uint8_t>(array.at(i).at("slideLaneIndexEnd").as_int64())));
+			static_cast<std::uint16_t>(array.at(i).at("rightOrLeft").as_int64()),
+			static_cast<std::uint16_t>(array.at(i).at("directionRightOrLeft").as_int64()),
+			static_cast<std::uint16_t>(array.at(i).at("slideLaneIndexStart").as_int64()),
+			static_cast<std::uint16_t>(array.at(i).at("slideLaneIndexEnd").as_int64())));
 	}
 	return n;
 }

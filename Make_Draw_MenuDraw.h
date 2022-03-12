@@ -60,6 +60,7 @@ namespace Make {
 			static std::shared_ptr<Draw::Make_Draw_BeatLineManager> p_beatLine;
 			static std::function<void()> drawFunc;
 			static bool isPlaying;
+			static bool playFinalize;
 			static bool isFileOpen;
 
 			static void MenuItemSelectCallBack(const TCHAR* itemName, int itemID);//ƒƒjƒ…[‚ª‘I‘ğ‚³‚ê‚½‚çŒÄ‚Î‚ê‚éŠÖ”

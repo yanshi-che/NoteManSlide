@@ -50,23 +50,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetOutApplicationLogValidFlag(FALSE);
 	ChangeWindowMode(true);
 	SetGraphMode(Global::WINDOW_WIDTH,Global::WINDOW_HEIGHT,Global::WINDOW_COLORBIT); //スクリーンの大きさの設定
-	SetMainWindowText("noteman");
+	SetMainWindowText("NoteManSlide");
 
 	if (DxLib_Init() == -1)		// ＤＸライブラリ初期化処理
 	{
 		return -1;			// エラーが起きたら直ちに終了
 	}
 	SetDrawScreen(DX_SCREEN_BACK);//裏画面で画面生成
-	int backImgHandle = LoadGraph(".\\image\\backGround\\pipo-battlebg020a.jpg");
+	const int backImgHandle = LoadGraph(".\\image\\background\\backImg.jpg");
 
 	SetBackgroundColor(30,30,30);
-	MainSceneManager mng;
+	MainSceneManager mng = MainSceneManager(backImgHandle);
 	Fps fps;
 
 	mng.initialize();
 	// while(裏画面を表画面に反映, メッセージ処理, 画面クリア)
 	while (ProcessMessage() == 0 && ClearDrawScreen() == 0) {
-		DrawGraph(0,0,backImgHandle,false);
 		fps.Update();
 		fps.Draw();
 		mng.update();

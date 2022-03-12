@@ -1,8 +1,8 @@
 #include "Make_Note_SlideNoteContainer.h"
 
-std::uint8_t Make::Note::Make_Note_SlideNoteContainer::lineThickness = 8;
+std::uint16_t Make::Note::Make_Note_SlideNoteContainer::lineThickness = 8;
 
-Make::Note::Make_Note_SlideNoteContainer::Make_Note_SlideNoteContainer(const std::uint16_t barID,const std::uint8_t beatID, const double& y,const std::uint8_t laneAmount,const double time) :
+Make::Note::Make_Note_SlideNoteContainer::Make_Note_SlideNoteContainer(const std::uint16_t barID,const std::uint16_t beatID, const double& y,const std::uint16_t laneAmount,const double time) :
 	barID(barID), beatID(beatID), laneAmount(laneAmount), time(time), r_y(y) {
 	colorR = GetColor(228, 75, 198);
 	colorL = GetColor(62, 253, 249);
@@ -95,7 +95,7 @@ void Make::Note::Make_Note_SlideNoteContainer::drawSlideNote() {
 	}
 }
 
-void Make::Note::Make_Note_SlideNoteContainer::setSlideNoteFlag(const std::uint8_t laneIDStart,const std::uint8_t laneIDEnd,const bool right, const bool isDirectionRight) {
+void Make::Note::Make_Note_SlideNoteContainer::setSlideNoteFlag(const std::uint16_t laneIDStart,const std::uint16_t laneIDEnd,const bool right, const bool isDirectionRight) {
 	if (right) {
 		if (!noteFlag.first) {
 			noteStartAndEndLane.first.first = laneIDStart;
@@ -142,7 +142,7 @@ const std::pair<bool, bool>& Make::Note::Make_Note_SlideNoteContainer::getSlideN
 	return noteDirectionRightOrLeft;
 }
 
-const std::pair<std::pair<std::uint8_t, std::uint8_t>, std::pair<std::uint8_t, std::uint8_t>>& Make::Note::Make_Note_SlideNoteContainer::getNoteStartAndEnd() {
+const std::pair<std::pair<std::uint16_t, std::uint16_t>, std::pair<std::uint16_t, std::uint16_t>>& Make::Note::Make_Note_SlideNoteContainer::getNoteStartAndEnd() {
 	return noteStartAndEndLane;
 }
 
@@ -154,6 +154,6 @@ const std::uint16_t& Make::Note::Make_Note_SlideNoteContainer::getBarID() {
 	return barID;
 }
 
-const std::uint8_t& Make::Note::Make_Note_SlideNoteContainer::getBeatID() {
+const std::uint16_t& Make::Note::Make_Note_SlideNoteContainer::getBeatID() {
 	return beatID;
 }

@@ -2,7 +2,7 @@
 
 double Make::Note::Make_Note_LongNoteContainer::noteWidth = 15.0;
 
-Make::Note::Make_Note_LongNoteContainer::Make_Note_LongNoteContainer(const std::uint16_t barID,const std::uint8_t beatID,const double& y,const std::uint8_t laneAmount,const double time) :
+Make::Note::Make_Note_LongNoteContainer::Make_Note_LongNoteContainer(const std::uint16_t barID,const std::uint16_t beatID,const double& y,const std::uint16_t laneAmount,const double time) :
 	barID(barID), beatID(beatID),laneAmount(laneAmount),time(time),r_y(y) {
 	noteHeight1.resize(laneAmount);
 	noteHeight2.resize(laneAmount);
@@ -32,7 +32,7 @@ void Make::Note::Make_Note_LongNoteContainer::drawLongNote() {
 	}
 }
 
-void Make::Note::Make_Note_LongNoteContainer::setLongNoteFlag(const std::uint8_t laneID,const bool isFirstOrLast) {
+void Make::Note::Make_Note_LongNoteContainer::setLongNoteFlag(const std::uint16_t laneID,const bool isFirstOrLast) {
 	if (isFirstOrLast) {
 		if (!noteFlag.at(laneID).first) {
 			noteFlag.at(laneID).first = true;
@@ -55,7 +55,7 @@ void Make::Note::Make_Note_LongNoteContainer::setLongNoteFlag(const std::uint8_t
 	}
 }
 
-void Make::Note::Make_Note_LongNoteContainer::setNoteHeight(const std::uint8_t laneID,const double noteHeight,const bool isFirst) {
+void Make::Note::Make_Note_LongNoteContainer::setNoteHeight(const std::uint16_t laneID,const double noteHeight,const bool isFirst) {
 	if (isFirst) {
 		this->noteHeight1.at(laneID) = noteHeight;
 	}
@@ -64,7 +64,7 @@ void Make::Note::Make_Note_LongNoteContainer::setNoteHeight(const std::uint8_t l
 	}
 }
 
-void Make::Note::Make_Note_LongNoteContainer::setNoteGroup(const std::uint8_t laneID,const std::uint16_t group) {
+void Make::Note::Make_Note_LongNoteContainer::setNoteGroup(const std::uint16_t laneID,const std::uint16_t group) {
 	noteGroup.at(laneID) = group;
 }
 
@@ -72,11 +72,11 @@ const double& Make::Note::Make_Note_LongNoteContainer::getY() {
 	return r_y;
 }
 
-const std::pair<bool, bool> Make::Note::Make_Note_LongNoteContainer::getLongNoteFlag(const std::uint8_t laneID) {
+const std::pair<bool, bool> Make::Note::Make_Note_LongNoteContainer::getLongNoteFlag(const std::uint16_t laneID) {
 	return noteFlag.at(laneID);
 }
 
-const std::uint16_t& Make::Note::Make_Note_LongNoteContainer::getNoteGroup(const std::uint8_t laneID) {
+const std::uint16_t& Make::Note::Make_Note_LongNoteContainer::getNoteGroup(const std::uint16_t laneID) {
 	return noteGroup.at(laneID);
 }
 
@@ -88,6 +88,6 @@ const std::uint16_t& Make::Note::Make_Note_LongNoteContainer::getBarID() {
 	return barID;
 }
 
-const std::uint8_t& Make::Note::Make_Note_LongNoteContainer::getBeatID() {
+const std::uint16_t& Make::Note::Make_Note_LongNoteContainer::getBeatID() {
 	return beatID;
 }

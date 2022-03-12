@@ -3,11 +3,13 @@
 #include <cstdint>
 #include <string>
 
-namespace Make {
-	namespace File {
-		class Make_File_MusicData
+namespace Game {
+	namespace Menu {
+		class Game_Menu_MusicData
 		{
 		private:
+			const std::string musicPath;
+			const std::string scorePath;
 			const std::string name;
 			const std::string artist;
 			const std::uint16_t level;
@@ -16,7 +18,9 @@ namespace Make {
 			const double totalMinutes;//ã»ÇÃçƒê∂éûä‘(ï™)
 			const double beginDelay;//ã»Ç™énÇ‹ÇÈÇ‹Ç≈ÇÃÇ∏ÇÍ
 		public:
-			Make_File_MusicData(const std::string& name,const std::string& artist,const std::uint16_t level,const double bpm,const std::uint16_t barLength,const double totalMinutes,const double beginDelay);
+			Game_Menu_MusicData(const std::string& musicPath, const std::string& scorePath,const std::string& name, const std::string& artist, const std::uint16_t level, const double bpm, const std::uint16_t barLength, const double totalMinutes, const double beginDelay);
+			const std::string& getMusicPath() noexcept;
+			const std::string& getScorePath() noexcept;
 			const std::string& getName() noexcept;
 			const std::string& getArtist() noexcept;
 			const std::uint16_t& getLevel() noexcept;
@@ -25,6 +29,6 @@ namespace Make {
 			const double& getTotalMinutes() noexcept;
 			const double& getBeginDelay()noexcept;
 		};
-
 	}
 }
+

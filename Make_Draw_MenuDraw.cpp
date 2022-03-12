@@ -7,12 +7,13 @@ std::shared_ptr<Make::Draw::Make_Draw_BeatLineManager> Make::Draw::Make_Draw_Men
 std::shared_ptr<Make::Play::Make_Play_TestPlayManager> Make::Draw::Make_Draw_MenuDraw::p_testPlay = nullptr;
 std::function<void()> Make::Draw::Make_Draw_MenuDraw::drawFunc = nullptr;
 bool Make::Draw::Make_Draw_MenuDraw::isPlaying = false;
+bool Make::Draw::Make_Draw_MenuDraw::playFinalize = false;
 bool Make::Draw::Make_Draw_MenuDraw::isFileOpen = false;
 
 Make::Draw::Make_Draw_MenuDraw::Make_Draw_MenuDraw(std::shared_ptr<SceneChanger>& sceneChanger){
 	this->sceneChanger = sceneChanger;
 	p_beatLine = std::make_shared<Draw::Make_Draw_BeatLineManager>();
-	drawFunc =p_beatLine->getDrawFunc();
+	drawFunc = p_beatLine->getDrawFunc();
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, MENUITEM_IDTOP, FALSE, "ファイル(&F)", File);
 	AddMenuItem(MENUITEM_ADD_CHILD, NULL, File, FALSE, "新規作成(&Ctrl+N)", NewFile);
 	AddKeyAccel_ID(NewFile,KEY_INPUT_N,1,0,0);
@@ -147,6 +148,8 @@ void Make::Draw::Make_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemNam
 	case Stop:
 		if (p_musicData != nullptr && isPlaying) {
 			drawFunc = p_beatLine->getDrawFunc();
+			isPlaying = false;
+			playFinalize = true;
 		}
 		break;
 	case WholeQUARTER:
@@ -224,15 +227,16 @@ void Make::Draw::Make_Draw_MenuDraw::finalize() {
 	}
 	p_musicData.reset();
 	p_musicPlayer.reset();
+	ClearKeyAccel();
+	DeleteMenuItemAll();
 }
 
 void Make::Draw::Make_Draw_MenuDraw::resetDrawFunc() {
 	drawFunc = nullptr;
-	if (isPlaying) {
+	if (playFinalize) {
 		p_testPlay->finalize();
 		p_testPlay.reset();
-		p_musicPlayer->stopMusic();
-		isPlaying = false;
+		playFinalize = false;
 	}
 }
 

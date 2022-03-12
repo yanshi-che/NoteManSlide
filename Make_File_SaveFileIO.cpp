@@ -30,7 +30,7 @@ void Make::File::Make_File_SaveFileIO::writeSaveData(const std::shared_ptr<Make_
 
 	std::vector<BarLineData> barLineDataVec;
 	for (int i = 0, iSize = static_cast<int>(barVec.size()); i<iSize ; i++) {
-		barLineDataVec.push_back(BarLineData(i,static_cast<std::uint8_t>(barVec.at(i).size())));
+		barLineDataVec.push_back(BarLineData(i,static_cast<std::uint16_t>(barVec.at(i).size())));
 	}
 
 	obj["BarLineData"] = json::value_from(barLineDataVec, sp);
@@ -115,7 +115,6 @@ std::tuple<std::unique_ptr<Make::File::Make_File_MusicData>, std::unique_ptr<Mak
 		return std::tuple<std::unique_ptr<Make_File_MusicData>, std::unique_ptr<Play::Make_Play_MusicPlayer>, json::value>(nullptr, nullptr, NULL);
 	}
 	//jsonì¬—p‚Ì•Ï”
-	json::object obj;
 	json::value val;
 	json::storage_ptr sp = json::make_shared_resource< json::monotonic_resource >();
 

@@ -47,7 +47,6 @@ namespace Make {
 
 			LONGLONG startClock;
 			double nowTime;
-			bool isStart;
 			bool isMusicStart;
 
 			double startDelay;
@@ -56,7 +55,7 @@ namespace Make {
 
 			std::function<void()> drawNoteFunc;
 
-			void nextNote(const std::uint8_t noteType, const std::uint8_t laneIndex);//判定を同じレーンの次のノーツに移す
+			void nextNote(const std::uint16_t noteType, const std::uint16_t laneIndex);//判定を同じレーンの次のノーツに移す
 			void draw();
 			void drawBeforeStart();
 			void drawDown();

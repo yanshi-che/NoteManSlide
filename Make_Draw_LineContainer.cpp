@@ -1,12 +1,12 @@
 #include "Make_Draw_LineContainer.h"
 
-std::uint8_t Make::Draw::Make_Draw_LineContainer::noteType = Global::NOTETYPE_NORMAL;
+std::uint16_t Make::Draw::Make_Draw_LineContainer::noteType = Global::NOTETYPE_NORMAL;
 
 bool Make::Draw::Make_Draw_LineContainer::clickObserver = false;
 
 int Make::Draw::Make_Draw_LineContainer::mouseX = 0;
 int Make::Draw::Make_Draw_LineContainer::mouseY = 0;
-std::uint8_t Make::Draw::Make_Draw_LineContainer::laneIDForLongNote = 0;
+std::uint16_t Make::Draw::Make_Draw_LineContainer::laneIDForLongNote = 0;
 
 std::uint16_t Make::Draw::Make_Draw_LineContainer::barIDForChangeQuontize = 0;
 
@@ -14,7 +14,7 @@ std::uint16_t Make::Draw::Make_Draw_LineContainer::getbarIDForChangeQuontize() {
 	return barIDForChangeQuontize;
 }
 
-Make::Draw::Make_Draw_LineContainer::Make_Draw_LineContainer(const std::uint16_t barID,const double time,const std::uint8_t beatID, const std::uint8_t quontize,const double y,const double yMax, const std::shared_ptr<Note::Make_Note_NoteManager>& p_noteManager) :
+Make::Draw::Make_Draw_LineContainer::Make_Draw_LineContainer(const std::uint16_t barID,const double time,const std::uint16_t beatID, const std::uint16_t quontize,const double y,const double yMax, const std::shared_ptr<Note::Make_Note_NoteManager>& p_noteManager) :
 	barID(barID),laneAmount(Global::LANE_AMOUNT),time(time), beatID(beatID),p_noteManager(p_noteManager){
 	this->y = y;
 	this->yMax = yMax;
@@ -217,7 +217,7 @@ void Make::Draw::Make_Draw_LineContainer::setNoteSlideL() {
 	}
 }
 
-void Make::Draw::Make_Draw_LineContainer::setNoteType(std::uint8_t type)  {
+void Make::Draw::Make_Draw_LineContainer::setNoteType(std::uint16_t type)  {
 	noteType = type;
 }
 
