@@ -8,6 +8,7 @@
 #include "Global.h"
 #include "Config_Config.h"
 #include "Game_Play_Score.h"
+#include "Game_Play_Effect.h"
 #include "Singleton_KeyHitCheck.h"
 
 namespace Game {
@@ -29,6 +30,7 @@ namespace Game {
 			const std::uint16_t slideLaneIndexEnd;//スライドノーツの終了レーン
 			const std::function<void(std::uint16_t, std::uint16_t)> nextNote;//判定を次のノーツに移す
 			const std::shared_ptr<Game_Play_Score>& p_score;//スコア表示
+			const std::shared_ptr<Game_Play_Effect>& p_effect;//エフェクト
 			std::uint32_t colorR;
 			std::uint32_t colorL;
 			std::uint16_t key;
@@ -38,7 +40,7 @@ namespace Game {
 			void drawLine();
 			void drawArrow();
 		public:
-			Game_Play_SlideNote(const double time, const std::uint16_t noteType, const double laneXStart, const double laneXEnd, const double laneWidth, const double arrowWidthBetween, const std::uint16_t rightOrLeft, const std::uint16_t directionRightOrLeft, const std::uint16_t slideLaneIndexStart, const std::uint16_t slideLaneIndexEnd, const std::function<void(std::uint16_t, std::uint16_t)> nextNote, const std::shared_ptr<Game_Play_Score>& p_score);
+			Game_Play_SlideNote(const double time, const std::uint16_t noteType, const double laneXStart, const double laneXEnd, const double laneWidth, const double arrowWidthBetween, const std::uint16_t rightOrLeft, const std::uint16_t directionRightOrLeft, const std::uint16_t slideLaneIndexStart, const std::uint16_t slideLaneIndexEnd, const std::function<void(std::uint16_t, std::uint16_t)> nextNote, const std::shared_ptr<Game_Play_Score>& p_score, const std::shared_ptr<Game_Play_Effect>& p_effect);
 			void check(double nowTime);
 			void setTurn(bool t);
 			void setDone(bool d);

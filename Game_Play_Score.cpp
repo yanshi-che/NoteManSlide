@@ -62,3 +62,15 @@ void Game::Play::Game_Play_Score::plusMiss() {
 	judge = " MISS";
 	judgeColor = GetColor(124, 126, 122);
 }
+
+std::uint16_t Game::Play::Game_Play_Score::getPerfect() {
+	return perfect;
+}
+
+std::uint16_t Game::Play::Game_Play_Score::getGreat() {
+	return great;
+}
+
+std::uint16_t Game::Play::Game_Play_Score::getMiss() {
+	return miss;
+}

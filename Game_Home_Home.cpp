@@ -41,14 +41,14 @@ void Game::Home::Game_Home_Home::update() {
 	if (blend == 0 || blend == 255) {
 		blendDiff = -blendDiff;
 	}
-	if (p_keyHitCheck->getHitKeyUsual(KEY_INPUT_RETURN)) {
+	if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_RETURN) == 1) {
 		if (boxCount == 0) {
 			p_sceneChanger->changeScene(Scene::GameMenu);
 		}else if(boxCount == 1){
 			p_sceneChanger->changeScene(Scene::NoteEdit);
 		}
 		else if (boxCount == 2) {
-			p_sceneChanger->changeScene(Scene::Config);
+			//p_sceneChanger->changeScene(Scene::Config);
 		}
 		else if (boxCount == 3) {
 			p_sceneChanger->changeScene(Scene::Exit);

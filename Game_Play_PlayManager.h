@@ -12,6 +12,7 @@
 #include "Global.h"
 #include "Config_Config.h"
 #include "Game_MusicDataShareBetweenMenuAndPlay.h"
+#include "Game_PlayResultShare.h"
 #include "Game_Menu_MusicData.h"
 #include "Game_Play_Lane.h"
 #include "Game_Play_BarLine.h"
@@ -19,6 +20,7 @@
 #include "Game_Play_LongNote.h"
 #include "Game_Play_SlideNote.h"
 #include "Game_Play_Score.h"
+#include "Game_Play_Effect.h"
 #include "Singleton_KeyHitCheck.h"
 
 using namespace boost;
@@ -28,9 +30,11 @@ namespace Game {
 		class Game_Play_PlayManager : public Task
 		{
 		private:
-			std::shared_ptr<Game_MusicDataShareBetweenMenuAndPlay> p_musicDataShare;
+			std::shared_ptr<Game_MusicDataShareBetweenMenuAndPlay>& p_musicDataShare;
+			std::shared_ptr<Game::Game_PlayResultShare>& p_playResultShare;
 
 			std::shared_ptr<Game_Play_Score> p_score;//スコア表示
+			std::shared_ptr<Game_Play_Effect> p_effect;//エフェクト
 			std::unique_ptr<Game_Play_Lane> p_lane;//レーン周りの描画
 			std::vector<std::unique_ptr<Game_Play_BarLine>> barLineVec; //小節線
 			//各ノーツ格納用
@@ -74,7 +78,7 @@ namespace Game {
 
 			bool initializeNote(const std::uint16_t laneAmount, const double timePerBeat);
 		public:
-			Game_Play_PlayManager(std::shared_ptr<SceneChanger>& p_sceneChanger, std::shared_ptr<Game_MusicDataShareBetweenMenuAndPlay>& p_musicDataShare);
+			Game_Play_PlayManager(std::shared_ptr<SceneChanger>& p_sceneChanger, std::shared_ptr<Game_MusicDataShareBetweenMenuAndPlay>& p_musicDataShare, std::shared_ptr<Game::Game_PlayResultShare>& p_playResultShare);
 			void initialize() override;
 			void finalize() override;
 			void update() override;

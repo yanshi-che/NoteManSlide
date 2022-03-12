@@ -24,7 +24,7 @@ namespace Game {
 		{
 		private:
 			Singleton::Singleton_KeyHitCheck* p_keyHitCheck;
-			std::shared_ptr<Game_MusicDataShareBetweenMenuAndPlay> p_musicDataShare;
+			std::shared_ptr<Game_MusicDataShareBetweenMenuAndPlay>& p_musicDataShare;
 			std::unique_ptr<Game_Menu_FileOperator> p_fileOp;
 			std::vector<std::vector<std::shared_ptr<Game_Menu_MusicData>>> musicDataVec;
 			std::deque<std::uint16_t> musicDataVecElementDeq;
@@ -46,6 +46,8 @@ namespace Game {
 
 			std::uint16_t blend;
 			std::int16_t blendDiff;
+
+			bool isFail;
 
 			void drawMusicList();
 			void drawFocusedMusicData();
