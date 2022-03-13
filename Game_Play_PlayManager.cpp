@@ -166,6 +166,7 @@ void Game::Play::Game_Play_PlayManager::draw() {
 		p_effect->draw();
 		drawHiSpeed();
 		drawJudgeCorrection();
+		DrawString(10, 720, "’†’f : escape", fontColor, edgeColor);
 	}
 }
 

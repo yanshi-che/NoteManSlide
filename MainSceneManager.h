@@ -13,6 +13,7 @@
 #include "Game_Menu_MenuManager.h"
 #include "Game_Play_PlayManager.h"
 #include "Game_Result_Result.h"
+#include "Game_Config_Config.h"
 
 class MainSceneManager
 {
@@ -23,8 +24,10 @@ private:
 	std::shared_ptr<Game::Game_PlayResultShare> p_playResultShare;
 	Task* scene;
 	const int backImgHandle;
+	const int bgmHandle;
+	bool isPlaying;
 public:
-	MainSceneManager(const int backImgHandle);
+	MainSceneManager(const int backImgHandle, const int bgmHandle);
 	void initialize();
 	void finalize();
 	void update();
