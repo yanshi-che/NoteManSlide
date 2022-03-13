@@ -80,6 +80,7 @@ void Game::Play::Game_Play_PlayManager::initialize() {
 		p_sceneChanger->changeScene(Scene::GameMenu);
 		return;
 	}
+	ChangeVolumeSoundMem(127, musicHandle);
 
 	//エフェクト
 	p_effect = std::make_shared<Game_Play_Effect>();
