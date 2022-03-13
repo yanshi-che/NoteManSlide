@@ -90,6 +90,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetDrawScreen(DX_SCREEN_BACK);//ó†âÊñ Ç≈âÊñ ê∂ê¨
 	const int backImgHandle = LoadGraph(".\\image\\background\\backImg.jpg");
 	const int bgmHandle = LoadSoundMem(".\\bgm\\bgm.mp3");
+	ChangeVolumeSoundMem(127, bgmHandle);
 
 	SetBackgroundColor(30,30,30);
 	MainSceneManager mng = MainSceneManager(backImgHandle,bgmHandle);
