@@ -48,7 +48,7 @@ void Game::Home::Game_Home_Home::update() {
 			p_sceneChanger->changeScene(Scene::NoteEdit);
 		}
 		else if (boxCount == 2) {
-			//p_sceneChanger->changeScene(Scene::Config);
+			p_sceneChanger->changeScene(Scene::Config);
 		}
 		else if (boxCount == 3) {
 			p_sceneChanger->changeScene(Scene::Exit);

@@ -1,6 +1,11 @@
-#include <iostream>
+#include <fstream>
+
+#include "boost/json.hpp"
 #include "MainSceneManager.h"
 #include "Global.h"
+#include "Config_Config.h"
+
+using namespace boost;
 
 class Fps {
 	int mStartTime;         //測定開始時刻
@@ -44,6 +49,32 @@ public:
 	}
 };
 
+void configInit() {
+	//ファイルの読み込み用
+	std::string s = "";
+	std::string line = "";
+	//json作成用の変数
+	json::object obj;
+	json::value val;
+	json::storage_ptr sp = json::make_shared_resource< json::monotonic_resource >();
+	bool isFail = false;
+	std::ifstream readfile(".\\config\\config.json");
+	if (!readfile) {
+		isFail = true;
+		return;
+	}
+	while (std::getline(readfile, line)) {
+		s.append(line);
+	}
+
+	val = json::parse(s, sp);
+	obj = val.at("Config").as_object();
+	double hiSpeed = obj.at("hiSpeed").as_double();
+	double judgeCorrection = obj.at("judge").as_double();
+	Config::g_hiSpeed += hiSpeed - Config::g_hiSpeed;
+	Config::g_judgeCorrection += judgeCorrection - Config::g_judgeCorrection;
+}
+
 // プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -58,10 +89,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 	SetDrawScreen(DX_SCREEN_BACK);//裏画面で画面生成
 	const int backImgHandle = LoadGraph(".\\image\\background\\backImg.jpg");
+	const int bgmHandle = LoadSoundMem(".\\bgm\\bgm.mp3");
 
 	SetBackgroundColor(30,30,30);
-	MainSceneManager mng = MainSceneManager(backImgHandle);
+	MainSceneManager mng = MainSceneManager(backImgHandle,bgmHandle);
 	Fps fps;
+
+	configInit();
 
 	mng.initialize();
 	// while(裏画面を表画面に反映, メッセージ処理, 画面クリア)
@@ -77,6 +111,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	mng.finalize();
 
 	DeleteGraph(backImgHandle);
+	DeleteSoundMem(bgmHandle);
 
 	DxLib_End();				// ＤＸライブラリ使用の終了処理
 
