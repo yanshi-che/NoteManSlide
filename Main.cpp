@@ -88,10 +88,29 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return -1;			// エラーが起きたら直ちに終了
 	}
 	SetDrawScreen(DX_SCREEN_BACK);//裏画面で画面生成
-	const int backImgHandle = LoadGraph(".\\image\\background\\backImg.jpg");
-	const int bgmHandle = LoadSoundMem(".\\bgm\\bgm.mp3");
+	//登録されている譜面が入ったディレクトリの読み込み
+	std::string path = ".\\bgm";
+	std::string bgmPath;
+
+	try {
+		for (const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator(path)) {
+			bgmPath = entry.path().string();
+		}
+	}
+	catch (...) {
+		DrawBox(30, 200, 710, 500, GetColor(0, 0, 0), true);
+		DrawString(80, 300, "bgmの読み込みに失敗しました。\nディレクトリ構成、またはファイルに問題がある可能性があります。",GetColor(255,255,255));
+		DrawString(80, 420, "5秒後に終了します", GetColor(255, 255, 255));
+		ScreenFlip();
+		Sleep(5000);
+		DxLib_End();				// ＤＸライブラリ使用の終了処理
+		return 0;				// ソフトの終了
+	}
+
+	const int bgmHandle = LoadSoundMem(bgmPath.c_str());
 	ChangeVolumeSoundMem(127, bgmHandle);
 
+	const int backImgHandle = LoadGraph(".\\image\\background\\backImg.jpg");
 	SetBackgroundColor(30,30,30);
 	MainSceneManager mng = MainSceneManager(backImgHandle,bgmHandle);
 	Fps fps;

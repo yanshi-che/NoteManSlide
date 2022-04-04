@@ -56,16 +56,16 @@ void Make::Play::Make_Play_TestPlayManager::drawHiSpeed() {
 void Make::Play::Make_Play_TestPlayManager::drawJudgeCorrection() {
 	if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_RIGHT) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_RIGHT)) {
 		if (Config::g_judgeCorrection < 0.05) {
-			Config::g_judgeCorrection += 0.01;
+			Config::g_judgeCorrection += 0.001;
 		}
 	}
 	else if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_LEFT) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_LEFT)) {
 		if (-0.05 < Config::g_judgeCorrection) {
-			Config::g_judgeCorrection -= 0.01;
+			Config::g_judgeCorrection -= 0.001;
 		}
 	}
 	DrawStringF(10, 230, "”»’è’²® :", strColor);
-	DrawFormatStringF(100, 230, strColor, "%.1f", Config::g_judgeCorrection * 100.0);
+	DrawFormatStringF(100, 230, strColor, "%.1f", Config::g_judgeCorrection * 1000.0);
 }
 
 void Make::Play::Make_Play_TestPlayManager::drawNote() {

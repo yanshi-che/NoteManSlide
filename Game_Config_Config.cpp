@@ -68,12 +68,12 @@ void Game::Config::Game_Config_Config::update() {
 	}
 	if (p_keyCheck->getHitKeyLong(KEY_INPUT_RIGHT) == 1 || 60 < p_keyCheck->getHitKeyLong(KEY_INPUT_RIGHT)) {
 		if (judgeCorrection < 0.05) {
-			judgeCorrection += 0.01;
+			judgeCorrection += 0.001;
 		}
 	}
 	else if (p_keyCheck->getHitKeyLong(KEY_INPUT_LEFT) == 1 || 60 < p_keyCheck->getHitKeyLong(KEY_INPUT_LEFT)) {
 		if (-0.05 < judgeCorrection) {
-			judgeCorrection -= 0.01;
+			judgeCorrection -= 0.001;
 		}
 	}
 	if (p_keyCheck->getHitKeyUsual(KEY_INPUT_ESCAPE)) {
@@ -86,7 +86,7 @@ void Game::Config::Game_Config_Config::draw() {
 	DrawStringToHandle(50, 200, "HiSpeed :", fontColor, font, edgeColor);
 	DrawFormatStringToHandle(350, 200, fontColor, font, "%.1f", hiSpeed * 10.0, edgeColor);
 	DrawStringToHandle(50, 430, "  judge :", fontColor, font, edgeColor);
-	DrawFormatStringToHandle(350, 430, fontColor, font, "%.1f", judgeCorrection * 100.0, edgeColor);
+	DrawFormatStringToHandle(350, 430, fontColor, font, "%.1f", judgeCorrection * 1000.0, edgeColor);
 	if (isFail) {
 		DrawString(50, 600, "コンフィグファイルが読み込めませんでした。\n保存されません。", fontColor,edgeColor);
 	}

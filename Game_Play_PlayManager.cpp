@@ -1,13 +1,14 @@
 #include "Game_Play_PlayManager.h"
 
 
-Game::Play::Game_Play_PlayManager::Game_Play_PlayManager(std::shared_ptr<SceneChanger>& p_sceneChanger, std::shared_ptr<Game_MusicDataShareBetweenMenuAndPlay>& p_musicDataShare, std::shared_ptr<Game::Game_PlayResultShare>& p_playResultShare): Task(p_sceneChanger),p_musicDataShare(p_musicDataShare),p_playResultShare(p_playResultShare) {
+Game::Play::Game_Play_PlayManager::Game_Play_PlayManager(std::shared_ptr<SceneChanger>& p_sceneChanger, std::shared_ptr<Game_MusicDataShareBetweenOtherSection>& p_musicDataShare, std::shared_ptr<Game::Game_PlayResultShare>& p_playResultShare): Task(p_sceneChanger),p_musicDataShare(p_musicDataShare),p_playResultShare(p_playResultShare) {
 	p_lane = nullptr;
 	p_score = nullptr;
 	drawNoteFunc = [&] {return drawBeforeStart(); };
 	startClock = 0;
 	isMusicStart = false;
 	isLoadFail = false;
+	isPlayToEnd = true;
 	nowTime = 0;
 	startDelay = 5.0;
 	configFont = 0;
@@ -54,8 +55,10 @@ void Game::Play::Game_Play_PlayManager::initialize() {
 		timeSum += timePerBeat;
 	}
 
+
+	std::uint16_t maxChain = 0;
 	//ノーツの初期化
-	if (!initializeNote(laneAmount, timePerBeat)){
+	if (!initializeNote(laneAmount, timePerBeat,maxChain)){
 		DrawBox(30, 200, 710, 500, GetColor(0, 0, 0), true);
 		DrawString(80, 300, "譜面データまたは音楽ファイルの読み込みに失敗しました。\nディレクトリ構成、またはファイルに問題がある可能性があります。", fontColor, edgeColor);
 		DrawString(80, 420, "5秒後にメニューに戻ります", fontColor, edgeColor);
@@ -97,7 +100,7 @@ void Game::Play::Game_Play_PlayManager::initialize() {
 	//レーン周りの描画
 	p_lane = std::make_unique<Game_Play_Lane>();
 	//スコアの描画
-	p_score = std::make_shared<Game_Play_Score>(configFont);
+	p_score = std::make_shared<Game_Play_Score>(configFont,maxChain);
 
 	//初期判定配置
 	for (int i = 0; i < laneAmount; ++i) {
@@ -142,18 +145,24 @@ void Game::Play::Game_Play_PlayManager::update() {
 	}
 	if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_RIGHT) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_RIGHT)) {
 		if (Config::g_judgeCorrection < 0.05) {
-			Config::g_judgeCorrection += 0.01;
+			Config::g_judgeCorrection += 0.001;
 		}
 	}
 	else if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_LEFT) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_LEFT)) {
 		if (-0.05 < Config::g_judgeCorrection) {
-			Config::g_judgeCorrection -= 0.01;
+			Config::g_judgeCorrection -= 0.001;
 		}
 	}
 	if (isMusicStart && CheckSoundMem(musicHandle) != 1 || p_keyHitCheck->getHitKeyUsual(KEY_INPUT_ESCAPE)) {
+		if (p_keyHitCheck->getHitKeyUsual(KEY_INPUT_ESCAPE)) {
+			isPlayToEnd = false;
+		}
 		p_playResultShare->setPerfect(p_score->getPerfect());
 		p_playResultShare->setGreat(p_score->getGreat());
 		p_playResultShare->setMiss(p_score->getMiss());
+		p_playResultShare->setIsPlayToEnd(isPlayToEnd);
+		p_playResultShare->setScore(p_score->getScore());
+		p_playResultShare->setIsClear(p_score->isClear());
 		p_sceneChanger->changeScene(Scene::GameResult);
 	}
 }
@@ -186,13 +195,13 @@ void Game::Play::Game_Play_PlayManager::drawDown() {
 }
 
 void Game::Play::Game_Play_PlayManager::drawHiSpeed() {
-	DrawStringToHandle(10, 200, "HiSpeed :", fontColor,configFont ,edgeColor);
-	DrawFormatStringToHandle(100, 200, fontColor,configFont, "%.1f", Config::g_hiSpeed * 10.0,edgeColor);
+	DrawStringToHandle(10, 50, "HiSpeed :", fontColor,configFont ,edgeColor);
+	DrawFormatStringToHandle(100, 50, fontColor,configFont, "%.1f", Config::g_hiSpeed * 10.0,edgeColor);
 }
 
 void Game::Play::Game_Play_PlayManager::drawJudgeCorrection() {
-	DrawStringToHandle(10, 230, "  judge :", fontColor,configFont,edgeColor);
-	DrawFormatStringToHandle(100, 230, fontColor,configFont, "%.1f", Config::g_judgeCorrection * 100.0,edgeColor);
+	DrawStringToHandle(10, 80, "  judge :", fontColor,configFont,edgeColor);
+	DrawFormatStringToHandle(100, 80, fontColor,configFont, "%.1f", Config::g_judgeCorrection * 1000.0,edgeColor);
 }
 
 void Game::Play::Game_Play_PlayManager::drawNote() {
@@ -289,7 +298,7 @@ void Game::Play::Game_Play_PlayManager::updateKey() {
 
 }
 
-bool Game::Play::Game_Play_PlayManager::initializeNote(const std::uint16_t laneAmount, const double timePerBeat) {
+bool Game::Play::Game_Play_PlayManager::initializeNote(const std::uint16_t laneAmount, const double timePerBeat,std::uint16_t& maxChain) {
 
 	std::vector<bool> isFirst;//ロングノーツの初期化でつかうフラグ
 	std::vector<double> startTime;//ロングノーツの初期化で始点の時間を保管
@@ -340,17 +349,19 @@ bool Game::Play::Game_Play_PlayManager::initializeNote(const std::uint16_t laneA
 					.push_back(std::make_unique<Game_Play_NormalNote>(
 						noteDataArray.at(i).at("time").as_double() + startDelay, noteType,
 						laneIndex, laneX[laneIndex], laneX[laneIndex + 1], nextNoteFunc, p_score,p_effect));
+				++maxChain;
 			}
 			else if (noteType == Global::NOTETYPE_LONG) {
 				if (isFirst.at(laneIndex)) {
 					startTime.at(laneIndex) = noteDataArray.at(i).at("time").as_double() + startDelay;
 					isFirst.at(laneIndex) = false;
+					++maxChain;
 				}
 				else {
 					longNoteVec.at(laneIndex)
 						.push_back(std::make_unique<Game_Play_LongNote>(
 							startTime.at(laneIndex), noteDataArray.at(i).at("time").as_double() + startDelay, sixteenthTime, noteType,
-							laneIndex, laneX[laneIndex], laneX[laneIndex + 1], nextNoteFunc, p_score, p_effect));
+							laneIndex, laneX[laneIndex], laneX[laneIndex + 1], nextNoteFunc, p_score, p_effect,maxChain));
 					isFirst.at(laneIndex) = true;
 				}
 			}
@@ -397,6 +408,7 @@ bool Game::Play::Game_Play_PlayManager::initializeNote(const std::uint16_t laneA
 								laneX[slideNoteIndexStart + 1], laneX[slideNoteIndexEnd], laneWidth, arrowWidthBetween, laneIndex, directionRightOrLeft, slideNoteIndexStart, slideNoteIndexEnd, nextNoteFunc, p_score, p_effect));
 					}
 				}
+				++maxChain;
 			}
 		}
 	}
