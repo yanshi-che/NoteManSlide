@@ -11,14 +11,14 @@
 
 <p>
  <img src="https://github.com/yanshi-che/imageContainer/blob/main/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB1.PNG" width=400px height=400px />
-<img src=https://github.com/yanshi-che/imageContainer/blob/main/play.jpg width=400px height=400px />
+<img src=https://github.com/yanshi-che/imageContainer/blob/main/playing.jpg width=400px height=400px />
 </p>
   
 ### ポイント
 ポイントは何といっても譜面制作ツールがついている点です。個人製作ですので一人で譜面を供給するのは時間的に厳しいですが、ツールがあることで遊ぶ人自身が譜面を作ることができます。本ツールを使用して作った譜面に関しては、好きなようにしていただいて構いません。
 
 ### 配布用のURL
-https://drive.google.com/file/d/1mXi3X7Rq6y6ZGRZM_M9LufFNSjDOPwWR/view?usp=sharing
+https://drive.google.com/drive/folders/1-mc6oSaPd1Zm6_EJpxCKpwbrBwJFBstd?usp=sharing
 
 ### 対応している音楽ファイル
 - mp3(非推奨、曲によっては途中で途切れてしまいます。)
@@ -37,6 +37,8 @@ https://drive.google.com/file/d/1mXi3X7Rq6y6ZGRZM_M9LufFNSjDOPwWR/view?usp=shari
 - 作った譜面は曲とともに「musicData」フォルダに追加していきます。ディレクトリ構成は以下のようになっています。  
 musicData ---- someThing ---- music  
 　　　　　　　　　　　　|  
+　　　　　　　　　　　　| ----- saveData  
+　　　　　　　　　　　　|  
 　　　　　　　　　　　　-- score ---- easy  
 　　　　　　　　　　　　　　　　　|  
 　　　　　　　　　　　　　　　　　|- normal 
@@ -45,11 +47,14 @@ musicData ---- someThing ---- music
 　　　　　　　　　　　　　　　　　-- hard  
                  
 1. 「musicData」フォルダ直下に好きな名前のフォルダを作ります。  
-2. そのフォルダの直下に「music」「score」フォルダを、さらに「score」フォルダの直下に「easy」「normal」「hard」フォルダをつくります。
-3. 「music」フォルダには音楽ファイルを、「score」フォルダの直下のファイルには各難易度に対応した譜面データを入れます。それぞれ名前は何でもいいです。
+2. そのフォルダの直下に「music」「score」「saveData」フォルダを、さらに「score」フォルダの直下に「easy」「normal」「hard」フォルダをつくります。
+3. 「music」フォルダには音楽ファイルを、「score」フォルダの直下のファイルには各難易度に対応した譜面データを入れます。それぞれ名前は何でもいいです。また、「saveData」フォルダは空で構いません。
                                       
 ### 操作方法
 - レーンの左から「D」「F」「G」「H」「J」「K」となっております。スライドノーツは青色が「R」「T」、赤色が「U」「I」がそれぞれ左向き、右向きに対応しています。
+
+### クリア方法
+- ゲージが70%以上でクリアとなります。また、ミスなしでFullChain、全てパーフェクトでPerfectFullChainとなります。
                                      
 ### 譜面の作り方
 1. ホーム画面から「NoteEdit」を選びます。
