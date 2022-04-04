@@ -6,6 +6,7 @@ musicPath(musicPath),scorePath(scorePath),savePath(savePath),name(name),artist(a
 	isPerfect = false;
 	isFullChain = false;
 	isClear = false;
+	isPlayed = false;
 	bestScore = NULL;
 }
 
@@ -60,6 +61,10 @@ const bool& Game::Menu::Game_Menu_MusicData::getIsClear() noexcept {
 	return isClear;
 }
 
+const bool& Game::Menu::Game_Menu_MusicData::getIsPlayed() noexcept {
+	return isPlayed;
+}
+
 const std::uint16_t& Game::Menu::Game_Menu_MusicData::getBestScore() noexcept {
 	return bestScore;
 }
@@ -74,6 +79,10 @@ void Game::Menu::Game_Menu_MusicData::setIsFullChain(const bool isFullChain) noe
 
 void Game::Menu::Game_Menu_MusicData::setIsClear(const bool isClear) noexcept {
 	this->isClear = isClear;
+}
+
+void Game::Menu::Game_Menu_MusicData::setIsPlayed(const bool isPlayed) noexcept {
+	this->isPlayed = isPlayed;
 }
 
 void Game::Menu::Game_Menu_MusicData::setBestScore(const std::uint16_t bestScore) noexcept {

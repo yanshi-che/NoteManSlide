@@ -202,11 +202,11 @@ void Game::Menu::Game_Menu_MenuManager::setDifficultyFocusedMusicDataStr() {
 				}
 			}
 		}
-		else if (p_focusedMusicData->at(i)->getBestScore() == NULL) {
-			clearStatus[i] = "Not Played";
+		else if (p_focusedMusicData->at(i)->getIsPlayed()) {
+			clearStatus[i] = "Played";
 		}
 		else {
-			clearStatus[i] = "Played";
+			clearStatus[i] = "Not Played";
 		}
 	}
 }

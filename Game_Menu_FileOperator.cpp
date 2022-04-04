@@ -4,6 +4,7 @@ Game::Menu::SaveDataInit::SaveDataInit() {
 	isPerfect = false;
 	isFullChain = false;
 	isClear = false;
+	isPlayed = false;
 	bestScore = NULL;
 }
 
@@ -12,6 +13,7 @@ void Game::Menu::tag_invoke(const json::value_from_tag&, json::value& jv, const 
 		{"isPerfect",s.isPerfect},
 		{"isFullChain",s.isFullChain},
 		{"isClear",s.isClear},
+		{"isPlayed",s.isPlayed},
 		{ "bestScore", s.bestScore },
 	};
 }
@@ -39,18 +41,21 @@ void Game::Menu::Game_Menu_FileOperator::getScoreData(std::vector<std::vector<st
 			musicData.at(i).at(0)->setIsPerfect(obj.at("isPerfect").as_bool());
 			musicData.at(i).at(0)->setIsFullChain(obj.at("isFullChain").as_bool());
 			musicData.at(i).at(0)->setIsClear(obj.at("isClear").as_bool());
+			musicData.at(i).at(0)->setIsPlayed(obj.at("isPlayed").as_bool());
 			musicData.at(i).at(0)->setBestScore(static_cast<std::uint16_t>(obj.at("bestScore").as_int64()));
 
 			obj = val.at("normal").as_object();
 			musicData.at(i).at(1)->setIsPerfect(obj.at("isPerfect").as_bool());
 			musicData.at(i).at(1)->setIsFullChain(obj.at("isFullChain").as_bool());
 			musicData.at(i).at(1)->setIsClear(obj.at("isClear").as_bool());
+			musicData.at(i).at(1)->setIsPlayed(obj.at("isPlayed").as_bool());
 			musicData.at(i).at(1)->setBestScore(static_cast<std::uint16_t>(obj.at("bestScore").as_int64()));
 
 			obj = val.at("hard").as_object();
 			musicData.at(i).at(2)->setIsPerfect(obj.at("isPerfect").as_bool());
 			musicData.at(i).at(2)->setIsFullChain(obj.at("isFullChain").as_bool());
 			musicData.at(i).at(2)->setIsClear(obj.at("isClear").as_bool());
+			musicData.at(i).at(2)->setIsPlayed(obj.at("isPlayed").as_bool());
 			musicData.at(i).at(2)->setBestScore(static_cast<std::uint16_t>(obj.at("bestScore").as_int64()));
 		}
 		catch (...) {
@@ -198,6 +203,7 @@ void Game::Menu::Game_Menu_FileOperator::saveResultData(const bool isPerfect, co
 	obj.at(difficulty).as_object().at("isPerfect") = isPerfect;
 	obj.at(difficulty).as_object().at("isFullChain") = isFullChain;
 	obj.at(difficulty).as_object().at("isClear") = isClear;
+	obj.at(difficulty).as_object().at("isPlayed") = true;
 	if (p_musicDataShare->getMusicData()->getBestScore() < score) {
 		obj.at(difficulty).as_object().at("bestScore") = score;
 	}

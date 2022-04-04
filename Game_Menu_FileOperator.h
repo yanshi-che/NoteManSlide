@@ -19,6 +19,7 @@ namespace Game {
 			bool isPerfect;
 			bool isFullChain;
 			bool isClear;
+			bool isPlayed;
 			std::uint16_t bestScore;
 			SaveDataInit();
 		};
