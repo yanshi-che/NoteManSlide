@@ -1,6 +1,6 @@
 #include "Game_Play_LongNote.h"
 
-Game::Play::Game_Play_LongNote::Game_Play_LongNote(const double startTime, const double endTime, const double sixteenthTime, const std::uint16_t noteType, const std::uint16_t laneIndex, const double laneXRight, const double laneXLeft, const std::function<void(std::uint16_t, std::uint16_t)> nextNote, const std::shared_ptr<Game_Play_Score>& p_score, const std::shared_ptr<Game_Play_Effect>& p_effect) :
+Game::Play::Game_Play_LongNote::Game_Play_LongNote(const double startTime, const double endTime, const double sixteenthTime, const std::uint16_t noteType, const std::uint16_t laneIndex, const double laneXRight, const double laneXLeft, const std::function<void(std::uint16_t, std::uint16_t)> nextNote, const std::shared_ptr<Game_Play_Score>& p_score, const std::shared_ptr<Game_Play_Effect>& p_effect, std::uint16_t& maxChain) :
 	startTime(startTime), endTime(endTime), noteType(noteType), laneIndex(laneIndex), laneXRight(laneXRight), laneXLeft(laneXLeft), nextNote(nextNote), p_score(p_score),p_effect(p_effect) {
 	p_keyHitCheck = ::Singleton::Singleton_KeyHitCheck::getInstance();
 	y = 0;
@@ -16,6 +16,7 @@ Game::Play::Game_Play_LongNote::Game_Play_LongNote(const double startTime, const
 	while (t < endTime) {
 		judgeTime.push_back(t);
 		t += sixteenthTime;
+		++maxChain;
 	}
 	key = 0;
 	updateKey();

@@ -2,7 +2,7 @@
 
 MainSceneManager::MainSceneManager(const int backImgHandle, const int bgmHandle) : backImgHandle(backImgHandle),bgmHandle(bgmHandle){
 	p_sceneChanger = std::make_shared<SceneChanger>();
-	p_musicDataShare = std::make_shared<Game::Game_MusicDataShareBetweenMenuAndPlay>();
+	p_musicDataShare = std::make_shared<Game::Game_MusicDataShareBetweenOtherSection>();
 	p_playResultShare = std::make_shared<Game::Game_PlayResultShare>();
 	p_keyCheck = Singleton::Singleton_KeyHitCheck::getInstance();
 	isPlaying = false;
@@ -24,12 +24,15 @@ void MainSceneManager::MainSceneManager::update() {
 		scene->finalize();
 		delete scene;
 		scene = nullptr;
+		isPlaying = false;
 		if (p_sceneChanger->getNextScene() == Scene::Home) {
 			scene = static_cast<Task*>(new Game::Home::Game_Home_Home(p_sceneChanger));
 		}else if(p_sceneChanger->getNextScene() == Scene::GameMenu) {
 			scene = static_cast<Task*>(new Game::Menu::Game_Menu_MenuManager(p_sceneChanger,p_musicDataShare));
 		}
 		else if (p_sceneChanger->getNextScene() == Scene::NoteEdit) {
+			StopSoundMem(bgmHandle);
+			isPlaying = true;
 			scene = static_cast<Task*>(new Make::Make_DrawManager(p_sceneChanger));
 		}
 		else if(p_sceneChanger->getNextScene() == Scene::GamePlay) {
@@ -38,8 +41,7 @@ void MainSceneManager::MainSceneManager::update() {
 			scene = static_cast<Task*>(new Game::Play::Game_Play_PlayManager(p_sceneChanger,p_musicDataShare,p_playResultShare));
 		}
 		else if (p_sceneChanger->getNextScene() == Scene::GameResult) {
-			isPlaying = false;
-			scene = static_cast<Task*>(new Game::Result::Game_Result_Result(p_sceneChanger,p_playResultShare));
+			scene = static_cast<Task*>(new Game::Result::Game_Result_Result(p_sceneChanger, p_musicDataShare, p_playResultShare));
 		}
 		else if (p_sceneChanger->getNextScene() == Scene::Config) {
 			scene = static_cast<Task*>(new Game::Config::Game_Config_Config(p_sceneChanger));

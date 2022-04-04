@@ -10,7 +10,7 @@ INT_PTR CALLBACK Make::Dialog::Make_Dialog_MusicInfo::MusicInfoDialogProc(HWND h
 		case IDC_BUTTONFilePath:
 		{
 			const char* title[] = { "音楽ファイルの選択" };
-			const char* filter[] = { "mp3 wave\0*.mp3;*.wave\0\0" };
+			const char* filter[] = { "mp3 wave ogg\0*.mp3;*.wave;*.ogg\0\0" };
 			char filePath[MAX_PATH]= "";
 			File::Make_File_BaseFile gfb;
 			gfb.openExplorer(title, filter, filePath,false);

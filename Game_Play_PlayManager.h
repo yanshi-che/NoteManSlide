@@ -11,7 +11,7 @@
 #include "Task.h"
 #include "Global.h"
 #include "Config_Config.h"
-#include "Game_MusicDataShareBetweenMenuAndPlay.h"
+#include "Game_MusicDataShareBetweenOtherSection.h"
 #include "Game_PlayResultShare.h"
 #include "Game_Menu_MusicData.h"
 #include "Game_Play_Lane.h"
@@ -30,7 +30,7 @@ namespace Game {
 		class Game_Play_PlayManager : public Task
 		{
 		private:
-			std::shared_ptr<Game_MusicDataShareBetweenMenuAndPlay>& p_musicDataShare;
+			std::shared_ptr<Game_MusicDataShareBetweenOtherSection>& p_musicDataShare;
 			std::shared_ptr<Game::Game_PlayResultShare>& p_playResultShare;
 
 			std::shared_ptr<Game_Play_Score> p_score;//スコア表示
@@ -66,6 +66,8 @@ namespace Game {
 
 			bool isLoadFail;
 
+			bool isPlayToEnd;
+
 			std::function<void()> drawNoteFunc;
 
 			void nextNote(const std::uint16_t noteType, const std::uint16_t laneIndex);//判定を同じレーンの次のノーツに移す
@@ -76,9 +78,9 @@ namespace Game {
 			void drawNote();
 			void updateKey();
 
-			bool initializeNote(const std::uint16_t laneAmount, const double timePerBeat);
+			bool initializeNote(const std::uint16_t laneAmount, const double timePerBeat, std::uint16_t& maxChain);
 		public:
-			Game_Play_PlayManager(std::shared_ptr<SceneChanger>& p_sceneChanger, std::shared_ptr<Game_MusicDataShareBetweenMenuAndPlay>& p_musicDataShare, std::shared_ptr<Game::Game_PlayResultShare>& p_playResultShare);
+			Game_Play_PlayManager(std::shared_ptr<SceneChanger>& p_sceneChanger, std::shared_ptr<Game_MusicDataShareBetweenOtherSection>& p_musicDataShare, std::shared_ptr<Game::Game_PlayResultShare>& p_playResultShare);
 			void initialize() override;
 			void finalize() override;
 			void update() override;

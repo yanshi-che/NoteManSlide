@@ -11,7 +11,7 @@
 #include "SceneChanger.h"
 #include "Game_Menu_MusicData.h"
 #include "Game_Menu_FileOperator.h"
-#include "Game_MusicDataShareBetweenMenuAndPlay.h"
+#include "Game_MusicDataShareBetweenOtherSection.h"
 #include "Singleton_KeyHitCheck.h"
 
 using namespace boost;
@@ -24,7 +24,7 @@ namespace Game {
 		{
 		private:
 			Singleton::Singleton_KeyHitCheck* p_keyHitCheck;
-			std::shared_ptr<Game_MusicDataShareBetweenMenuAndPlay>& p_musicDataShare;
+			std::shared_ptr<Game_MusicDataShareBetweenOtherSection>& p_musicDataShare;
 			std::unique_ptr<Game_Menu_FileOperator> p_fileOp;
 			std::vector<std::vector<std::shared_ptr<Game_Menu_MusicData>>> musicDataVec;
 			std::deque<std::uint16_t> musicDataVecElementDeq;
@@ -39,6 +39,8 @@ namespace Game {
 			int edgeColor;
 
 			std::int16_t difficultyCount;
+			std::string bestScore[3];
+			std::string clearStatus[3];
 			std::string bpm;
 			std::string easyNum;
 			std::string normalNum;
@@ -52,11 +54,11 @@ namespace Game {
 			void drawMusicList();
 			void drawFocusedMusicData();
 			void drawKeyConf();
-			void setDifficultyAndBpmStr();
+			void setDifficultyFocusedMusicDataStr();
 			void setNextFocusedMusicData();
 			void setPrevFocusedMusicData();
 		public:
-			Game_Menu_MenuManager(std::shared_ptr<SceneChanger>& p_sceneChanger, std::shared_ptr<Game_MusicDataShareBetweenMenuAndPlay>& p_musicDataShare);
+			Game_Menu_MenuManager(std::shared_ptr<SceneChanger>& p_sceneChanger, std::shared_ptr<Game_MusicDataShareBetweenOtherSection>& p_musicDataShare);
 			void initialize() override;
 			void finalize() override;
 			void update() override;
