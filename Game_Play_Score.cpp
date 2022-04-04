@@ -121,11 +121,11 @@ void Game::Play::Game_Play_Score::plusGreat() {
 
 void Game::Play::Game_Play_Score::plusMiss() {
 	chain = 0;
-	clearGageNum -= clearGageNumDiv * 0;
+	clearGageNum -= clearGageNumDiv * 2.0;
 	if (clearGageNum < 0) {
 		clearGageNum = 0;
 	}
-	clearGageBoxY += gageBoxDiv * 0;
+	clearGageBoxY += gageBoxDiv * 2.0;
 	if (clearGageBoxYMin < clearGageBoxY) {
 		clearGageBoxY = clearGageBoxYMin;
 	}
