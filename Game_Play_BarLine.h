@@ -11,9 +11,12 @@ namespace Game {
 		private:
 			double time;
 			double y;
+			double yUpdateBorderMin;
+			double yUpdateBorderMax;
 			std::int32_t color;
 		public:
 			Game_Play_BarLine(const double time);
+			void setYUpdateBorder();
 			void update(double nowTime);
 			void draw();
 		};

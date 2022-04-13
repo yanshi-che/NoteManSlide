@@ -26,6 +26,8 @@ namespace Game {
 			const std::shared_ptr<Game_Play_Score>& p_score;//スコア表示
 			const std::shared_ptr<Game_Play_Effect>& p_effect;//エフェクト
 			double y;
+			double yUpdateBorderMin;
+			double yUpdateBorderMax;
 			std::int32_t noteColor;
 			std::uint16_t key;
 			bool done; //処理が終わったか
@@ -35,6 +37,7 @@ namespace Game {
 			void check(double nowTime);
 			void setTurn(bool t);
 			void setDone(bool d);
+			void setYUpdateBorder();
 			void update(double nowTime);
 			void updateKey();
 			void draw();

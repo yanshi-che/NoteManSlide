@@ -121,6 +121,8 @@ void Game::Play::Game_Play_PlayManager::initialize() {
 		slideNote.at(1) = slideNoteVec.at(1).at(0).get();
 		slideNote.at(1)->setTurn(true);
 	}
+
+	setYUpdateBorder();
 }
 
 void Game::Play::Game_Play_PlayManager::finalize() {
@@ -130,41 +132,6 @@ void Game::Play::Game_Play_PlayManager::finalize() {
 	p_score.reset();
 	p_effect->finalize();
 	p_effect.reset();
-}
-
-void Game::Play::Game_Play_PlayManager::update() {
-	if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_UP) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_UP)) {
-		if (Config::g_hiSpeed < 1.5) {
-			Config::g_hiSpeed += 0.01;
-		}
-	}
-	else if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_DOWN) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_DOWN)) {
-		if (0.02 < Config::g_hiSpeed) {
-			Config::g_hiSpeed -= 0.01;
-		}
-	}
-	if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_RIGHT) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_RIGHT)) {
-		if (Config::g_judgeCorrection < 0.05) {
-			Config::g_judgeCorrection += 0.001;
-		}
-	}
-	else if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_LEFT) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_LEFT)) {
-		if (-0.05 < Config::g_judgeCorrection) {
-			Config::g_judgeCorrection -= 0.001;
-		}
-	}
-	if (isMusicStart && CheckSoundMem(musicHandle) != 1 || p_keyHitCheck->getHitKeyUsual(KEY_INPUT_ESCAPE)) {
-		if (p_keyHitCheck->getHitKeyUsual(KEY_INPUT_ESCAPE)) {
-			isPlayToEnd = false;
-		}
-		p_playResultShare->setPerfect(p_score->getPerfect());
-		p_playResultShare->setGreat(p_score->getGreat());
-		p_playResultShare->setMiss(p_score->getMiss());
-		p_playResultShare->setIsPlayToEnd(isPlayToEnd);
-		p_playResultShare->setScore(p_score->getScore());
-		p_playResultShare->setIsClear(p_score->isClear());
-		p_sceneChanger->changeScene(Scene::GameResult);
-	}
 }
 
 void Game::Play::Game_Play_PlayManager::draw() {
@@ -277,6 +244,65 @@ void Game::Play::Game_Play_PlayManager::nextNote(const std::uint16_t noteType, c
 		else {
 			slideNote.at(laneIndex) = nullptr;
 		}
+	}
+}
+
+void Game::Play::Game_Play_PlayManager::setYUpdateBorder() {
+	//è¨êﬂê¸
+	for (int i = 0, iSize = static_cast<int>(barLineVec.size()); i < iSize; ++i) {
+		barLineVec.at(i)->setYUpdateBorder();
+	}
+	//ÉmÅ[Éc
+	for (int i = 0, iSize = Global::LANE_AMOUNT; i < iSize; ++i) {
+		for (int k = 0, kSize = static_cast<int>(normalNoteVec.at(i).size()); k < kSize; ++k) {
+			normalNoteVec.at(i).at(k)->setYUpdateBorder();
+		}
+		for (int k = 0, kSize = static_cast<int>(longNoteVec.at(i).size()); k < kSize; ++k) {
+			longNoteVec.at(i).at(k)->setYUpdateBorder();
+		}
+	}
+	for (int i = 0, iSize = static_cast<int>(slideNoteVec.at(0).size()); i < iSize; ++i) {
+		slideNoteVec.at(0).at(i)->setYUpdateBorder();
+	}
+	for (int i = 0, iSize = static_cast<int>(slideNoteVec.at(1).size()); i < iSize; ++i) {
+		slideNoteVec.at(1).at(i)->setYUpdateBorder();
+	}
+}
+
+void Game::Play::Game_Play_PlayManager::update() {
+	if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_UP) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_UP)) {
+		if (Config::g_hiSpeed < 1.5) {
+			Config::g_hiSpeed += 0.01;
+			setYUpdateBorder();
+		}
+	}
+	else if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_DOWN) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_DOWN)) {
+		if (0.02 < Config::g_hiSpeed) {
+			Config::g_hiSpeed -= 0.01;
+			setYUpdateBorder();
+		}
+	}
+	if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_RIGHT) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_RIGHT)) {
+		if (Config::g_judgeCorrection < 0.05) {
+			Config::g_judgeCorrection += 0.001;
+		}
+	}
+	else if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_LEFT) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_LEFT)) {
+		if (-0.05 < Config::g_judgeCorrection) {
+			Config::g_judgeCorrection -= 0.001;
+		}
+	}
+	if (isMusicStart && CheckSoundMem(musicHandle) != 1 || p_keyHitCheck->getHitKeyUsual(KEY_INPUT_ESCAPE)) {
+		if (p_keyHitCheck->getHitKeyUsual(KEY_INPUT_ESCAPE)) {
+			isPlayToEnd = false;
+		}
+		p_playResultShare->setPerfect(p_score->getPerfect());
+		p_playResultShare->setGreat(p_score->getGreat());
+		p_playResultShare->setMiss(p_score->getMiss());
+		p_playResultShare->setIsPlayToEnd(isPlayToEnd);
+		p_playResultShare->setScore(p_score->getScore());
+		p_playResultShare->setIsClear(p_score->isClear());
+		p_sceneChanger->changeScene(Scene::GameResult);
 	}
 }
 

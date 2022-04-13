@@ -3,11 +3,20 @@
 Game::Play::Game_Play_BarLine::Game_Play_BarLine(const double time) :
 	time(time) {
 	y = 0;
+	yUpdateBorderMin = this->time - 1/Config::g_hiSpeed;
+	yUpdateBorderMax = this->time - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT)/(Global::JUDGELINE_Y * Config::g_hiSpeed);
 	color = GetColor(255, 255, 255);
 }
 
+void Game::Play::Game_Play_BarLine::setYUpdateBorder() {
+	yUpdateBorderMin = time - 1 / Config::g_hiSpeed;
+	yUpdateBorderMax = time - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed);
+}
+
 void Game::Play::Game_Play_BarLine::update(double nowTime) {
-	y = Global::JUDGELINE_Y - ((time - nowTime) * Global::JUDGELINE_Y * Config::g_hiSpeed);
+	if (yUpdateBorderMin < nowTime && nowTime < yUpdateBorderMax) {
+		y = Global::JUDGELINE_Y - ((time - nowTime) * Global::JUDGELINE_Y * Config::g_hiSpeed);
+	}
 }
 
 void Game::Play::Game_Play_BarLine::draw() {

@@ -121,9 +121,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// while(裏画面を表画面に反映, メッセージ処理, 画面クリア)
 	while (ProcessMessage() == 0 && ClearDrawScreen() == 0) {
 		fps.Update();
-		fps.Draw();
 		mng.update();
 		mng.draw();
+		fps.Draw();
 		ScreenFlip();
 		fps.Wait();
 	}

@@ -42,11 +42,13 @@ void Make::Play::Make_Play_TestPlayManager::drawHiSpeed() {
 	if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_UP) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_UP)) {
 		if (Config::g_hiSpeed < 1.5) {
 			Config::g_hiSpeed += 0.01;
+			setYUpdateBorder();
 		}
 	}
 	else if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_DOWN) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_DOWN)) {
 		if (0.02 < Config::g_hiSpeed) {
 			Config::g_hiSpeed -= 0.01;
+			setYUpdateBorder();
 		}
 	}
 	DrawStringF(10, 200,"HiSpeed :", strColor);
@@ -294,6 +296,28 @@ void Make::Play::Make_Play_TestPlayManager::nextNote(const std::uint16_t noteTyp
 		else {
 			slideNote.at(laneIndex) = nullptr;
 		}
+	}
+}
+
+void Make::Play::Make_Play_TestPlayManager::setYUpdateBorder() {
+	//è¨êﬂê¸
+	for (int i = 0, iSize = static_cast<int>(barLineVec.size()); i < iSize; ++i) {
+		barLineVec.at(i)->setYUpdateBorder();
+	}
+	//ÉmÅ[Éc
+	for (int i = 0, iSize = Global::LANE_AMOUNT; i < iSize; ++i) {
+		for (int k = 0, kSize = static_cast<int>(normalNoteVec.at(i).size()); k < kSize; ++k) {
+			normalNoteVec.at(i).at(k)->setYUpdateBorder();
+		}
+		for (int k = 0, kSize = static_cast<int>(longNoteVec.at(i).size()); k < kSize; ++k) {
+			longNoteVec.at(i).at(k)->setYUpdateBorder();
+		}
+	}
+	for (int i = 0, iSize = static_cast<int>(slideNoteVec.at(0).size()); i < iSize; ++i) {
+		slideNoteVec.at(0).at(i)->setYUpdateBorder();
+	}
+	for (int i = 0, iSize = static_cast<int>(slideNoteVec.at(1).size()); i < iSize; ++i) {
+		slideNoteVec.at(1).at(i)->setYUpdateBorder();
 	}
 }
 
