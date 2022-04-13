@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <functional>
 #include <memory>
 #include <tuple>
@@ -62,6 +63,8 @@ namespace Make {
 			static bool isPlaying;
 			static bool playFinalize;
 			static bool isFileOpen;
+
+			const std::filesystem::path firstPath;
 
 			static void MenuItemSelectCallBack(const TCHAR* itemName, int itemID);//ƒƒjƒ…[‚ª‘I‘ğ‚³‚ê‚½‚çŒÄ‚Î‚ê‚éŠÖ”
 			static void setMusicDataFromNewFile(const std::shared_ptr<File::Make_File_MusicData> md);
