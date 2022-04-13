@@ -29,6 +29,8 @@ namespace Make {
 			std::uint16_t judgeTimeCount;
 			double nowJudgeTime;
 			double y;
+			double yUpdateBorderMin;
+			double yUpdateBorderMax;
 			double longNoteHeight;
 			std::uint16_t alpha;
 			std::int32_t noteColor;
@@ -41,6 +43,7 @@ namespace Make {
 			void check(double nowTime);
 			void setTurn(bool t);
 			void setDone(bool d);
+			void setYUpdateBorder();
 			void update(double nowTime);
 			void updateKey();
 			void draw();

@@ -4,6 +4,8 @@ Game::Play::Game_Play_LongNote::Game_Play_LongNote(const double startTime, const
 	startTime(startTime), endTime(endTime), noteType(noteType), laneIndex(laneIndex), laneXRight(laneXRight), laneXLeft(laneXLeft), nextNote(nextNote), p_score(p_score),p_effect(p_effect) {
 	p_keyHitCheck = ::Singleton::Singleton_KeyHitCheck::getInstance();
 	y = 0;
+	yUpdateBorderMin = this->startTime - 1 / Config::g_hiSpeed;
+	yUpdateBorderMax = this->endTime - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed);
 	longNoteHeight = 0;
 	alpha = 255;
 	done = false;
@@ -65,19 +67,26 @@ void Game::Play::Game_Play_LongNote::setDone(bool d) {
 	nextNote(noteType, laneIndex);
 }
 
+void Game::Play::Game_Play_LongNote::setYUpdateBorder() {
+	yUpdateBorderMin = startTime - 1 / Config::g_hiSpeed;
+	yUpdateBorderMax = endTime - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed);
+}
+
 void Game::Play::Game_Play_LongNote::update(double nowTime) {
-	y = Global::JUDGELINE_Y - ((startTime - nowTime) * Global::JUDGELINE_Y * Config::g_hiSpeed);
-	longNoteHeight = y - (Global::JUDGELINE_Y - ((endTime - nowTime) * Global::JUDGELINE_Y * Config::g_hiSpeed));
-	if (turn) {
-		if (endTime + Global::MISS < nowTime + Config::g_judgeCorrection) {
-			setDone(true);
-		}
-		if (judgeTimeCount < judgeTime.size() && nowJudgeTime + Global::GREAT < nowTime + Config::g_judgeCorrection) {
-			p_score->plusMiss();
-			p_effect->setMiss(laneIndex);
-			nowJudgeTime = judgeTime.at(judgeTimeCount);
-			isHit = false;
-			++judgeTimeCount;
+	if (yUpdateBorderMin < nowTime && nowTime < yUpdateBorderMax) {
+		y = Global::JUDGELINE_Y - ((startTime - nowTime) * Global::JUDGELINE_Y * Config::g_hiSpeed);
+		longNoteHeight = y - (Global::JUDGELINE_Y - ((endTime - nowTime) * Global::JUDGELINE_Y * Config::g_hiSpeed));
+		if (turn) {
+			if (endTime + Global::MISS < nowTime + Config::g_judgeCorrection) {
+				setDone(true);
+			}
+			if (judgeTimeCount < judgeTime.size() && nowJudgeTime + Global::GREAT < nowTime + Config::g_judgeCorrection) {
+				p_score->plusMiss();
+				p_effect->setMiss(laneIndex);
+				nowJudgeTime = judgeTime.at(judgeTimeCount);
+				isHit = false;
+				++judgeTimeCount;
+			}
 		}
 	}
 }

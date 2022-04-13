@@ -77,6 +77,7 @@ namespace Game {
 			void drawJudgeCorrection();
 			void drawNote();
 			void updateKey();
+			void setYUpdateBorder();
 
 			bool initializeNote(const std::uint16_t laneAmount, const double timePerBeat, std::uint16_t& maxChain);
 		public:

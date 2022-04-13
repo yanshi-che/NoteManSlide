@@ -4,6 +4,8 @@ Game::Play::Game_Play_NormalNote::Game_Play_NormalNote(const double time, const 
 	time(time), noteType(noteType), laneIndex(laneIndex), laneXRight(laneXRight), laneXLeft(laneXLeft), nextNote(nextNote), p_score(p_score),p_effect(p_effect) {
 	p_keyHitCheck = ::Singleton::Singleton_KeyHitCheck::getInstance();
 	y = 0;
+	yUpdateBorderMin = this->time - 1 / Config::g_hiSpeed;
+	yUpdateBorderMax = this->time - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed);
 	done = false;
 	turn = false;
 	noteColor = GetColor(255, 255, 255);
@@ -43,12 +45,19 @@ void Game::Play::Game_Play_NormalNote::setDone(bool d) {
 	nextNote(noteType, laneIndex);
 }
 
+void Game::Play::Game_Play_NormalNote::setYUpdateBorder() {
+	yUpdateBorderMin = time - 1 / Config::g_hiSpeed;
+	yUpdateBorderMax = time - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed);
+}
+
 void Game::Play::Game_Play_NormalNote::update(double nowTime) {
-	y = Global::JUDGELINE_Y - ((time - nowTime) * Global::JUDGELINE_Y * Config::g_hiSpeed);
-	if (turn && time + Global::MISS + Config::g_judgeCorrection < nowTime + Config::g_judgeCorrection) {
-		setDone(true);
-		p_score->plusMiss();
-		p_effect->setMiss(laneIndex);
+	if (yUpdateBorderMin < nowTime && nowTime < yUpdateBorderMax) {
+		y = Global::JUDGELINE_Y - ((time - nowTime) * Global::JUDGELINE_Y * Config::g_hiSpeed);
+		if (turn && time + Global::MISS + Config::g_judgeCorrection < nowTime + Config::g_judgeCorrection) {
+			setDone(true);
+			p_score->plusMiss();
+			p_effect->setMiss(laneIndex);
+		}
 	}
 }
 

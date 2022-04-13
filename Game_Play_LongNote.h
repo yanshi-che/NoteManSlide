@@ -32,6 +32,8 @@ namespace Game {
 			double nowJudgeTime;
 			double y;
 			double longNoteHeight;
+			double yUpdateBorderMin;
+			double yUpdateBorderMax;
 			std::uint16_t alpha;
 			std::int32_t noteColor;
 			std::uint16_t key;
@@ -43,6 +45,7 @@ namespace Game {
 			void check(double nowTime);
 			void setTurn(bool t);
 			void setDone(bool d);
+			void setYUpdateBorder();
 			void update(double nowTime);
 			void updateKey();
 			void draw();

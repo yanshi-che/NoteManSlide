@@ -18,7 +18,6 @@ namespace Game {
 		private:
 			::Singleton::Singleton_KeyHitCheck* p_keyHitCheck;
 			const double time;//ノーツの時間
-			double y;
 			const double laneXStart;
 			const double laneXEnd;
 			const double laneWidth;
@@ -31,9 +30,14 @@ namespace Game {
 			const std::function<void(std::uint16_t, std::uint16_t)> nextNote;//判定を次のノーツに移す
 			const std::shared_ptr<Game_Play_Score>& p_score;//スコア表示
 			const std::shared_ptr<Game_Play_Effect>& p_effect;//エフェクト
-			std::uint32_t colorR;
-			std::uint32_t colorL;
+			std::uint32_t colorRR;
+			std::uint32_t colorRL;
+			std::uint32_t colorLR;
+			std::uint32_t colorLL;
 			std::uint16_t key;
+			double y;
+			double yUpdateBorderMin;
+			double yUpdateBorderMax;
 			bool done; //処理が終わったか
 			bool turn; //今自分の処理順か
 
@@ -44,6 +48,7 @@ namespace Game {
 			void check(double nowTime);
 			void setTurn(bool t);
 			void setDone(bool d);
+			void setYUpdateBorder();
 			void update(double nowTime);
 			void updateKey();
 			void draw();

@@ -29,7 +29,7 @@ namespace Global {
 	constexpr const double JUDGELINE_Y{ 680 };
 	constexpr const double NOTE_HEIGHT{ 3.0 };
 	constexpr const double LENGTH_FROM_LANE{ 5.0 };
-	constexpr const std::uint16_t ARROW_NUM_LANE{ 4 };//1ƒŒ[ƒ“‚ ‚½‚è‚Ì–îˆó‚Ì”
+	constexpr const std::uint16_t ARROW_NUM_LANE{ 3 };//1ƒŒ[ƒ“‚ ‚½‚è‚Ì–îˆó‚Ì”
 	constexpr const double ARROW_HEIGHT{ 12.0 };//•`‰æ‚·‚é–îˆó‚Ì•G
 	constexpr const double ARROW_LENGTH{ 12.0 };//•`‰æ‚·‚é–îˆó‚Ì•G
 

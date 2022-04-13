@@ -62,6 +62,7 @@ namespace Make {
 			void drawHiSpeed();
 			void drawJudgeCorrection();
 			void drawNote();
+			void setYUpdateBorder();
 		public:
 			Make_Play_TestPlayManager();
 			void finalize();
