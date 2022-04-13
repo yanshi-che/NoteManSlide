@@ -10,7 +10,7 @@ bool Make::Draw::Make_Draw_MenuDraw::isPlaying = false;
 bool Make::Draw::Make_Draw_MenuDraw::playFinalize = false;
 bool Make::Draw::Make_Draw_MenuDraw::isFileOpen = false;
 
-Make::Draw::Make_Draw_MenuDraw::Make_Draw_MenuDraw(std::shared_ptr<SceneChanger>& sceneChanger){
+Make::Draw::Make_Draw_MenuDraw::Make_Draw_MenuDraw(std::shared_ptr<SceneChanger>& sceneChanger) : firstPath(std::filesystem::current_path()){
 	this->sceneChanger = sceneChanger;
 	p_beatLine = std::make_shared<Draw::Make_Draw_BeatLineManager>();
 	drawFunc = p_beatLine->getDrawFunc();
@@ -229,6 +229,7 @@ void Make::Draw::Make_Draw_MenuDraw::finalize() {
 	p_musicPlayer.reset();
 	ClearKeyAccel();
 	DeleteMenuItemAll();
+	std::filesystem::current_path(firstPath);
 }
 
 void Make::Draw::Make_Draw_MenuDraw::resetDrawFunc() {
