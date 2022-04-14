@@ -18,7 +18,7 @@
 ポイントは何といっても譜面制作ツールがついている点です。個人製作ですので一人で譜面を供給するのは時間的に厳しいですが、ツールがあることで遊ぶ人自身が譜面を作ることができます。本ツールを使用して作った譜面に関しては、好きなようにしていただいて構いません。
 
 ### 配布用のURL
-https://drive.google.com/drive/folders/1-mc6oSaPd1Zm6_EJpxCKpwbrBwJFBstd?usp=sharing
+https://drive.google.com/drive/folders/1b7hn2l3RyAornhF8NIVQKdOE31HjcVZS?usp=sharing
 
 ### 対応している音楽ファイル
 - mp3(非推奨、曲によっては途中で途切れてしまいます。)
