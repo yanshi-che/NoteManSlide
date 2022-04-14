@@ -18,8 +18,10 @@ namespace Make {
 			const double time;//曲の開始から何秒か
 			const std::uint16_t laneAmount; //レーンの数
 			const double& r_y; //拍線の座標
-			std::uint32_t colorR;
-			std::uint32_t colorL;
+			std::uint32_t colorRR;
+			std::uint32_t colorRL;
+			std::uint32_t colorLR;
+			std::uint32_t colorLL;
 			std::pair<bool,bool> noteFlag;//firstが右(赤)secondが左(青)
 			std::pair<bool, bool> noteDirectionRightOrLeft;//firstが右secondが左 trueなら右falseなら左
 			std::vector<double> laneX;
