@@ -82,6 +82,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ChangeWindowMode(true);
 	SetGraphMode(Global::WINDOW_WIDTH,Global::WINDOW_HEIGHT,Global::WINDOW_COLORBIT); //スクリーンの大きさの設定
 	SetMainWindowText("NoteManSlide");
+	SetWaitVSyncFlag(false);
+	SetAlwaysRunFlag(true);
 
 	if (DxLib_Init() == -1)		// ＤＸライブラリ初期化処理
 	{
@@ -100,7 +102,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	catch (...) {
 		DrawBox(30, 200, 710, 500, GetColor(0, 0, 0), true);
 		DrawString(80, 300, "bgmの読み込みに失敗しました。\nディレクトリ構成、またはファイルに問題がある可能性があります。",GetColor(255,255,255));
-		DrawString(80, 420, "5秒後に終了します", GetColor(255, 255, 255));
+		DrawString(80, 420, "5秒後にプログラムを終了します", GetColor(255, 255, 255));
 		ScreenFlip();
 		Sleep(5000);
 		DxLib_End();				// ＤＸライブラリ使用の終了処理
@@ -111,7 +113,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ChangeVolumeSoundMem(127, bgmHandle);
 
 	const int backImgHandle = LoadGraph(".\\image\\background\\backImg.jpg");
-	SetBackgroundColor(30,30,30);
 	MainSceneManager mng = MainSceneManager(backImgHandle,bgmHandle);
 	Fps fps;
 

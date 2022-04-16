@@ -73,5 +73,10 @@ void Game::Play::Game_Play_Lane::drawLane() {
 }
 
 void Game::Play::Game_Play_Lane::drawJudgeLine() {
-	DrawLineAA(static_cast<float>(laneX[0]), static_cast<float>(Global::JUDGELINE_Y), static_cast<float>(laneX[Global::LANE_AMOUNT]), static_cast<float>(Global::JUDGELINE_Y), judgeLineColor, 5);
+	//ŠO˜g
+	DrawBoxAA(static_cast<float>(laneX[0]), static_cast<float>(Global::JUDGELINE_Y - Global::NOTE_HEIGHT), static_cast<float>(laneX[Global::LANE_AMOUNT]), static_cast<float>(Global::JUDGELINE_Y + Global::NOTE_HEIGHT), judgeLineColor, false);
+	//“à‘¤
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
+	DrawBoxAA(static_cast<float>(laneX[0]), static_cast<float>(Global::JUDGELINE_Y - Global::NOTE_HEIGHT), static_cast<float>(laneX[Global::LANE_AMOUNT]), static_cast<float>(Global::JUDGELINE_Y + Global::NOTE_HEIGHT), judgeLineColor, true);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 }

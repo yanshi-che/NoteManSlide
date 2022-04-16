@@ -157,7 +157,7 @@ void Game::Play::Game_Play_PlayManager::drawBeforeStart() {
 
 void Game::Play::Game_Play_PlayManager::drawDown() {
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200);
-	DrawBoxAA(static_cast<float>(Global::PLAY_LANE_X_MIN + 1), static_cast<float>(Global::JUDGELINE_Y + 1.0), static_cast<float>(Global::PLAY_LANE_X_MAX - 1), static_cast<float>(Global::WINDOW_HEIGHT), downColor, true);
+	DrawBoxAA(static_cast<float>(Global::PLAY_LANE_X_MIN + 1.0), static_cast<float>(Global::JUDGELINE_Y + Global::NOTE_HEIGHT), static_cast<float>(Global::PLAY_LANE_X_MAX - 1.0), static_cast<float>(Global::WINDOW_HEIGHT), downColor, true);
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 }
 
