@@ -28,7 +28,8 @@ namespace Game {
 			double y;
 			double yUpdateBorderMin;
 			double yUpdateBorderMax;
-			std::int32_t noteColor;
+			std::int32_t noteOutSideColor;
+			std::int32_t noteInSideColor;
 			std::uint16_t key;
 			bool done; //ˆ—‚ªI‚í‚Á‚½‚©
 			bool turn; //¡©•ª‚Ìˆ—‡‚©

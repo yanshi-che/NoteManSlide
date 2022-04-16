@@ -23,11 +23,12 @@ namespace Global {
 	constexpr const std::uint16_t THIRTYSECOND{ 32 };// ３２分音符
 	constexpr const std::uint16_t TRIPLET{ 12 };// ３連符
 
-	//テストプレイ画面の描画関連
+	//プレイ画面の描画関連
 	constexpr const double PLAY_LANE_X_MAX{ 550.0 };
 	constexpr const double PLAY_LANE_X_MIN{ 190.0 };
 	constexpr const double JUDGELINE_Y{ 680 };
-	constexpr const double NOTE_HEIGHT{ 3.0 };
+	constexpr const double NOTE_HEIGHT{ 4.0 };
+	constexpr const double NOTE_LENGTH_FROM_OUTLINE{ 2.0 };
 	constexpr const double LENGTH_FROM_LANE{ 5.0 };
 	constexpr const std::uint16_t ARROW_NUM_LANE{ 3 };//1レーンあたりの矢印の数
 	constexpr const double ARROW_HEIGHT{ 12.0 };//描画する矢印の幅；
