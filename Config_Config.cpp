@@ -1,6 +1,7 @@
 #include "Config_Config.h"
 
 //ユーザー定義
+std::uint16_t Config::g_fps = 60;
 double Config::g_hiSpeed = 0.3;
 double Config::g_judgeCorrection = 0.0;
 std::uint16_t Config::g_lane0 = KEY_INPUT_D;

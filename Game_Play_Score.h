@@ -4,6 +4,7 @@
 #include <string>
 
 #include "dxlib/DxLib.h"
+#include "Global.h"
 
 namespace Game {
 	namespace Play {

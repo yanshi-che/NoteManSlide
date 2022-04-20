@@ -46,7 +46,7 @@ namespace Make {
 			void setYUpdateBorder();
 			void update(double nowTime);
 			void updateKey();
-			void draw();
+			void draw(double nowTime);
 		};
 	}
 }

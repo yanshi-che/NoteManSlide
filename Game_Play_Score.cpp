@@ -67,7 +67,7 @@ void Game::Play::Game_Play_Score::drawJudge() {
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	SetFontSize(initFontSize);
 	if (blend > 0) {
-		blend -= 10;
+		blend -= 10 * Global::g_fpsDiff;
 	}
 }
 

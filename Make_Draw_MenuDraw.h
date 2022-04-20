@@ -60,9 +60,11 @@ namespace Make {
 			static std::shared_ptr<Play::Make_Play_TestPlayManager> p_testPlay;
 			static std::shared_ptr<Draw::Make_Draw_BeatLineManager> p_beatLine;
 			static std::function<void()> drawFunc;
+			static std::function<void()> updateFunc;
 			static bool isPlaying;
 			static bool playFinalize;
 			static bool isFileOpen;
+			static bool existUpdateFunc;
 
 			const std::filesystem::path firstPath;
 
@@ -73,7 +75,11 @@ namespace Make {
 			Make_Draw_MenuDraw(std::shared_ptr<SceneChanger>& sceneChanger);
 			void finalize();
 			void resetDrawFunc();
+			void resetUpdateFunc();
+
+			bool checkUpdateFunc();
 			std::function<void()> getDrawFunc();
+			std::function<void()> getUpdateFunc();
 		};
 
 	}

@@ -16,7 +16,13 @@ void MainSceneManager::MainSceneManager::initialize() {
 void MainSceneManager::MainSceneManager::finalize() {
 	if (scene != nullptr) {
 		scene->finalize();
+		delete scene;
 	}
+	p_keyCheck->destroyInstance();
+	p_keyCheck = nullptr;
+	p_sceneChanger.reset();
+	p_musicDataShare.reset();
+	p_playResultShare.reset();
 }
 
 void MainSceneManager::MainSceneManager::update() {
@@ -24,6 +30,7 @@ void MainSceneManager::MainSceneManager::update() {
 		scene->finalize();
 		delete scene;
 		scene = nullptr;
+
 		isPlaying = false;
 		if (p_sceneChanger->getNextScene() == Scene::Home) {
 			scene = static_cast<Task*>(new Game::Home::Game_Home_Home(p_sceneChanger));

@@ -29,6 +29,19 @@ Game::Menu::Game_Menu_MenuManager::Game_Menu_MenuManager(std::shared_ptr<SceneCh
 	isFail = false;
 }
 
+void Game::Menu::Game_Menu_MenuManager::blendDiffUpdate() {
+	blend += static_cast<std::uint16_t>(blendDiff * Global::g_fpsDiff);
+	if (blend < 0) {
+		blend = 0;
+	}
+	if (255 < blend) {
+		blend = 255;
+	}
+	if (blend <= 0 || blend >= 255) {
+		blendDiff = -blendDiff;
+	}
+}
+
 void Game::Menu::Game_Menu_MenuManager::initialize() {
 	focusedMusicListFontHandle = CreateFontToHandle("Pristina", 20, 3, DX_FONTTYPE_ANTIALIASING_EDGE);
 	notFocusedMusicListFontHandle = CreateFontToHandle("Pristina", 20, 2, DX_FONTTYPE_ANTIALIASING_EDGE);
@@ -92,15 +105,11 @@ void Game::Menu::Game_Menu_MenuManager::update() {
 		p_musicDataShare->setDifficulty(difficultyCount);
 		p_sceneChanger->changeScene(Scene::GamePlay);
 	}
-
-	blend += blendDiff;
-	if (blend == 0 || blend == 255) {
-		blendDiff = -blendDiff;
-	}
 }
 
 void Game::Menu::Game_Menu_MenuManager::draw() {
 	if (!isFail) {
+		blendDiffUpdate();
 		drawKeyConf();
 		drawFocusedMusicData();
 		drawMusicList();

@@ -7,6 +7,7 @@ Make::Play::Make_Play_TestPlayManager::Make_Play_TestPlayManager() {
 	p_score = nullptr;
 	drawNoteFunc = [&] {return drawBeforeStart(); };
 	startClock = 0;
+	isGameStart = false;
 	isMusicStart = false;
 	nowTime = 0;
 	startDelay = 5.0;
@@ -26,10 +27,6 @@ void Make::Play::Make_Play_TestPlayManager::draw() {
 
 void Make::Play::Make_Play_TestPlayManager::drawBeforeStart() {
 	DrawString(280, 330, "Press Space to Start", strColor);
-	if (p_keyHitCheck->getHitKeyUsual(KEY_INPUT_SPACE)) {
-		this->startClock = GetNowHiPerformanceCount();
-		drawNoteFunc = [&] {return drawNote(); };
-	}
 }
 
 void Make::Play::Make_Play_TestPlayManager::drawDown() {
@@ -39,77 +36,33 @@ void Make::Play::Make_Play_TestPlayManager::drawDown() {
 }
 
 void Make::Play::Make_Play_TestPlayManager::drawHiSpeed() {
-	if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_UP) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_UP)) {
-		if (Config::g_hiSpeed < 1.5) {
-			Config::g_hiSpeed += 0.01;
-			setYUpdateBorder();
-		}
-	}
-	else if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_DOWN) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_DOWN)) {
-		if (0.02 < Config::g_hiSpeed) {
-			Config::g_hiSpeed -= 0.01;
-			setYUpdateBorder();
-		}
-	}
 	DrawStringF(10, 200,"HiSpeed :", strColor);
 	DrawFormatStringF(100,200,strColor,"%.1f",Config::g_hiSpeed * 10.0);
 }
 
 void Make::Play::Make_Play_TestPlayManager::drawJudgeCorrection() {
-	if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_RIGHT) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_RIGHT)) {
-		if (Config::g_judgeCorrection < 0.05) {
-			Config::g_judgeCorrection += 0.001;
-		}
-	}
-	else if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_LEFT) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_LEFT)) {
-		if (-0.05 < Config::g_judgeCorrection) {
-			Config::g_judgeCorrection -= 0.001;
-		}
-	}
 	DrawStringF(10, 230, "判定調整 :", strColor);
 	DrawFormatStringF(100, 230, strColor, "%.1f", Config::g_judgeCorrection * 1000.0);
 }
 
 void Make::Play::Make_Play_TestPlayManager::drawNote() {
-	nowTime = (double)((GetNowHiPerformanceCount() - startClock)) / 1000000.0;
-	if (!isMusicStart && startDelay <= nowTime) {
-		p_musicPlayer->startMusicFromHead();
-		isMusicStart = true;
-	}
 	for (int i = 0, iSize = static_cast<int>(barLineVec.size()); i < iSize; ++i) {
-		barLineVec.at(i)->update(nowTime);
-		barLineVec.at(i)->draw();
+		barLineVec.at(i)->draw(nowTime);
 	}
 	//座標更新
 	for (int i = 0, iSize = Global::LANE_AMOUNT; i < iSize; ++i) {
 		for (int k = 0, kSize = static_cast<int>(normalNoteVec.at(i).size()); k < kSize; ++k) {
-			normalNoteVec.at(i).at(k)->update(nowTime);
-			normalNoteVec.at(i).at(k)->draw();
+			normalNoteVec.at(i).at(k)->draw(nowTime);
 		}
 		for (int k = 0, kSize = static_cast<int>(longNoteVec.at(i).size()); k < kSize; ++k) {
-			longNoteVec.at(i).at(k)->update(nowTime);
-			longNoteVec.at(i).at(k)->draw();
-		}
-		if (normalNote.at(i) != nullptr) {
-			normalNote.at(i)->check(nowTime);
-		}
-		if (longNote.at(i) != nullptr) {
-			longNote.at(i)->check(nowTime);
+			longNoteVec.at(i).at(k)->draw(nowTime);
 		}
 	}
 	for (int i = 0, iSize = static_cast<int>(slideNoteVec.at(0).size()); i < iSize; ++i) {
-		slideNoteVec.at(0).at(i)->update(nowTime);
-		slideNoteVec.at(0).at(i)->draw();
+		slideNoteVec.at(0).at(i)->draw(nowTime);
 	}
 	for (int i = 0, iSize = static_cast<int>(slideNoteVec.at(1).size()); i < iSize; ++i) {
-		slideNoteVec.at(1).at(i)->update(nowTime);
-		slideNoteVec.at(1).at(i)->draw();
-	}
-	if (slideNote.at(0) != nullptr) {
-		slideNote.at(0)->check(nowTime);
-	}
-	if (slideNote.at(1) != nullptr) {
-		slideNote.at(1)->check(nowTime);
+		slideNoteVec.at(1).at(i)->draw(nowTime);
 	}
 }
 
@@ -321,6 +274,75 @@ void Make::Play::Make_Play_TestPlayManager::setYUpdateBorder() {
 	}
 }
 
+void Make::Play::Make_Play_TestPlayManager::playUpdate() {
+	nowTime = (double)(Global::g_time - startClock) / 1000000.0;
+	if (!isMusicStart && isGameStart && startDelay <= nowTime) {
+		p_musicPlayer->startMusicFromHead();
+		isMusicStart = true;
+	}
+	for (int i = 0, iSize = static_cast<int>(barLineVec.size()); i < iSize; ++i) {
+		barLineVec.at(i)->update(nowTime);
+	}
+	//座標更新
+	for (int i = 0, iSize = Global::LANE_AMOUNT; i < iSize; ++i) {
+		for (int k = 0, kSize = static_cast<int>(normalNoteVec.at(i).size()); k < kSize; ++k) {
+			normalNoteVec.at(i).at(k)->update(nowTime);
+		}
+		for (int k = 0, kSize = static_cast<int>(longNoteVec.at(i).size()); k < kSize; ++k) {
+			longNoteVec.at(i).at(k)->update(nowTime);
+		}
+		if (normalNote.at(i) != nullptr) {
+			normalNote.at(i)->check(nowTime);
+		}
+		if (longNote.at(i) != nullptr) {
+			longNote.at(i)->check(nowTime);
+		}
+	}
+	for (int i = 0, iSize = static_cast<int>(slideNoteVec.at(0).size()); i < iSize; ++i) {
+		slideNoteVec.at(0).at(i)->update(nowTime);
+	}
+	for (int i = 0, iSize = static_cast<int>(slideNoteVec.at(1).size()); i < iSize; ++i) {
+		slideNoteVec.at(1).at(i)->update(nowTime);
+	}
+	if (slideNote.at(0) != nullptr) {
+		slideNote.at(0)->check(nowTime);
+	}
+	if (slideNote.at(1) != nullptr) {
+		slideNote.at(1)->check(nowTime);
+	}
+}
+
+void Make::Play::Make_Play_TestPlayManager::update() {
+	if (!isMusicStart && p_keyHitCheck->getHitKeyUsual(KEY_INPUT_SPACE)) {
+		this->startClock = Global::g_time;
+		drawNoteFunc = [&] {return drawNote(); };
+		isGameStart = true;
+	}
+	if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_UP) == 1) {
+		if (Config::g_hiSpeed < 1.5) {
+			Config::g_hiSpeed += 0.01;
+			setYUpdateBorder();
+		}
+	}
+	else if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_DOWN) == 1) {
+		if (0.02 < Config::g_hiSpeed) {
+			Config::g_hiSpeed -= 0.01;
+			setYUpdateBorder();
+		}
+	}
+	if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_RIGHT) == 1) {
+		if (Config::g_judgeCorrection < 0.05) {
+			Config::g_judgeCorrection += 0.001;
+		}
+	}
+	else if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_LEFT) == 1) {
+		if (-0.05 < Config::g_judgeCorrection) {
+			Config::g_judgeCorrection -= 0.001;
+		}
+	}
+	playUpdate();
+}
+
 void Make::Play::Make_Play_TestPlayManager::updateKey() {
 	for (int i = 0, iSize = Global::LANE_AMOUNT; i < iSize; ++i) {
 		for (int k = 0, kSize = static_cast<int>(normalNoteVec.at(i).size()); k < kSize; ++k) {
@@ -341,4 +363,9 @@ void Make::Play::Make_Play_TestPlayManager::updateKey() {
 
 const std::function<void()> Make::Play::Make_Play_TestPlayManager::getDrawFunc() {
 	return [&] {return draw(); };
+
+}
+
+const std::function<void()> Make::Play::Make_Play_TestPlayManager::getUpdateFunc() {
+	return [&] {return update(); };
 }
