@@ -5,6 +5,7 @@
 
 #include "dxlib/DxLib.h"
 #include "Task.h"
+#include "Global.h"
 #include "SceneChanger.h"
 #include "Singleton_KeyHitCheck.h"
 
@@ -25,6 +26,7 @@ namespace Game {
 			std::uint16_t blend;
 			std::int16_t blendDiff;
 
+			void blendDiffUpdate();
 			void drawOption();
 			void drawTitle();
 			void drawKeyConf();

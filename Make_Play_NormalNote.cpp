@@ -4,8 +4,8 @@ Make::Play::Make_Play_NormalNote::Make_Play_NormalNote(const double time, const 
 time(time),noteType(noteType),laneIndex(laneIndex),laneXRight(laneXRight),laneXLeft(laneXLeft),nextNote(nextNote),p_score(p_score){
 	p_keyHitCheck = ::Singleton::Singleton_KeyHitCheck::getInstance();
 	y = 0;
-	yUpdateBorderMin = this->time - 1 / Config::g_hiSpeed;
-	yUpdateBorderMax = this->time - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed);
+	yUpdateBorderMin = this->time - Global::JUDGELINE_Y / (Global::JUDGELINE_Y * Config::g_hiSpeed);
+	yUpdateBorderMax = this->time - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed) + 0.01666;
 	done = false;
 	turn = false;
 	noteColor = GetColor(255, 255, 255);
@@ -43,14 +43,14 @@ void Make::Play::Make_Play_NormalNote::setDone(bool d) {
 }
 
 void Make::Play::Make_Play_NormalNote::setYUpdateBorder() {
-	yUpdateBorderMin = time - 1 / Config::g_hiSpeed;
-	yUpdateBorderMax = time - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed);
+	yUpdateBorderMin = time - Global::JUDGELINE_Y / (Global::JUDGELINE_Y * Config::g_hiSpeed);
+	yUpdateBorderMax = time - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed) + 0.01666;
 }
 
 void Make::Play::Make_Play_NormalNote::update(double nowTime) {
 	if (yUpdateBorderMin < nowTime && nowTime < yUpdateBorderMax) {
 		y = Global::JUDGELINE_Y - ((time - nowTime) * Global::JUDGELINE_Y * Config::g_hiSpeed);
-		if (turn && time + Global::MISS + Config::g_judgeCorrection < nowTime + Config::g_judgeCorrection) {
+		if (turn && time + Global::MISS < nowTime + Config::g_judgeCorrection) {
 			setDone(true);
 			p_score->plusMiss();
 		}
@@ -78,8 +78,8 @@ void Make::Play::Make_Play_NormalNote::updateKey() {
 	}
 }
 
-void Make::Play::Make_Play_NormalNote::draw() {
-	if (0 < y && y < Global::WINDOW_HEIGHT && !done) {
+void Make::Play::Make_Play_NormalNote::draw(double nowTime) {
+	if (yUpdateBorderMin < nowTime && nowTime < yUpdateBorderMax && !done) {
 		DrawBoxAA(static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE), static_cast<float>(y - Global::NOTE_HEIGHT),
 			static_cast<float>(laneXLeft - Global::LENGTH_FROM_LANE), static_cast<float>(y + Global::NOTE_HEIGHT ), GetColor(255, 255, 255), true);
 	}

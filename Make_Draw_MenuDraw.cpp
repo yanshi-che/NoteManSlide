@@ -6,9 +6,11 @@ std::shared_ptr<Make::Play::Make_Play_MusicPlayer> Make::Draw::Make_Draw_MenuDra
 std::shared_ptr<Make::Draw::Make_Draw_BeatLineManager> Make::Draw::Make_Draw_MenuDraw::p_beatLine = nullptr;
 std::shared_ptr<Make::Play::Make_Play_TestPlayManager> Make::Draw::Make_Draw_MenuDraw::p_testPlay = nullptr;
 std::function<void()> Make::Draw::Make_Draw_MenuDraw::drawFunc = nullptr;
+std::function<void()> Make::Draw::Make_Draw_MenuDraw::updateFunc = nullptr;
 bool Make::Draw::Make_Draw_MenuDraw::isPlaying = false;
 bool Make::Draw::Make_Draw_MenuDraw::playFinalize = false;
 bool Make::Draw::Make_Draw_MenuDraw::isFileOpen = false;
+bool Make::Draw::Make_Draw_MenuDraw::existUpdateFunc = false;
 
 Make::Draw::Make_Draw_MenuDraw::Make_Draw_MenuDraw(std::shared_ptr<SceneChanger>& sceneChanger) : firstPath(std::filesystem::current_path()){
 	this->sceneChanger = sceneChanger;
@@ -142,7 +144,9 @@ void Make::Draw::Make_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemNam
 			p_testPlay = std::make_shared<Play::Make_Play_TestPlayManager>();
 			p_testPlay->initialize(val,p_musicPlayer,p_musicData);
 			drawFunc = p_testPlay->getDrawFunc();
+			updateFunc = p_testPlay->getUpdateFunc();
 			isPlaying = true;
+			existUpdateFunc = true;
 		}
 		break;
 	case Stop:
@@ -150,6 +154,7 @@ void Make::Draw::Make_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemNam
 			drawFunc = p_beatLine->getDrawFunc();
 			isPlaying = false;
 			playFinalize = true;
+			existUpdateFunc = true;
 		}
 		break;
 	case WholeQUARTER:
@@ -241,6 +246,24 @@ void Make::Draw::Make_Draw_MenuDraw::resetDrawFunc() {
 	}
 }
 
+void Make::Draw::Make_Draw_MenuDraw::resetUpdateFunc() {
+	updateFunc = nullptr;
+	existUpdateFunc = false;
+	if (playFinalize) {
+		p_testPlay->finalize();
+		p_testPlay.reset();
+		playFinalize = false;
+	}
+}
+
+bool Make::Draw::Make_Draw_MenuDraw::checkUpdateFunc() {
+	return existUpdateFunc;
+}
+
 std::function<void()> Make::Draw::Make_Draw_MenuDraw::getDrawFunc() {
 	return drawFunc;
+}
+
+std::function<void()> Make::Draw::Make_Draw_MenuDraw::getUpdateFunc() {
+	return updateFunc;
 }

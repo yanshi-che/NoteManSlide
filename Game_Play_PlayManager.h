@@ -52,9 +52,10 @@ namespace Game {
 
 			Singleton::Singleton_KeyHitCheck* p_keyHitCheck;
 
-			LONGLONG startClock;
+			LONGLONG startTime;
 			double nowTime;
 			double startDelay;
+			bool isGameStart;
 			bool isMusicStart;
 
 			std::int32_t fontColor;
@@ -77,6 +78,7 @@ namespace Game {
 			void drawJudgeCorrection();
 			void drawNote();
 			void updateKey();
+			void playUpdate();
 			void setYUpdateBorder();
 
 			bool initializeNote(const std::uint16_t laneAmount, const double timePerBeat, std::uint16_t& maxChain);

@@ -4,8 +4,8 @@ Game::Play::Game_Play_LongNote::Game_Play_LongNote(const double startTime, const
 	startTime(startTime), endTime(endTime), noteType(noteType), laneIndex(laneIndex), laneXRight(laneXRight), laneXLeft(laneXLeft), nextNote(nextNote), p_score(p_score),p_effect(p_effect) {
 	p_keyHitCheck = ::Singleton::Singleton_KeyHitCheck::getInstance();
 	y = 0;
-	yUpdateBorderMin = this->startTime - 1 / Config::g_hiSpeed;
-	yUpdateBorderMax = this->endTime - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed);
+	yUpdateBorderMin = this->startTime - Global::JUDGELINE_Y / (Global::JUDGELINE_Y * Config::g_hiSpeed);
+	yUpdateBorderMax = this->endTime - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed) + 0.01666;
 	longNoteHeight = 0;
 	alpha = 255;
 	done = false;
@@ -68,8 +68,8 @@ void Game::Play::Game_Play_LongNote::setDone(bool d) {
 }
 
 void Game::Play::Game_Play_LongNote::setYUpdateBorder() {
-	yUpdateBorderMin = startTime - 1 / Config::g_hiSpeed;
-	yUpdateBorderMax = endTime - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed);
+	yUpdateBorderMin = startTime - Global::JUDGELINE_Y / (Global::JUDGELINE_Y * Config::g_hiSpeed);
+	yUpdateBorderMax = endTime - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed) + 0.01666;
 }
 
 void Game::Play::Game_Play_LongNote::update(double nowTime) {
@@ -112,56 +112,11 @@ void Game::Play::Game_Play_LongNote::updateKey() {
 	}
 }
 
-void Game::Play::Game_Play_LongNote::draw() {
-	if (0 < y && !done) {
+void Game::Play::Game_Play_LongNote::draw(double nowTime) {
+	if (yUpdateBorderMin < nowTime && nowTime < yUpdateBorderMax && !done) {
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 		DrawBoxAA(static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE), static_cast<float>(y - Global::NOTE_HEIGHT - longNoteHeight),
 			static_cast<float>(laneXLeft - Global::LENGTH_FROM_LANE), static_cast<float>(y + Global::NOTE_HEIGHT), noteOutSideColor, true);
-		drawNoteStartAndEnd();
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	}
-}
-
-void Game::Play::Game_Play_LongNote::drawNoteStartAndEnd() {
-	//“à‘¤
-	if (isHit) {
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 132);
-	}
-	//start
-	DrawBoxAA(static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 1), static_cast<float>(y - Global::NOTE_HEIGHT + Global::NOTE_LENGTH_FROM_OUTLINE),
-		static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 14), static_cast<float>(y + Global::NOTE_HEIGHT - Global::NOTE_LENGTH_FROM_OUTLINE), noteInSideColor, true);
-
-	DrawBoxAA(static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 5), static_cast<float>(y - Global::NOTE_HEIGHT + Global::NOTE_LENGTH_FROM_OUTLINE),
-		static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 10), static_cast<float>(y + Global::NOTE_HEIGHT - Global::NOTE_LENGTH_FROM_OUTLINE), noteInSideColor, true);
-
-	DrawLineAA(static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 15), static_cast<float>(y - Global::NOTE_HEIGHT),
-		static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 15), static_cast<float>(y + Global::NOTE_HEIGHT), noteOutSideColor, true);
-
-	DrawBoxAA(static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 16), static_cast<float>(y - Global::NOTE_HEIGHT + Global::NOTE_LENGTH_FROM_OUTLINE),
-		static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 49), static_cast<float>(y + Global::NOTE_HEIGHT - Global::NOTE_LENGTH_FROM_OUTLINE), noteInSideColor, true);
-
-	DrawBoxAA(static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 16), static_cast<float>(y - Global::NOTE_HEIGHT + Global::NOTE_LENGTH_FROM_OUTLINE),
-		static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 49), static_cast<float>(y + Global::NOTE_HEIGHT - Global::NOTE_LENGTH_FROM_OUTLINE), noteInSideColor, true);
-
-	DrawBoxAA(static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 30), static_cast<float>(y - Global::NOTE_HEIGHT + Global::NOTE_LENGTH_FROM_OUTLINE),
-		static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 40), static_cast<float>(y + Global::NOTE_HEIGHT - Global::NOTE_LENGTH_FROM_OUTLINE), noteInSideColor, true);
-
-	//end
-	DrawBoxAA(static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 1), static_cast<float>(y - Global::NOTE_HEIGHT - longNoteHeight + Global::NOTE_LENGTH_FROM_OUTLINE),
-		static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 14), static_cast<float>(y + Global::NOTE_HEIGHT - longNoteHeight - Global::NOTE_LENGTH_FROM_OUTLINE), noteInSideColor, true);
-
-	DrawBoxAA(static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 5), static_cast<float>(y - Global::NOTE_HEIGHT - longNoteHeight + Global::NOTE_LENGTH_FROM_OUTLINE),
-		static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 10), static_cast<float>(y + Global::NOTE_HEIGHT - longNoteHeight - Global::NOTE_LENGTH_FROM_OUTLINE), noteInSideColor, true);
-
-	DrawLineAA(static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 15), static_cast<float>(y - Global::NOTE_HEIGHT - longNoteHeight),
-		static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 15), static_cast<float>(y + Global::NOTE_HEIGHT - longNoteHeight), noteOutSideColor, true);
-
-	DrawBoxAA(static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 16), static_cast<float>(y - Global::NOTE_HEIGHT - longNoteHeight + Global::NOTE_LENGTH_FROM_OUTLINE),
-		static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 49), static_cast<float>(y + Global::NOTE_HEIGHT - longNoteHeight - Global::NOTE_LENGTH_FROM_OUTLINE), noteInSideColor, true);
-
-	DrawBoxAA(static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 16), static_cast<float>(y - Global::NOTE_HEIGHT - longNoteHeight + Global::NOTE_LENGTH_FROM_OUTLINE),
-		static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 49), static_cast<float>(y + Global::NOTE_HEIGHT - longNoteHeight - Global::NOTE_LENGTH_FROM_OUTLINE), noteInSideColor, true);
-
-	DrawBoxAA(static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 30), static_cast<float>(y - Global::NOTE_HEIGHT - longNoteHeight + Global::NOTE_LENGTH_FROM_OUTLINE),
-		static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE + 40), static_cast<float>(y + Global::NOTE_HEIGHT - longNoteHeight - Global::NOTE_LENGTH_FROM_OUTLINE), noteInSideColor, true);
 }

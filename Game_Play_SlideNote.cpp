@@ -8,8 +8,8 @@ Game::Play::Game_Play_SlideNote::Game_Play_SlideNote(const double time, const st
 	colorLR = GetColor(62, 253, 249);
 	colorLL = GetColor(67, 62, 253);
 	y = 0;
-	yUpdateBorderMin = this->time - 1 / Config::g_hiSpeed;
-	yUpdateBorderMax = this->time - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed);
+	yUpdateBorderMin = this->time - Global::JUDGELINE_Y / (Global::JUDGELINE_Y * Config::g_hiSpeed);
+	yUpdateBorderMax = this->time - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed) + 0.01666;
 	done = false;
 	turn = false;
 	key = 0;
@@ -48,8 +48,8 @@ void Game::Play::Game_Play_SlideNote::setDone(bool d) {
 }
 
 void Game::Play::Game_Play_SlideNote::setYUpdateBorder() {
-	yUpdateBorderMin = time - 1 / Config::g_hiSpeed;
-	yUpdateBorderMax = time - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed);
+	yUpdateBorderMin = time - Global::JUDGELINE_Y / (Global::JUDGELINE_Y * Config::g_hiSpeed);
+	yUpdateBorderMax = time - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed) + 0.01666;
 }
 
 void Game::Play::Game_Play_SlideNote::update(double nowTime) {
@@ -145,8 +145,8 @@ void Game::Play::Game_Play_SlideNote::drawArrow() {
 	}
 }
 
-void Game::Play::Game_Play_SlideNote::draw() {
-	if (0 < y && y < Global::WINDOW_HEIGHT && !done) {
+void Game::Play::Game_Play_SlideNote::draw(double nowTime) {
+	if (yUpdateBorderMin < nowTime && nowTime < yUpdateBorderMax && !done) {
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
 		drawLine();
 		drawArrow();

@@ -16,13 +16,13 @@ namespace Make {
         std::unique_ptr<Draw::Make_Draw_MenuDraw> p_menu;
         Singleton::Make_Singleton_MouseOperationCheck* p_mouseCheck;
         std::function<void()> drawFunc;
+        std::function<void()> updateFunc;
     public:
         Make_DrawManager(std::shared_ptr<SceneChanger>& p_sceneChanger);
         void initialize() override;
         void finalize() override;
         void update() override;
         void draw() override;
-
     };
 
 }

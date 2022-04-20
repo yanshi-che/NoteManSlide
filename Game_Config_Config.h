@@ -7,6 +7,7 @@
 #include "boost/json.hpp"
 #include "dxlib/DxLib.h"
 #include "Task.h"
+#include "Global.h"
 #include "Config_Config.h"
 #include "Singleton_KeyHitCheck.h"
 
@@ -20,11 +21,16 @@ namespace Game {
 			Singleton::Singleton_KeyHitCheck* p_keyCheck;
 			double hiSpeed;
 			double judgeCorrection;
+			std::uint16_t fps;
 			std::int32_t fontColor;
 			std::int32_t edgeColor;
+			std::uint16_t fpsBoxX;
+			std::uint16_t blend;
+			std::int16_t blendDiff;
 			int font;
 			bool isFail;
 
+			void blendDiffUpdate();
 			void drawKeyConf();
 		public:
 			Game_Config_Config(std::shared_ptr<SceneChanger>& p_sceneChanger);

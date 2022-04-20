@@ -8,6 +8,7 @@
 #include "boost/json.hpp"
 #include "dxlib/DxLib.h"
 #include "Task.h"
+#include "Global.h"
 #include "SceneChanger.h"
 #include "Game_Menu_MusicData.h"
 #include "Game_Menu_FileOperator.h"
@@ -51,6 +52,7 @@ namespace Game {
 
 			bool isFail;
 
+			void blendDiffUpdate();
 			void drawMusicList();
 			void drawFocusedMusicData();
 			void drawKeyConf();

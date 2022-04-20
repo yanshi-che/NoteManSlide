@@ -4,8 +4,8 @@ Make::Play::Make_Play_LongNote::Make_Play_LongNote(const double startTime, const
 	startTime(startTime), endTime(endTime), noteType(noteType), laneIndex(laneIndex), laneXRight(laneXRight), laneXLeft(laneXLeft), nextNote(nextNote), p_score(p_score) {
 	p_keyHitCheck = ::Singleton::Singleton_KeyHitCheck::getInstance();
 	y = 0;
-	yUpdateBorderMin = this->startTime - 1 / Config::g_hiSpeed;
-	yUpdateBorderMax = this->endTime - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed);
+	yUpdateBorderMin = this->startTime - Global::JUDGELINE_Y / (Global::JUDGELINE_Y * Config::g_hiSpeed);
+	yUpdateBorderMax = this->endTime - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed) + 0.01666;
 	longNoteHeight = 0;
 	alpha = 255;
 	done = false;
@@ -65,8 +65,8 @@ void Make::Play::Make_Play_LongNote::setDone(bool d) {
 }
 
 void Make::Play::Make_Play_LongNote::setYUpdateBorder() {
-	yUpdateBorderMin = startTime - 1 / Config::g_hiSpeed;
-	yUpdateBorderMax = endTime - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed);
+	yUpdateBorderMin = startTime - Global::JUDGELINE_Y / (Global::JUDGELINE_Y * Config::g_hiSpeed);
+	yUpdateBorderMax = endTime - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed) + 0.01666;
 }
 
 void Make::Play::Make_Play_LongNote::update(double nowTime) {
@@ -108,8 +108,8 @@ void Make::Play::Make_Play_LongNote::updateKey() {
 	}
 }
 
-void Make::Play::Make_Play_LongNote::draw() {
-	if (0 < y && !done) {
+void Make::Play::Make_Play_LongNote::draw(double nowTime) {
+	if (yUpdateBorderMin < nowTime && nowTime < yUpdateBorderMax && !done) {
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 		DrawBoxAA(static_cast<float>(laneXRight + Global::LENGTH_FROM_LANE), static_cast<float>(y - Global::NOTE_HEIGHT - longNoteHeight),
 			static_cast<float>(laneXLeft - Global::LENGTH_FROM_LANE), static_cast<float>(y + Global::NOTE_HEIGHT), GetColor(255, 255, 255), true);

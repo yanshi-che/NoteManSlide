@@ -12,6 +12,19 @@ Game::Home::Game_Home_Home::Game_Home_Home(std::shared_ptr<SceneChanger>& p_scen
 	blendDiff = -5;
 }
 
+void Game::Home::Game_Home_Home::blendDiffUpdate() {
+	blend += static_cast<std::uint16_t>(blendDiff * Global::g_fpsDiff);
+	if (blend < 0) {
+		blend = 0;
+	}
+	if (255 < blend) {
+		blend = 255;
+	}
+	if (blend <= 0 || blend >= 255) {
+		blendDiff = -blendDiff;
+	}
+}
+
 void Game::Home::Game_Home_Home::initialize() {
 	p_keyHitCheck = ::Singleton::Singleton_KeyHitCheck::getInstance();
 	titleFontHandle = CreateFontToHandle("Pristina", 120, 4, DX_FONTTYPE_ANTIALIASING_EDGE);
@@ -37,10 +50,6 @@ void Game::Home::Game_Home_Home::update() {
 	if (3 < boxCount) {
 		boxCount = 0;
 	}
-	blend += blendDiff;
-	if (blend == 0 || blend == 255) {
-		blendDiff = -blendDiff;
-	}
 	if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_RETURN) == 1) {
 		if (boxCount == 0) {
 			p_sceneChanger->changeScene(Scene::GameMenu);
@@ -57,6 +66,7 @@ void Game::Home::Game_Home_Home::update() {
 }
 
 void Game::Home::Game_Home_Home::draw() {
+	blendDiffUpdate();
 	drawTitle();
 	drawOption();
 	drawKeyConf();

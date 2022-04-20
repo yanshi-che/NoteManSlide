@@ -18,7 +18,7 @@ namespace Game {
 			Game_Play_BarLine(const double time);
 			void setYUpdateBorder();
 			void update(double nowTime);
-			void draw();
+			void draw(double nowTime);
 		};
 	}
 }

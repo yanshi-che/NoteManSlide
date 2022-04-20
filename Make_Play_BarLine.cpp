@@ -19,8 +19,8 @@ void Make::Play::Make_Play_BarLine::update(double nowTime) {
 	}
 }
 
-void Make::Play::Make_Play_BarLine::draw() {
-	if (0 < y && y < Global::WINDOW_HEIGHT) {
+void Make::Play::Make_Play_BarLine::draw(double nowTime) {
+	if (yUpdateBorderMin < nowTime && nowTime < yUpdateBorderMax) {
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
 		DrawLineAA(static_cast<float>(Global::PLAY_LANE_X_MIN), static_cast<float>(y), static_cast<float>(Global::PLAY_LANE_X_MAX), static_cast<float>(y), color);
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);

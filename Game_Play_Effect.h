@@ -17,12 +17,14 @@ namespace Game {
 			int missEffectHandle[effectHandleSize];
 			std::uint16_t effectCount[Global::LANE_AMOUNT][3];
 			bool isEffect[Global::LANE_AMOUNT][3];
+			double fpsDiffOp[Global::LANE_AMOUNT][3];
 		public:
 			Game_Play_Effect();
 			void finalize();
 			void setPerfect(std::uint16_t laneIndex);
 			void setGreat(std::uint16_t laneIndex);
 			void setMiss(std::uint16_t laneIndex);
+			void update();
 			void draw();
 
 			bool loadEffect();

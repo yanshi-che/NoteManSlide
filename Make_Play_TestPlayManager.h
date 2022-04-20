@@ -47,6 +47,7 @@ namespace Make {
 
 			LONGLONG startClock;
 			double nowTime;
+			bool isGameStart;
 			bool isMusicStart;
 
 			double startDelay;
@@ -62,13 +63,16 @@ namespace Make {
 			void drawHiSpeed();
 			void drawJudgeCorrection();
 			void drawNote();
+			void playUpdate();
 			void setYUpdateBorder();
 		public:
 			Make_Play_TestPlayManager();
 			void finalize();
 			void initialize(const json::value& val,const std::shared_ptr<Make_Play_MusicPlayer>& p_musicPlayer,const std::shared_ptr<File::Make_File_MusicData>& p_musicData);
+			void update();
 			void updateKey();
 			const std::function<void()> getDrawFunc();
+			const std::function<void()> getUpdateFunc();
 		};
 	}
 }

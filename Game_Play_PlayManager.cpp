@@ -5,7 +5,8 @@ Game::Play::Game_Play_PlayManager::Game_Play_PlayManager(std::shared_ptr<SceneCh
 	p_lane = nullptr;
 	p_score = nullptr;
 	drawNoteFunc = [&] {return drawBeforeStart(); };
-	startClock = 0;
+	startTime = 0;
+	isGameStart = false;
 	isMusicStart = false;
 	isLoadFail = false;
 	isPlayToEnd = true;
@@ -149,10 +150,6 @@ void Game::Play::Game_Play_PlayManager::draw() {
 
 void Game::Play::Game_Play_PlayManager::drawBeforeStart() {
 	DrawString(280, 330, "Press Space to Start", fontColor);
-	if (p_keyHitCheck->getHitKeyUsual(KEY_INPUT_SPACE)) {
-		this->startClock = GetNowHiPerformanceCount();
-		drawNoteFunc = [&] {return drawNote(); };
-	}
 }
 
 void Game::Play::Game_Play_PlayManager::drawDown() {
@@ -172,45 +169,23 @@ void Game::Play::Game_Play_PlayManager::drawJudgeCorrection() {
 }
 
 void Game::Play::Game_Play_PlayManager::drawNote() {
-	nowTime = (double)((GetNowHiPerformanceCount() - startClock)) / 1000000.0;
-	if (!isMusicStart && startDelay <= nowTime) {
-		PlaySoundMem(musicHandle, DX_PLAYTYPE_BACK, true);
-		isMusicStart = true;
-	}
 	for (int i = 0, iSize = static_cast<int>(barLineVec.size()); i < iSize; ++i) {
-		barLineVec.at(i)->update(nowTime);
-		barLineVec.at(i)->draw();
+		barLineVec.at(i)->draw(nowTime);
 	}
 	//座標更新
 	for (int i = 0, iSize = Global::LANE_AMOUNT; i < iSize; ++i) {
 		for (int k = 0, kSize = static_cast<int>(normalNoteVec.at(i).size()); k < kSize; ++k) {
-			normalNoteVec.at(i).at(k)->update(nowTime);
-			normalNoteVec.at(i).at(k)->draw();
+			normalNoteVec.at(i).at(k)->draw(nowTime);
 		}
 		for (int k = 0, kSize = static_cast<int>(longNoteVec.at(i).size()); k < kSize; ++k) {
-			longNoteVec.at(i).at(k)->update(nowTime);
-			longNoteVec.at(i).at(k)->draw();
-		}
-		if (normalNote.at(i) != nullptr) {
-			normalNote.at(i)->check(nowTime);
-		}
-		if (longNote.at(i) != nullptr) {
-			longNote.at(i)->check(nowTime);
+			longNoteVec.at(i).at(k)->draw(nowTime);
 		}
 	}
 	for (int i = 0, iSize = static_cast<int>(slideNoteVec.at(0).size()); i < iSize; ++i) {
-		slideNoteVec.at(0).at(i)->update(nowTime);
-		slideNoteVec.at(0).at(i)->draw();
+		slideNoteVec.at(0).at(i)->draw(nowTime);
 	}
 	for (int i = 0, iSize = static_cast<int>(slideNoteVec.at(1).size()); i < iSize; ++i) {
-		slideNoteVec.at(1).at(i)->update(nowTime);
-		slideNoteVec.at(1).at(i)->draw();
-	}
-	if (slideNote.at(0) != nullptr) {
-		slideNote.at(0)->check(nowTime);
-	}
-	if (slideNote.at(1) != nullptr) {
-		slideNote.at(1)->check(nowTime);
+		slideNoteVec.at(1).at(i)->draw(nowTime);
 	}
 }
 
@@ -269,25 +244,64 @@ void Game::Play::Game_Play_PlayManager::setYUpdateBorder() {
 	}
 }
 
+void Game::Play::Game_Play_PlayManager::playUpdate() {
+	nowTime = (double)(Global::g_time - startTime) / 1000000.0;
+
+	if (!isMusicStart && isGameStart && startDelay <= nowTime) {
+		PlaySoundMem(musicHandle, DX_PLAYTYPE_BACK, true);
+		isMusicStart = true;
+	}
+	for (int i = 0, iSize = static_cast<int>(barLineVec.size()); i < iSize; ++i) {
+		barLineVec.at(i)->update(nowTime);
+	}
+	//座標更新
+	for (int i = 0, iSize = Global::LANE_AMOUNT; i < iSize; ++i) {
+		for (int k = 0, kSize = static_cast<int>(normalNoteVec.at(i).size()); k < kSize; ++k) {
+			normalNoteVec.at(i).at(k)->update(nowTime);
+		}
+		for (int k = 0, kSize = static_cast<int>(longNoteVec.at(i).size()); k < kSize; ++k) {
+			longNoteVec.at(i).at(k)->update(nowTime);
+		}
+		if (normalNote.at(i) != nullptr) {
+			normalNote.at(i)->check(nowTime);
+		}
+		if (longNote.at(i) != nullptr) {
+			longNote.at(i)->check(nowTime);
+		}
+	}
+	for (int i = 0, iSize = static_cast<int>(slideNoteVec.at(0).size()); i < iSize; ++i) {
+		slideNoteVec.at(0).at(i)->update(nowTime);
+	}
+	for (int i = 0, iSize = static_cast<int>(slideNoteVec.at(1).size()); i < iSize; ++i) {
+		slideNoteVec.at(1).at(i)->update(nowTime);
+	}
+	if (slideNote.at(0) != nullptr) {
+		slideNote.at(0)->check(nowTime);
+	}
+	if (slideNote.at(1) != nullptr) {
+		slideNote.at(1)->check(nowTime);
+	}
+}
+
 void Game::Play::Game_Play_PlayManager::update() {
-	if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_UP) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_UP)) {
+	if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_UP) == 1) {
 		if (Config::g_hiSpeed < 1.5) {
 			Config::g_hiSpeed += 0.01;
 			setYUpdateBorder();
 		}
 	}
-	else if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_DOWN) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_DOWN)) {
+	else if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_DOWN) == 1) {
 		if (0.02 < Config::g_hiSpeed) {
 			Config::g_hiSpeed -= 0.01;
 			setYUpdateBorder();
 		}
 	}
-	if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_RIGHT) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_RIGHT)) {
+	if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_RIGHT) == 1) {
 		if (Config::g_judgeCorrection < 0.05) {
 			Config::g_judgeCorrection += 0.001;
 		}
 	}
-	else if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_LEFT) == 1 || 60 < p_keyHitCheck->getHitKeyLong(KEY_INPUT_LEFT)) {
+	else if (p_keyHitCheck->getHitKeyLong(KEY_INPUT_LEFT) == 1) {
 		if (-0.05 < Config::g_judgeCorrection) {
 			Config::g_judgeCorrection -= 0.001;
 		}
@@ -304,6 +318,13 @@ void Game::Play::Game_Play_PlayManager::update() {
 		p_playResultShare->setIsClear(p_score->isClear());
 		p_sceneChanger->changeScene(Scene::GameResult);
 	}
+	if (p_keyHitCheck->getHitKeyUsual(KEY_INPUT_SPACE)) {
+		isGameStart = true;
+		this->startTime = Global::g_time;
+		drawNoteFunc = [&] {return drawNote(); };
+	}
+	playUpdate();
+	p_effect->update();
 }
 
 void Game::Play::Game_Play_PlayManager::updateKey() {

@@ -6,6 +6,7 @@
 
 namespace Config{
 	//ユーザー定義
+	extern std::uint16_t g_fps;
 	extern double g_hiSpeed;
 	extern double g_judgeCorrection;
 	extern std::uint16_t g_lane0;

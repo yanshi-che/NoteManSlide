@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Windows.h>
 #include <cstdint>
 
 namespace Global {
@@ -37,9 +38,12 @@ namespace Global {
 	//判定
 	constexpr const double PERFECT{ 0.03333 };
 	constexpr const double GREAT{ 0.06666 };
-	constexpr const double MISS{ 0.06999 };
+	constexpr const double MISS{ 0.08777 };
 
-	//
+	//時間関連
+	extern double g_fpsDiff;
+	extern LONGLONG g_time;
+	//その他
 	extern bool g_saveFlag;//セーブしたかどうかのフラグ
 	extern std::uint16_t g_clickWidth;//拍線に対するマウスクリックの許容幅
 }
