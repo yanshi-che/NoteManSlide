@@ -17,7 +17,7 @@ INT_PTR CALLBACK Make::Dialog::Make_Dialog_MusicInfo::MusicInfoDialogProc(HWND h
 			SetDlgItemText(hWnd, IDC_EDITFilePath, filePath);
 		}
 		break;
-		case IDOK:
+		case IDC_BUTTONOK:
 		{
 			bool isError = false;
 			std::string errorMessage;
@@ -118,12 +118,18 @@ void Make::Dialog::Make_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MA
 
 	ShowWindow(hDialogWnd, SW_SHOW);
 
-	while (isShowMusicInfoDlg && ProcessMessage() == 0 &&ClearDrawScreen() == 0) {
+	::Singleton::Singleton_FpsOperator* fps = ::Singleton::Singleton_FpsOperator::getInstance();
+
+	while (isShowMusicInfoDlg && ProcessMessage() == 0) {
 		//ダイアログボックスの入力が終わるまで待つ
-		ProcessMessage();
-		ClearDrawScreen();
-		ScreenFlip();
+		fps->update();
+		if (fps->waitForDialog()) {
+			ClearDrawScreen();
+			ScreenFlip();
+		}
 	}
+
+	fps = nullptr;
 
 	if (isInputed) {
 		GetDlgItemText(hDialogWnd, IDC_EDITFilePath, filePath, MAX_PATH);
@@ -146,4 +152,6 @@ void Make::Dialog::Make_Dialog_MusicInfo::getMusicInfoFromDlg(char(&filePath)[MA
 
 	isShowMusicInfoDlg = true;
 	isInputed = false;
+
+	DestroyWindow(hDialogWnd);
 }

@@ -10,6 +10,7 @@ void Make::Make_DrawManager::initialize(){
 	p_mouseCheck = Singleton::Make_Singleton_MouseOperationCheck::getInstance();
 	p_menu = std::make_unique<Draw::Make_Draw_MenuDraw>(p_sceneChanger);
 	drawFunc = p_menu->getDrawFunc();
+	SetUseIMEFlag(true);
 }
 
 void Make::Make_DrawManager::finalize() {
@@ -18,6 +19,7 @@ void Make::Make_DrawManager::finalize() {
 	p_menu->finalize();
 	p_menu.reset();
 	Singleton::Make_Singleton_MouseOperationCheck::destroyInstance();
+	SetUseIMEFlag(false);
 }
 
 void Make::Make_DrawManager::update() {

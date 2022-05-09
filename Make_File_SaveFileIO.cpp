@@ -22,8 +22,11 @@ void Make::File::Make_File_SaveFileIO::writeSaveData(const std::shared_ptr<Make_
 	json::value val;
 	json::storage_ptr sp = json::make_shared_resource< json::monotonic_resource >();
 
+	//ファイル名とアーテイストを16進数に変換
+	Method::Method_ShiftJISStringAndHex sjsh;
+
 	//MusicDataObjectの作成
-	obj["MusicData"] = json::value_from(MusicData(p_musicData->getName(), p_musicData->getArtist(), p_musicData->getLevel(), p_musicData->getBpm(), p_musicData->getBarLength(), p_musicData->getTotalMinutes(), p_musicData->getBeginDelay()), sp);
+	obj["MusicData"] = json::value_from(MusicData(sjsh.ShiftJISStrongToHex(p_musicData->getName()), sjsh.ShiftJISStrongToHex(p_musicData->getArtist()), p_musicData->getLevel(), p_musicData->getBpm(), p_musicData->getBarLength(), p_musicData->getTotalMinutes(), p_musicData->getBeginDelay()), sp);
 
 	//BarLineDataObjectの作成
 	const std::vector<std::vector<std::shared_ptr<Draw::Make_Draw_LineContainer>>>& barVec = p_beatLine->getBarVec();

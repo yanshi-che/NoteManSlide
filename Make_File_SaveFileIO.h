@@ -18,6 +18,7 @@
 #include "Make_File_FileStructData.h"
 #include "Make_Note_NoteManager.h"
 #include "Make_Play_MusicPlayer.h"
+#include "Method_ShiftJISStringAndHex.h"
 
 using namespace boost;
 

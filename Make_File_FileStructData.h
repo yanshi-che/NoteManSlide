@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include "Method_ShiftJISStringAndHex.h"
+
 using namespace boost;
 
 namespace Make{

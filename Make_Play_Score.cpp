@@ -27,7 +27,7 @@ void Make::Play::Make_Play_Score::drawJudge() {
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	SetFontSize(initFontSize);
 	if (blend > 0) {
-		blend -= 10 * Global::g_fpsDiff;
+		blend -= static_cast<std::uint16_t>(10 * Global::g_fpsDiff);
 	}
 }
 

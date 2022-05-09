@@ -44,4 +44,6 @@ void Make::Dialog::Make_Dialog_FailFile::failFileDlg(const std::string& sentence
 		ScreenFlip();
 	}
 	isShowMusicInfoDlg = true;
+
+	DestroyWindow(hDialogWnd);
 }

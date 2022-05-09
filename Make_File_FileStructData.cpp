@@ -24,7 +24,9 @@ void Make::File::tag_invoke(const json::value_from_tag&, json::value& jv, const 
 
 Make::File::MusicData Make::File::tag_invoke(const json::value_to_tag<MusicData>&, const json::value& jv) {
 	const json::value& val = jv.as_object().at("MusicData");
-	return MusicData(std::string(val.at("name").as_string().c_str()),std::string(val.at("artist").as_string().c_str()),
+	//ファイル名とアーテイストを16進数に変換
+	Method::Method_ShiftJISStringAndHex sjsh;
+	return MusicData(sjsh.ShiftJISHexToString(std::string(val.at("name").as_string().c_str())), sjsh.ShiftJISHexToString(std::string(val.at("artist").as_string().c_str())),
 		static_cast<std::uint16_t>(val.at("level").as_int64()), val.at("bpm").as_double(),
 		static_cast<std::uint16_t>(val.at("barLength").as_int64()),val.at("totalMinute").as_double(),
 		val.at("beginDelay").as_double());

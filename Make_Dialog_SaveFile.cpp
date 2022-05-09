@@ -98,4 +98,6 @@ void Make::Dialog::Make_Dialog_SaveFile::getSaveFilePathFromDlg(char(&saveFilePa
 
 	isShowMusicInfoDlg = true;
 	isInputed = false;
+
+	DestroyWindow(hDialogWnd);
 }

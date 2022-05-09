@@ -16,73 +16,11 @@
 #include "MainSceneManager.h"
 #include "Global.h"
 #include "Config_Config.h"
+#include "Singleton_FpsOperator.h"
 
 using namespace boost;
 
-class Fps {
-	LONGLONG nowTime;
-	LONGLONG time;
-	LONGLONG waitTime;
-	const LONGLONG sixtyWaitTime;
-	const LONGLONG oneHundredTwentyWaitTime;
-	int configFps;
-	int fps;
-	int fpsCount;
-	LONGLONG fpsCountTime;
-public:
-	Fps(bool isConfigFpsSixty) : sixtyWaitTime(16666),oneHundredTwentyWaitTime(8333) {
-		time = GetNowHiPerformanceCount();
-		if (isConfigFpsSixty) {
-			waitTime = sixtyWaitTime;
-			Global::g_fpsDiff = 1.0;
-			configFps = 60;
-		}
-		else {
-			waitTime = oneHundredTwentyWaitTime;
-			Global::g_fpsDiff = 0.5;
-			configFps = 120;
-		}
-		nowTime = 0;
-		fpsCountTime = time;
-		fpsCount = 0;
-		fps = 0;
-	}
-
-	void update() {
-		nowTime = GetNowHiPerformanceCount();
-		Global::g_time = nowTime;
-		if (configFps != Config::g_fps) {
-			if (configFps != 60) {
-				configFps = 60;
-				waitTime = sixtyWaitTime;
-			}
-			else {
-				configFps = 120;
-				waitTime = oneHundredTwentyWaitTime;
-			}
-		}
-	}
-
-	void drawFps() {
-		++fpsCount;
-		if (1000000 <= nowTime - fpsCountTime) {
-			fps = fpsCount;
-			fpsCount = 0;
-			fpsCountTime = nowTime;
-		}
-		DrawFormatString(10, 10, GetColor(255, 255, 255), "%d", fps);
-	}
-
-	bool wait() {
-		if (waitTime <= nowTime - time) {
-			time = nowTime;
-			return true;
-		}
-		return false;
-	}
-};
-
-bool configInit() {
+void configInit() {
 	//ファイルの読み込み用
 	std::string s = "";
 	std::string line = "";
@@ -94,7 +32,7 @@ bool configInit() {
 	std::ifstream readfile(".\\config\\config.json");
 	if (!readfile) {
 		isFail = true;
-		return true;
+		Config::g_fps = 60;
 	}
 	while (std::getline(readfile, line)) {
 		s.append(line);
@@ -108,10 +46,6 @@ bool configInit() {
 	Config::g_hiSpeed += hiSpeed - Config::g_hiSpeed;
 	Config::g_judgeCorrection += judgeCorrection - Config::g_judgeCorrection;
 	Config::g_fps = fps;
-	if (fps == 60) {
-		return true;
-	}
-	return false;
 }
 
 // プログラムは WinMain から始まります
@@ -131,6 +65,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return -1;			// エラーが起きたら直ちに終了
 	}
 	SetDrawScreen(DX_SCREEN_BACK);//裏画面で画面生成
+
 	//登録されている譜面が入ったディレクトリの読み込み
 	std::string path = ".\\bgm";
 	std::string bgmPath;
@@ -155,14 +90,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	const int backImgHandle = LoadGraph(".\\image\\background\\backImg.jpg");
 	MainSceneManager mng = MainSceneManager(backImgHandle,bgmHandle);
-	Fps* fps = nullptr;
+	configInit();
+	Singleton::Singleton_FpsOperator* fps = Singleton::Singleton_FpsOperator::getInstance();
 
-	if (configInit()) {
-		fps = new Fps(true);
-	}
-	else {
-		fps = new Fps(false);
-	}
 
 	mng.initialize();
 	// while(裏画面を表画面に反映, メッセージ処理, 画面クリア)
@@ -179,7 +109,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	mng.finalize();
 
-	delete fps;
+	fps->destroyInstance();
+	fps = nullptr;
+
 	DeleteGraph(backImgHandle);
 	DeleteSoundMem(bgmHandle);
 

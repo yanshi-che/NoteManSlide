@@ -10,6 +10,7 @@
 #include "boost/json.hpp"
 #include "Game_Menu_MusicData.h"
 #include "Game_MusicDataShareBetweenOtherSection.h"
+#include "Method_ShiftJISStringAndHex.h"
 
 using namespace boost;
 

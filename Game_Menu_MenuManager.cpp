@@ -5,7 +5,7 @@ Game::Menu::Game_Menu_MenuManager::Game_Menu_MenuManager(std::shared_ptr<SceneCh
 	//フォントデータのハンドル
 	focusedMusicListFontHandle = 0;
 	notFocusedMusicListFontHandle = 0;
-	focusedMusicFontHandle = 0;
+	focusedMusicOtherFontHandle = 0;
 	difficultyFontHandle = 0;
 	//色
 	fontColor = GetColor(255, 255, 255);
@@ -43,9 +43,10 @@ void Game::Menu::Game_Menu_MenuManager::blendDiffUpdate() {
 }
 
 void Game::Menu::Game_Menu_MenuManager::initialize() {
-	focusedMusicListFontHandle = CreateFontToHandle("Pristina", 20, 3, DX_FONTTYPE_ANTIALIASING_EDGE);
-	notFocusedMusicListFontHandle = CreateFontToHandle("Pristina", 20, 2, DX_FONTTYPE_ANTIALIASING_EDGE);
-	focusedMusicFontHandle = CreateFontToHandle("Pristina", 20, 3, DX_FONTTYPE_ANTIALIASING_EDGE);
+	focusedMusicListFontHandle = CreateFontToHandle("メイリオ", 20, 3, DX_FONTTYPE_ANTIALIASING_EDGE);
+	notFocusedMusicListFontHandle = CreateFontToHandle("メイリオ", 20, 2, DX_FONTTYPE_ANTIALIASING_EDGE);
+	focusedMusicOtherFontHandle = CreateFontToHandle("Pristina", 20, 3, DX_FONTTYPE_ANTIALIASING_EDGE);
+	focusedMusicNameAndArtistFontHandle = CreateFontToHandle("メイリオ", 20, 3, DX_FONTTYPE_ANTIALIASING_EDGE);
 	difficultyFontHandle = CreateFontToHandle("Pristina", 50, 3, DX_FONTTYPE_ANTIALIASING_EDGE);
 	p_fileOp = std::make_unique<Game_Menu_FileOperator>();
 	if (!p_fileOp->getMusicData(musicDataVec)) {
@@ -68,11 +69,14 @@ void Game::Menu::Game_Menu_MenuManager::initialize() {
 void Game::Menu::Game_Menu_MenuManager::finalize() {
 	DeleteFontToHandle(focusedMusicListFontHandle);
 	DeleteFontToHandle(notFocusedMusicListFontHandle);
-	DeleteFontToHandle(focusedMusicFontHandle);
+	DeleteFontToHandle(focusedMusicOtherFontHandle);
+	DeleteFontToHandle(focusedMusicNameAndArtistFontHandle);
 	DeleteFontToHandle(difficultyFontHandle);
 	p_fileOp.reset();
-	for (int i = 0,iSize= static_cast<int>(p_focusedMusicData->size()); i < iSize; ++i) {
-		p_focusedMusicData->at(i).reset();
+	if (p_focusedMusicData != nullptr) {
+		for (int i = 0, iSize = static_cast<int>(p_focusedMusicData->size()); i < iSize; ++i) {
+			p_focusedMusicData->at(i).reset();
+		}
 	}
 	for (int i = 0, iSize = static_cast<int>(musicDataVec.size()); i < iSize; ++i) {
 		for (int k = 0, kSize = static_cast<int>(musicDataVec.at(i).size()); k < kSize; ++k) {
@@ -156,21 +160,21 @@ void Game::Menu::Game_Menu_MenuManager::drawFocusedMusicData() {
 	DrawBox(130 + difficultyCount * 200, 115, 195 + difficultyCount * 200, 195, GetColor(255, 255, 255), false);
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	//BPM
-	DrawStringToHandle(50, 50, bpm.c_str(), fontColor, focusedMusicFontHandle,edgeColor);
+	DrawStringToHandle(50, 50, bpm.c_str(), fontColor, focusedMusicOtherFontHandle,edgeColor);
 	//ベストスコア
-	DrawStringToHandle(210, 50, bestScore[difficultyCount].c_str(), fontColor, focusedMusicFontHandle, edgeColor);
+	DrawStringToHandle(210, 50, bestScore[difficultyCount].c_str(), fontColor, focusedMusicOtherFontHandle, edgeColor);
 	// クリア状況
-	DrawStringToHandle(450, 50, clearStatus[difficultyCount].c_str(), fontColor, focusedMusicFontHandle, edgeColor);
+	DrawStringToHandle(450, 50, clearStatus[difficultyCount].c_str(), fontColor, focusedMusicOtherFontHandle, edgeColor);
 	//曲名
-	DrawStringToHandle(70, 71, p_focusedMusicData->at(0)->getName().c_str(), fontColor, focusedMusicFontHandle, edgeColor);
+	DrawStringToHandle(70, 71, p_focusedMusicData->at(0)->getName().c_str(), fontColor, focusedMusicNameAndArtistFontHandle, edgeColor);
 	//アーティスト
-	DrawStringToHandle(70, 91, p_focusedMusicData->at(0)->getArtist().c_str(), fontColor, focusedMusicFontHandle, edgeColor);
+	DrawStringToHandle(70, 91, p_focusedMusicData->at(0)->getArtist().c_str(), fontColor, focusedMusicNameAndArtistFontHandle, edgeColor);
 	//難易度
-	DrawStringToHandle(145, 170, "easy", GetColor(109, 250, 123), focusedMusicFontHandle);
+	DrawStringToHandle(145, 170, "easy", GetColor(109, 250, 123), focusedMusicOtherFontHandle);
 	DrawStringToHandle(140, 120, easyNum.c_str(), fontColor, difficultyFontHandle,edgeColor);
-	DrawStringToHandle(335, 170, "normal", GetColor(253, 253, 6), focusedMusicFontHandle);
+	DrawStringToHandle(335, 170, "normal", GetColor(253, 253, 6), focusedMusicOtherFontHandle);
 	DrawStringToHandle(340, 120, normalNum.c_str(), fontColor, difficultyFontHandle,edgeColor);
-	DrawStringToHandle(545, 170, "hard", GetColor(255, 11, 4), focusedMusicFontHandle);
+	DrawStringToHandle(545, 170, "hard", GetColor(255, 11, 4), focusedMusicOtherFontHandle);
 	DrawStringToHandle(540, 120, hardNum.c_str(), fontColor, difficultyFontHandle,edgeColor);
 }
 

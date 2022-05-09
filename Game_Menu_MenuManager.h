@@ -33,7 +33,8 @@ namespace Game {
 			//フォントデータのハンドル
 			int focusedMusicListFontHandle;
 			int notFocusedMusicListFontHandle;
-			int focusedMusicFontHandle;
+			int focusedMusicOtherFontHandle;
+			int focusedMusicNameAndArtistFontHandle;
 			int difficultyFontHandle;
 			//色
 			int fontColor;

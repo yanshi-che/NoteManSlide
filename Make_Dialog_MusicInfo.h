@@ -5,6 +5,7 @@
 #include <Windows.h>
 
 #include "Global.h"
+#include "Singleton_FpsOperator.h"
 #include "Make_File_BaseFile.h"
 #include "resource.h"
 
