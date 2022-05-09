@@ -6,6 +6,7 @@ Game::Menu::Game_Menu_MenuManager::Game_Menu_MenuManager(std::shared_ptr<SceneCh
 	focusedMusicListFontHandle = 0;
 	notFocusedMusicListFontHandle = 0;
 	focusedMusicOtherFontHandle = 0;
+	focusedMusicNameAndArtistFontHandle = 0;
 	difficultyFontHandle = 0;
 	//F
 	fontColor = GetColor(255, 255, 255);
