@@ -1,7 +1,7 @@
 #include "Game_Play_SlideNote.h"
 
-Game::Play::Game_Play_SlideNote::Game_Play_SlideNote(const double time, const std::uint16_t noteType, const double laneXStart, const double laneXEnd, const double laneWidth, const double arrowWidthBetween, const std::uint16_t rightOrLeft, const std::uint16_t directionRightOrLeft, const std::uint16_t slideLaneIndexStart, const std::uint16_t slideLaneIndexEnd, const std::function<void(std::uint16_t, std::uint16_t)> nextNote, const std::shared_ptr<Game_Play_Score>& p_score, const std::shared_ptr<Game_Play_Effect>& p_effect) :
-	time(time), noteType(noteType), laneXStart(laneXStart), laneXEnd(laneXEnd), laneWidth(laneWidth), arrowWidthBetween(arrowWidthBetween), rightOrLeft(rightOrLeft), directionRightOrLeft(directionRightOrLeft), slideLaneIndexStart(slideLaneIndexStart), slideLaneIndexEnd(slideLaneIndexEnd), nextNote(nextNote), p_score(p_score),p_effect(p_effect) {
+Game::Play::Game_Play_SlideNote::Game_Play_SlideNote(const double time, const std::uint16_t noteType, const double laneXStart, const double laneXEnd, const double laneWidth, const double arrowWidthBetween, const std::uint16_t rightOrLeft, const std::uint16_t directionRightOrLeft, const std::uint16_t slideLaneIndexStart, const std::uint16_t slideLaneIndexEnd, const std::function<void(std::uint16_t, std::uint16_t)> nextNote, const std::shared_ptr<Game_Play_Score>& p_score, const std::shared_ptr<Game_Play_Effect>& p_effect, const std::shared_ptr<Game_Play_SoundEffect>& p_soundEffect) :
+	time(time), noteType(noteType), laneXStart(laneXStart), laneXEnd(laneXEnd), laneWidth(laneWidth), arrowWidthBetween(arrowWidthBetween), rightOrLeft(rightOrLeft), directionRightOrLeft(directionRightOrLeft), slideLaneIndexStart(slideLaneIndexStart), slideLaneIndexEnd(slideLaneIndexEnd), nextNote(nextNote), p_score(p_score),p_effect(p_effect),p_soundEffect(p_soundEffect) {
 	p_keyHitCheck = ::Singleton::Singleton_KeyHitCheck::getInstance();
 	colorRR = GetColor(255, 49, 55);
 	colorRL = GetColor(228, 75, 198);
@@ -22,6 +22,7 @@ void Game::Play::Game_Play_SlideNote::check(double nowTime) {
 			if (time - Global::GREAT < nowTime + Config::g_judgeCorrection && nowTime + Config::g_judgeCorrection < time + Global::GREAT) {
 				setDone(true);
 				p_score->plusPerfect();
+				p_soundEffect->playSoundEffect();
 				if (directionRightOrLeft == 0) {
 					for (int i = slideLaneIndexStart; i <= slideLaneIndexEnd; ++i) {
 						p_effect->setPerfect(i);

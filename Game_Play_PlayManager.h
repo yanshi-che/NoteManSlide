@@ -21,6 +21,7 @@
 #include "Game_Play_SlideNote.h"
 #include "Game_Play_Score.h"
 #include "Game_Play_Effect.h"
+#include "Game_Play_SoundEffect.h"
 #include "Singleton_KeyHitCheck.h"
 
 using namespace boost;
@@ -35,6 +36,7 @@ namespace Game {
 
 			std::shared_ptr<Game_Play_Score> p_score;//スコア表示
 			std::shared_ptr<Game_Play_Effect> p_effect;//エフェクト
+			std::shared_ptr<Game_Play_SoundEffect> p_soundEffect;//サウンドエフェクト
 			std::unique_ptr<Game_Play_Lane> p_lane;//レーン周りの描画
 			std::vector<std::unique_ptr<Game_Play_BarLine>> barLineVec; //小節線
 			//各ノーツ格納用

@@ -44,10 +44,10 @@ void Game::Menu::Game_Menu_MenuManager::blendDiffUpdate() {
 }
 
 void Game::Menu::Game_Menu_MenuManager::initialize() {
-	focusedMusicListFontHandle = CreateFontToHandle("メイリオ", 20, 3, DX_FONTTYPE_ANTIALIASING_EDGE);
-	notFocusedMusicListFontHandle = CreateFontToHandle("メイリオ", 20, 2, DX_FONTTYPE_ANTIALIASING_EDGE);
+	focusedMusicListFontHandle = CreateFontToHandle("游明朝", 18, 2, DX_FONTTYPE_ANTIALIASING_EDGE);
+	notFocusedMusicListFontHandle = CreateFontToHandle("游明朝", 12, 2, DX_FONTTYPE_ANTIALIASING_EDGE);
 	focusedMusicOtherFontHandle = CreateFontToHandle("Pristina", 20, 3, DX_FONTTYPE_ANTIALIASING_EDGE);
-	focusedMusicNameAndArtistFontHandle = CreateFontToHandle("メイリオ", 20, 3, DX_FONTTYPE_ANTIALIASING_EDGE);
+	focusedMusicNameAndArtistFontHandle = CreateFontToHandle("游明朝", 11, 3, DX_FONTTYPE_ANTIALIASING_EDGE);
 	difficultyFontHandle = CreateFontToHandle("Pristina", 50, 3, DX_FONTTYPE_ANTIALIASING_EDGE);
 	p_fileOp = std::make_unique<Game_Menu_FileOperator>();
 	if (!p_fileOp->getMusicData(musicDataVec)) {
@@ -167,9 +167,9 @@ void Game::Menu::Game_Menu_MenuManager::drawFocusedMusicData() {
 	// クリア状況
 	DrawStringToHandle(450, 50, clearStatus[difficultyCount].c_str(), fontColor, focusedMusicOtherFontHandle, edgeColor);
 	//曲名
-	DrawStringToHandle(70, 71, p_focusedMusicData->at(0)->getName().c_str(), fontColor, focusedMusicNameAndArtistFontHandle, edgeColor);
+	DrawStringToHandle(70, 74, p_focusedMusicData->at(0)->getName().c_str(), fontColor, focusedMusicNameAndArtistFontHandle, edgeColor);
 	//アーティスト
-	DrawStringToHandle(70, 91, p_focusedMusicData->at(0)->getArtist().c_str(), fontColor, focusedMusicNameAndArtistFontHandle, edgeColor);
+	DrawStringToHandle(70, 94, p_focusedMusicData->at(0)->getArtist().c_str(), fontColor, focusedMusicNameAndArtistFontHandle, edgeColor);
 	//難易度
 	DrawStringToHandle(145, 170, "easy", GetColor(109, 250, 123), focusedMusicOtherFontHandle);
 	DrawStringToHandle(140, 120, easyNum.c_str(), fontColor, difficultyFontHandle,edgeColor);

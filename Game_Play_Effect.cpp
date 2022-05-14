@@ -20,9 +20,9 @@ Game::Play::Game_Play_Effect::Game_Play_Effect() {
 
 bool Game::Play::Game_Play_Effect::loadEffect() {
 	try {
-		LoadDivGraph(".\\image\\effect\\perfect.png", 15, 5, 3, 120, 120, perfectEffectHandle);
-		LoadDivGraph(".\\image\\effect\\great.png", 15, 5, 3, 120, 120, greatEffectHandle);
-		LoadDivGraph(".\\image\\effect\\miss.png", 15, 5, 3, 120, 120, missEffectHandle);
+		LoadDivGraph(".\\data\\image\\effect\\perfect.png", 15, 5, 3, 120, 120, perfectEffectHandle);
+		LoadDivGraph(".\\data\\image\\effect\\great.png", 15, 5, 3, 120, 120, greatEffectHandle);
+		LoadDivGraph(".\\data\\image\\effect\\miss.png", 15, 5, 3, 120, 120, missEffectHandle);
 	}
 	catch (...) {
 		return false;

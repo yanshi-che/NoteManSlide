@@ -10,6 +10,7 @@ Game::Result::Game_Result_Result::Game_Result_Result(std::shared_ptr<SceneChange
 	score = p_playResultShare->getScore();
 	clearStr = "Failed...";
 	font = 0;
+	jisFont = 0;
 	titleFont = 0;
 	fontColor = GetColor(255, 255, 255);
 	edgeColor = GetColor(0, 128, 128);
@@ -37,12 +38,14 @@ void Game::Result::Game_Result_Result::saveData() {
 
 void Game::Result::Game_Result_Result::initialize() {
 	font = CreateFontToHandle("Pristina", 22, 4, DX_FONTTYPE_ANTIALIASING_EDGE);
+	jisFont = CreateFontToHandle("Ÿà–¾’©", 15, 3, DX_FONTTYPE_ANTIALIASING_EDGE);
 	titleFont = CreateFontToHandle("Pristina", 50, 4, DX_FONTTYPE_ANTIALIASING_EDGE);
 	saveData();
 }
 
 void Game::Result::Game_Result_Result::finalize() {
 	DeleteFontToHandle(font);
+	DeleteFontToHandle(jisFont);
 	DeleteFontToHandle(titleFont);
 }
 
@@ -61,9 +64,9 @@ void Game::Result::Game_Result_Result::draw() {
 	DrawStringToHandle(50, 180, "Result", fontColor, titleFont, edgeColor);
 	//‹Èî•ñ
 	DrawStringToHandle(50, 260, "  name :", fontColor, font, edgeColor);
-	DrawStringToHandle(120, 260, p_musicDataShare->getMusicData()->getName().c_str(), fontColor, font);
+	DrawStringToHandle(120, 260, p_musicDataShare->getMusicData()->getName().c_str(), fontColor, jisFont);
 	DrawStringToHandle(50, 300, "artist :", fontColor, font, edgeColor);
-	DrawStringToHandle(120, 300, p_musicDataShare->getMusicData()->getArtist().c_str(), fontColor, font);
+	DrawStringToHandle(120, 300, p_musicDataShare->getMusicData()->getArtist().c_str(), fontColor, jisFont);
 	//ƒŒƒxƒ‹
 	DrawStringToHandle(460, 280, "level :", fontColor, font, edgeColor);
 	DrawFormatStringToHandle(520, 280, fontColor, font, "%d", p_musicDataShare->getMusicData()->getLevel(), edgeColor);

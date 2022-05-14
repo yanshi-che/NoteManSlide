@@ -10,6 +10,7 @@
 #include "Config_Config.h"
 #include "Game_Play_Score.h"
 #include "Game_Play_Effect.h"
+#include "Game_Play_SoundEffect.h"
 #include "Singleton_KeyHitCheck.h"
 
 namespace Game {
@@ -27,6 +28,7 @@ namespace Game {
 			const std::function<void(std::uint16_t, std::uint16_t)> nextNote;//判定を同じレーンの次のノーツに移す
 			const std::shared_ptr<Game_Play_Score>& p_score;//スコア表示
 			const std::shared_ptr<Game_Play_Effect>& p_effect;//エフェクト
+			const std::shared_ptr<Game_Play_SoundEffect>& p_soundEffect;
 			std::vector<double> judgeTime;
 			std::uint16_t judgeTimeCount;
 			double nowJudgeTime;
@@ -43,7 +45,7 @@ namespace Game {
 			bool isHit;
 
 		public:
-			Game_Play_LongNote(const double startTime, const double endTime, const double sixteenthTime, const std::uint16_t noteType, const std::uint16_t laneIndex, const double laneXRight, const double laneXLeft, const std::function<void(std::uint16_t, std::uint16_t)> nextNote, const std::shared_ptr<Game_Play_Score>& p_score, const std::shared_ptr<Game_Play_Effect>& p_effect,std::uint16_t& maxChain);
+			Game_Play_LongNote(const double startTime, const double endTime, const double sixteenthTime, const std::uint16_t noteType, const std::uint16_t laneIndex, const double laneXRight, const double laneXLeft, const std::function<void(std::uint16_t, std::uint16_t)> nextNote, const std::shared_ptr<Game_Play_Score>& p_score, const std::shared_ptr<Game_Play_Effect>& p_effect, const std::shared_ptr<Game_Play_SoundEffect>& p_soundEffect,std::uint16_t& maxChain);
 			void check(double nowTime);
 			void setTurn(bool t);
 			void setDone(bool d);

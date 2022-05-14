@@ -4,6 +4,8 @@
 Game::Play::Game_Play_PlayManager::Game_Play_PlayManager(std::shared_ptr<SceneChanger>& p_sceneChanger, std::shared_ptr<Game_MusicDataShareBetweenOtherSection>& p_musicDataShare, std::shared_ptr<Game::Game_PlayResultShare>& p_playResultShare): Task(p_sceneChanger),p_musicDataShare(p_musicDataShare),p_playResultShare(p_playResultShare) {
 	p_lane = nullptr;
 	p_score = nullptr;
+	p_effect = nullptr;
+	p_soundEffect = nullptr;
 	drawNoteFunc = [&] {return drawBeforeStart(); };
 	startTime = 0;
 	isGameStart = false;
@@ -98,6 +100,10 @@ void Game::Play::Game_Play_PlayManager::initialize() {
 		p_sceneChanger->changeScene(Scene::GameMenu);
 		return;
 	}
+
+	//サウンドエフェクト
+	p_soundEffect = std::make_shared<Game_Play_SoundEffect>();
+
 	//レーン周りの描画
 	p_lane = std::make_unique<Game_Play_Lane>();
 	//スコアの描画
@@ -395,7 +401,7 @@ bool Game::Play::Game_Play_PlayManager::initializeNote(const std::uint16_t laneA
 				normalNoteVec.at(laneIndex)
 					.push_back(std::make_unique<Game_Play_NormalNote>(
 						noteDataArray.at(i).at("time").as_double() + startDelay, noteType,
-						laneIndex, laneX[laneIndex], laneX[laneIndex + 1], nextNoteFunc, p_score,p_effect));
+						laneIndex, laneX[laneIndex], laneX[laneIndex + 1], nextNoteFunc, p_score,p_effect, p_soundEffect));
 				++maxChain;
 			}
 			else if (noteType == Global::NOTETYPE_LONG) {
@@ -408,7 +414,7 @@ bool Game::Play::Game_Play_PlayManager::initializeNote(const std::uint16_t laneA
 					longNoteVec.at(laneIndex)
 						.push_back(std::make_unique<Game_Play_LongNote>(
 							startTime.at(laneIndex), noteDataArray.at(i).at("time").as_double() + startDelay, sixteenthTime, noteType,
-							laneIndex, laneX[laneIndex], laneX[laneIndex + 1], nextNoteFunc, p_score, p_effect,maxChain));
+							laneIndex, laneX[laneIndex], laneX[laneIndex + 1], nextNoteFunc, p_score, p_effect,p_soundEffect,maxChain));
 					isFirst.at(laneIndex) = true;
 				}
 			}
@@ -432,13 +438,13 @@ bool Game::Play::Game_Play_PlayManager::initializeNote(const std::uint16_t laneA
 						slideNoteVec.at(laneIndex)
 							.push_back(std::make_unique<Game_Play_SlideNote>(
 								noteDataArray.at(i).at("time").as_double() + startDelay, noteType,
-								laneX[slideNoteIndexStart], laneX[slideNoteIndexEnd + 1], laneWidth, arrowWidthBetween, laneIndex, directionRightOrLeft, slideNoteIndexStart, slideNoteIndexEnd, nextNoteFunc, p_score, p_effect));
+								laneX[slideNoteIndexStart], laneX[slideNoteIndexEnd + 1], laneWidth, arrowWidthBetween, laneIndex, directionRightOrLeft, slideNoteIndexStart, slideNoteIndexEnd, nextNoteFunc, p_score, p_effect, p_soundEffect));
 					}
 					else {//右の左向き
 						slideNoteVec.at(laneIndex)
 							.push_back(std::make_unique<Game_Play_SlideNote>(
 								noteDataArray.at(i).at("time").as_double() + startDelay, noteType,
-								laneX[slideNoteIndexStart + 1], laneX[slideNoteIndexEnd], laneWidth, arrowWidthBetween, laneIndex, directionRightOrLeft, slideNoteIndexStart, slideNoteIndexEnd, nextNoteFunc, p_score, p_effect));
+								laneX[slideNoteIndexStart + 1], laneX[slideNoteIndexEnd], laneWidth, arrowWidthBetween, laneIndex, directionRightOrLeft, slideNoteIndexStart, slideNoteIndexEnd, nextNoteFunc, p_score, p_effect, p_soundEffect));
 					}
 				}
 				else {//左の右向き
@@ -446,13 +452,13 @@ bool Game::Play::Game_Play_PlayManager::initializeNote(const std::uint16_t laneA
 						slideNoteVec.at(laneIndex)
 							.push_back(std::make_unique<Game_Play_SlideNote>(
 								noteDataArray.at(i).at("time").as_double() + startDelay, noteType,
-								laneX[slideNoteIndexStart], laneX[slideNoteIndexEnd + 1], laneWidth, arrowWidthBetween, laneIndex, directionRightOrLeft, slideNoteIndexStart, slideNoteIndexEnd, nextNoteFunc, p_score, p_effect));
+								laneX[slideNoteIndexStart], laneX[slideNoteIndexEnd + 1], laneWidth, arrowWidthBetween, laneIndex, directionRightOrLeft, slideNoteIndexStart, slideNoteIndexEnd, nextNoteFunc, p_score, p_effect, p_soundEffect));
 					}
 					else {//左の左向き
 						slideNoteVec.at(laneIndex)
 							.push_back(std::make_unique<Game_Play_SlideNote>(
 								noteDataArray.at(i).at("time").as_double() + startDelay, noteType,
-								laneX[slideNoteIndexStart + 1], laneX[slideNoteIndexEnd], laneWidth, arrowWidthBetween, laneIndex, directionRightOrLeft, slideNoteIndexStart, slideNoteIndexEnd, nextNoteFunc, p_score, p_effect));
+								laneX[slideNoteIndexStart + 1], laneX[slideNoteIndexEnd], laneWidth, arrowWidthBetween, laneIndex, directionRightOrLeft, slideNoteIndexStart, slideNoteIndexEnd, nextNoteFunc, p_score, p_effect, p_soundEffect));
 					}
 				}
 				++maxChain;

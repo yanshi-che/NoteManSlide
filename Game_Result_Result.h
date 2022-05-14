@@ -25,6 +25,7 @@ namespace Game {
 			bool isPlayToEnd;
 			bool isClear;
 			int font;
+			int jisFont;
 			int titleFont;
 			std::int32_t fontColor;
 			std::int32_t edgeColor;
