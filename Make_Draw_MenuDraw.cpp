@@ -11,8 +11,9 @@ bool Make::Draw::Make_Draw_MenuDraw::isPlaying = false;
 bool Make::Draw::Make_Draw_MenuDraw::playFinalize = false;
 bool Make::Draw::Make_Draw_MenuDraw::isFileOpen = false;
 bool Make::Draw::Make_Draw_MenuDraw::existUpdateFunc = false;
+const std::filesystem::path Make::Draw::Make_Draw_MenuDraw::firstPath = std::filesystem::current_path();
 
-Make::Draw::Make_Draw_MenuDraw::Make_Draw_MenuDraw(std::shared_ptr<SceneChanger>& sceneChanger) : firstPath(std::filesystem::current_path()){
+Make::Draw::Make_Draw_MenuDraw::Make_Draw_MenuDraw(std::shared_ptr<SceneChanger>& sceneChanger){
 	this->sceneChanger = sceneChanger;
 	p_beatLine = std::make_shared<Draw::Make_Draw_BeatLineManager>();
 	drawFunc = p_beatLine->getDrawFunc();
@@ -138,6 +139,7 @@ void Make::Draw::Make_Draw_MenuDraw::MenuItemSelectCallBack(const TCHAR* itemNam
 		break;
 	case Play:
 		if (p_musicData != nullptr && !isPlaying){
+			std::filesystem::current_path(firstPath);
 			File::Make_File_JsonIO jsIO;
 			json::value val;
 			jsIO.getJsonVal(p_musicData, p_beatLine->getNoteManager(),val);

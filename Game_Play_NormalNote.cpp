@@ -1,7 +1,7 @@
 #include "Game_Play_NormalNote.h"
 
-Game::Play::Game_Play_NormalNote::Game_Play_NormalNote(const double time, const std::uint16_t noteType, const std::uint16_t laneIndex, const double laneXRight, const double laneXLeft, const std::function<void(std::uint16_t, std::uint16_t)> nextNote,const std::shared_ptr<Game_Play_Score>& p_score, const std::shared_ptr<Game_Play_Effect>& p_effect) :
-	time(time), noteType(noteType), laneIndex(laneIndex), laneXRight(laneXRight), laneXLeft(laneXLeft), nextNote(nextNote), p_score(p_score),p_effect(p_effect) {
+Game::Play::Game_Play_NormalNote::Game_Play_NormalNote(const double time, const std::uint16_t noteType, const std::uint16_t laneIndex, const double laneXRight, const double laneXLeft, const std::function<void(std::uint16_t, std::uint16_t)> nextNote,const std::shared_ptr<Game_Play_Score>& p_score, const std::shared_ptr<Game_Play_Effect>& p_effect, const std::shared_ptr<Game_Play_SoundEffect>& p_soundEffect) :
+	time(time), noteType(noteType), laneIndex(laneIndex), laneXRight(laneXRight), laneXLeft(laneXLeft), nextNote(nextNote), p_score(p_score),p_effect(p_effect),p_soundEffect(p_soundEffect) {
 	p_keyHitCheck = ::Singleton::Singleton_KeyHitCheck::getInstance();
 	y = 0;
 	yUpdateBorderMin = this->time - Global::JUDGELINE_Y / (Global::JUDGELINE_Y * Config::g_hiSpeed);
@@ -21,11 +21,13 @@ void Game::Play::Game_Play_NormalNote::check(double nowTime) {
 				setDone(true);
 				p_score->plusPerfect();
 				p_effect->setPerfect(laneIndex);
+				p_soundEffect->playSoundEffect();
 			}
 			else if (time - Global::GREAT < nowTime + Config::g_judgeCorrection && nowTime + Config::g_judgeCorrection < time + Global::GREAT) {
 				setDone(true);
 				p_score->plusGreat();
 				p_effect->setGreat(laneIndex);
+				p_soundEffect->playSoundEffect();
 			}
 			else if (time - Global::MISS < nowTime + Config::g_judgeCorrection && nowTime + Config::g_judgeCorrection < time + Global::MISS) {
 				setDone(true);

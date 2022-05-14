@@ -17,6 +17,8 @@
 #include "Make_Play_LongNote.h"
 #include "Make_Play_SlideNote.h"
 #include "Make_Play_Score.h"
+#include "Game_Play_effect.h"
+#include "Game_Play_SoundEffect.h"
 #include "Singleton_KeyHitCheck.h"
 
 using namespace boost;
@@ -28,6 +30,8 @@ namespace Make {
 		private:
 			std::shared_ptr<Make_Play_MusicPlayer> p_musicPlayer; //音楽再生用クラス
 			std::shared_ptr<Make_Play_Score> p_score;//スコア表示
+			std::shared_ptr<Game::Play::Game_Play_Effect> p_effect;//エフェクト
+			std::shared_ptr<Game::Play::Game_Play_SoundEffect> p_soundEffect;//サウンドエフェクト
 			std::unique_ptr<Make_Play_Lane> p_lane;//レーン周りの描画
 			std::vector<std::unique_ptr<Make_Play_BarLine>> barLineVec; //小節線
 			//各ノーツ格納用
@@ -49,6 +53,7 @@ namespace Make {
 			double nowTime;
 			bool isGameStart;
 			bool isMusicStart;
+			bool isAuto;
 
 			double startDelay;
 			std::int32_t strColor;
@@ -58,6 +63,7 @@ namespace Make {
 
 			void nextNote(const std::uint16_t noteType, const std::uint16_t laneIndex);//判定を同じレーンの次のノーツに移す
 			void draw();
+			void drawAuto();
 			void drawBeforeStart();
 			void drawDown();
 			void drawHiSpeed();
@@ -65,6 +71,7 @@ namespace Make {
 			void drawNote();
 			void playUpdate();
 			void setYUpdateBorder();
+			void toggleAuto();
 		public:
 			Make_Play_TestPlayManager();
 			void finalize();

@@ -42,7 +42,7 @@ void Game::Config::Game_Config_Config::initialize() {
 	json::value val;
 	json::storage_ptr sp = json::make_shared_resource< json::monotonic_resource >();
 
-	std::ifstream readfile(".\\config\\config.json");
+	std::ifstream readfile(".\\data\\config\\config.json");
 	if (!readfile) {
 		isFail = true;
 		return;
@@ -73,7 +73,7 @@ void Game::Config::Game_Config_Config::finalize() {
 		val = obj;
 
 		std::ofstream writeFile;
-		writeFile.open(".\\config\\config.json", std::ios::out);
+		writeFile.open(".\\data\\config\\config.json", std::ios::out);
 		writeFile << val << std::endl;
 		writeFile.close();
 	}

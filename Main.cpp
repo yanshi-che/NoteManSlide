@@ -29,7 +29,7 @@ void configInit() {
 	json::value val;
 	json::storage_ptr sp = json::make_shared_resource< json::monotonic_resource >();
 	bool isFail = false;
-	std::ifstream readfile(".\\config\\config.json");
+	std::ifstream readfile(".\\data\\config\\config.json");
 	if (!readfile) {
 		isFail = true;
 		Config::g_fps = 60;
@@ -67,7 +67,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetDrawScreen(DX_SCREEN_BACK);//裏画面で画面生成
 
 	//登録されている譜面が入ったディレクトリの読み込み
-	std::string path = ".\\bgm";
+	std::string path = ".\\data\\bgm";
 	std::string bgmPath;
 
 	try {
@@ -88,7 +88,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	const int bgmHandle = LoadSoundMem(bgmPath.c_str());
 	ChangeVolumeSoundMem(127, bgmHandle);
 
-	const int backImgHandle = LoadGraph(".\\image\\background\\backImg.jpg");
+	const int backImgHandle = LoadGraph(".\\data\\image\\background\\backImg.jpg");
 	MainSceneManager mng = MainSceneManager(backImgHandle,bgmHandle);
 	configInit();
 	Singleton::Singleton_FpsOperator* fps = Singleton::Singleton_FpsOperator::getInstance();

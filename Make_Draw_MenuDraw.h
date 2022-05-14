@@ -66,7 +66,7 @@ namespace Make {
 			static bool isFileOpen;
 			static bool existUpdateFunc;
 
-			const std::filesystem::path firstPath;
+			static const std::filesystem::path firstPath;
 
 			static void MenuItemSelectCallBack(const TCHAR* itemName, int itemID);//ƒƒjƒ…[‚ª‘I‘ğ‚³‚ê‚½‚çŒÄ‚Î‚ê‚éŠÖ”
 			static void setMusicDataFromNewFile(const std::shared_ptr<File::Make_File_MusicData> md);

@@ -41,6 +41,8 @@ namespace Global {
 	constexpr const double MISS{ 0.08777 };
 
 	//ŽžŠÔŠÖ˜A
+	constexpr const double sixtyFpsTime{ 0.016666 };
+	constexpr const double oneHundredTwentyFpsTime{ 0.008333 };
 	extern double g_fpsDiff;
 	extern LONGLONG g_time;
 	//‚»‚Ì‘¼

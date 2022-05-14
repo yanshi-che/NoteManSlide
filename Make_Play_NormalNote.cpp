@@ -1,13 +1,14 @@
 #include "Make_Play_NormalNote.h"
 
-Make::Play::Make_Play_NormalNote::Make_Play_NormalNote(const double time, const std::uint16_t noteType, const std::uint16_t laneIndex, const double laneXRight, const double laneXLeft,const std::function<void(std::uint16_t, std::uint16_t)> nextNote, std::shared_ptr<Make_Play_Score>& p_score) :
-time(time),noteType(noteType),laneIndex(laneIndex),laneXRight(laneXRight),laneXLeft(laneXLeft),nextNote(nextNote),p_score(p_score){
+Make::Play::Make_Play_NormalNote::Make_Play_NormalNote(const double time, const std::uint16_t noteType, const std::uint16_t laneIndex, const double laneXRight, const double laneXLeft,const std::function<void(std::uint16_t, std::uint16_t)> nextNote, std::shared_ptr<Make_Play_Score>& p_score, const std::shared_ptr<Game::Play::Game_Play_Effect>& p_effect, const std::shared_ptr<Game::Play::Game_Play_SoundEffect>& p_soundEffect) :
+time(time),noteType(noteType),laneIndex(laneIndex),laneXRight(laneXRight),laneXLeft(laneXLeft),nextNote(nextNote),p_score(p_score),p_effect(p_effect),p_soundEffect(p_soundEffect){
 	p_keyHitCheck = ::Singleton::Singleton_KeyHitCheck::getInstance();
 	y = 0;
 	yUpdateBorderMin = this->time - Global::JUDGELINE_Y / (Global::JUDGELINE_Y * Config::g_hiSpeed);
 	yUpdateBorderMax = this->time - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed) + 0.01666;
 	done = false;
 	turn = false;
+	isAuto = false;
 	noteColor = GetColor(255, 255, 255);
 	key = 0;
 	updateKey();
@@ -15,18 +16,29 @@ time(time),noteType(noteType),laneIndex(laneIndex),laneXRight(laneXRight),laneXL
 
 void Make::Play::Make_Play_NormalNote::check(double nowTime) {
 	if (turn) {
+		if (isAuto && time - Global::sixtyFpsTime < nowTime + Config::g_judgeCorrection && nowTime + Config::g_judgeCorrection < time + Global::sixtyFpsTime) {
+			setDone(true);
+			p_score->plusPerfect();
+			p_effect->setPerfect(laneIndex);
+			p_soundEffect->playSoundEffect();
+		}
 		if (p_keyHitCheck->getHitKeyLong(key) == 1) {
 			if (time - Global::PERFECT < nowTime + Config::g_judgeCorrection && nowTime + Config::g_judgeCorrection < time + Global::PERFECT) {
 				setDone(true);
 				p_score->plusPerfect();
+				p_effect->setPerfect(laneIndex);
+				p_soundEffect->playSoundEffect();
 			}
 			else if (time - Global::GREAT < nowTime + Config::g_judgeCorrection && nowTime + Config::g_judgeCorrection < time + Global::GREAT) {
 				setDone(true);
 				p_score->plusGreat();
+				p_effect->setGreat(laneIndex);
+				p_soundEffect->playSoundEffect();
 			}
 			else if (time - Global::MISS < nowTime + Config::g_judgeCorrection && nowTime + Config::g_judgeCorrection < time + Global::MISS) {
 				setDone(true);
 				p_score->plusMiss();
+				p_effect->setMiss(laneIndex);
 			}
 		}
 	}
@@ -42,6 +54,15 @@ void Make::Play::Make_Play_NormalNote::setDone(bool d) {
 	nextNote(noteType,laneIndex);
 }
 
+void Make::Play::Make_Play_NormalNote::setAuto() {
+	if (isAuto) {
+		isAuto = false;
+	}
+	else {
+		isAuto = true;
+	}
+}
+
 void Make::Play::Make_Play_NormalNote::setYUpdateBorder() {
 	yUpdateBorderMin = time - Global::JUDGELINE_Y / (Global::JUDGELINE_Y * Config::g_hiSpeed);
 	yUpdateBorderMax = time - (Global::JUDGELINE_Y - Global::WINDOW_HEIGHT) / (Global::JUDGELINE_Y * Config::g_hiSpeed) + 0.01666;
@@ -53,6 +74,7 @@ void Make::Play::Make_Play_NormalNote::update(double nowTime) {
 		if (turn && time + Global::MISS < nowTime + Config::g_judgeCorrection) {
 			setDone(true);
 			p_score->plusMiss();
+			p_effect->setMiss(laneIndex);
 		}
 	}
 }
